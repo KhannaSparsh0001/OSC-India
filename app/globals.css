@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+:root {
+  --orange: #FF6000;
+  --orange-dark: #e65600;
+  --green: #22C55E;
+  --bg: #000000;
+  --bg-card: #111111;
+  --bg-card2: #161616;
+  --border: rgba(255, 255, 255, 0.06);
+  --text-muted: #6b7280;
+  --text-secondary: #9ca3af;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: #000000;
+}
+
+body {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #000000; }
+::-webkit-scrollbar-thumb { background: #262626; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #3f3f3f; }
+
+/* Selection */
+::selection { background: rgba(255, 96, 0, 0.3); color: #ffffff; }
+
+/* Remove default list styling */
+ul { list-style: none; }
+
+/* Image optimization */
+img { display: block; max-width: 100%; }
