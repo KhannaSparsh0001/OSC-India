@@ -70,18 +70,26 @@ export default function ProjectsSection() {
       }}
     >
       <div style={{ maxWidth: "1280px", margin: "0 auto", position: "relative" }}>
-        {/* Tag */}
-        <div style={{ marginBottom: "14px" }}>
+        {/* Section Tag */}
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "8px",
+            marginBottom: "14px",
+          }}
+        >
+          <div style={{ width: "6px", height: "6px", backgroundColor: "#22C55E", borderRadius: "50%" }} />
           <span
             style={{
-              fontSize: "13px",
-              color: "#FF6000",
+              fontSize: "12px",
+              color: "#22C55E",
               fontWeight: 700,
               letterSpacing: "1.5px",
               textTransform: "uppercase",
             }}
           >
-            &lt; FEATURED WORK &gt;
+            FEATURED PROJECTS
           </span>
         </div>
 

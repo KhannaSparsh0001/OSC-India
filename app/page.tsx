@@ -21,37 +21,49 @@ export default function Home() {
           backgroundColor: "#000000",
         }}
       >
-        {/* Full span background image starting from Hero top and extending to About Us bottom */}
+        {/* Full span background image starting from Hero top and extending into About Us */}
         <div
           style={{
             position: "absolute",
             top: 0,
             left: 0,
             right: 0,
-            bottom: 0,
+            height: "1400px", // Fixed height so the image doesn't scale infinitely
             zIndex: 0,
             pointerEvents: "none",
             overflow: "hidden",
           }}
         >
-          <Image
-            src="/hero-bg.png"
-            alt="Open Source Connect India Artwork"
-            fill
-            priority
+          {/* Inner container to constrain image scaling to its native Figma size */}
+          <div
             style={{
-              objectFit: "cover",
-              objectPosition: "85% top",
+              position: "absolute",
+              top: 0,
+              right: 0,
+              width: "100%",
+              maxWidth: "1356px", // Matches Figma asset width
+              height: "1282px", // Matches Figma asset height
             }}
-          />
+          >
+            <Image
+              src="/hero-bg.png"
+              alt="Open Source Connect India Artwork"
+              fill
+              priority
+              style={{
+                objectFit: "contain", // Use contain so the entire image is always fully visible
+                objectPosition: "right top",
+              }}
+            />
+          </div>
 
-          {/* Smooth overlay across the full two-section span for clear contrast */}
+          {/* Smooth overlay across the full span for clear contrast */}
           <div
             style={{
               position: "absolute",
               inset: 0,
               background:
-                "linear-gradient(to right, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.7) 42%, rgba(0,0,0,0.2) 75%, transparent 100%)",
+                "linear-gradient(to right, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 42%, rgba(0,0,0,0.2) 75%, transparent 100%)",
             }}
           />
 
@@ -63,7 +75,7 @@ export default function Home() {
               left: 0,
               right: 0,
               height: "140px",
-              background: "linear-gradient(to bottom, transparent, #0d0d0d)",
+              background: "linear-gradient(to bottom, transparent, #000000)",
             }}
           />
         </div>

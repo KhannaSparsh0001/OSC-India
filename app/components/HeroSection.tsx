@@ -194,68 +194,6 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Divider Line with Circuit Center Dot */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              width: "100%",
-              maxWidth: "320px",
-              marginBottom: "24px",
-            }}
-          >
-            <div
-              style={{
-                flex: 1,
-                height: "1.5px",
-                background: "linear-gradient(90deg, rgba(255, 96, 0, 0.7) 0%, rgba(255, 96, 0, 0.3) 100%)",
-              }}
-            />
-            <div
-              style={{
-                display: "flex",
-                gap: "4px",
-                alignItems: "center",
-              }}
-            >
-              <div
-                style={{
-                  width: "5px",
-                  height: "5px",
-                  borderRadius: "50%",
-                  background: "#FF6000",
-                  boxShadow: "0 0 6px #FF6000",
-                }}
-              />
-              <div
-                style={{
-                  width: "7px",
-                  height: "7px",
-                  borderRadius: "50%",
-                  background: "#22C55E",
-                  boxShadow: "0 0 8px #22C55E",
-                }}
-              />
-              <div
-                style={{
-                  width: "5px",
-                  height: "5px",
-                  borderRadius: "50%",
-                  background: "#FF6000",
-                  boxShadow: "0 0 6px #FF6000",
-                }}
-              />
-            </div>
-            <div
-              style={{
-                flex: 1,
-                height: "1.5px",
-                background: "linear-gradient(90deg, rgba(34, 197, 94, 0.3) 0%, rgba(34, 197, 94, 0.7) 100%)",
-              }}
-            />
-          </div>
-
           {/* Date Label */}
           <div
             style={{
@@ -292,6 +230,89 @@ export default function HeroSection() {
             >
               August 15, 2025
             </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Divider placed between sections as requested */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "40px",
+          left: "0",
+          right: "0",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          pointerEvents: "none",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "1280px",
+            margin: "0 auto",
+            width: "100%",
+            padding: "0 24px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              width: "100%",
+              maxWidth: "380px",
+            }}
+          >
+            <div
+              style={{
+                flex: 1,
+                height: "1.5px",
+                background: "linear-gradient(90deg, rgba(255, 96, 0, 0.7) 0%, rgba(255, 96, 0, 0.1) 100%)",
+              }}
+            />
+            <div
+              style={{
+                display: "flex",
+                gap: "6px",
+                alignItems: "center",
+              }}
+            >
+              <div
+                style={{
+                  width: "5px",
+                  height: "5px",
+                  borderRadius: "50%",
+                  background: "#FF6000",
+                  boxShadow: "0 0 6px #FF6000",
+                }}
+              />
+              <div
+                style={{
+                  width: "7px",
+                  height: "7px",
+                  borderRadius: "50%",
+                  background: "#22C55E",
+                  boxShadow: "0 0 8px #22C55E",
+                }}
+              />
+              <div
+                style={{
+                  width: "5px",
+                  height: "5px",
+                  borderRadius: "50%",
+                  background: "#FF6000",
+                  boxShadow: "0 0 6px #FF6000",
+                }}
+              />
+            </div>
+            <div
+              style={{
+                flex: 1,
+                height: "1.5px",
+                background: "linear-gradient(90deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.7) 100%)",
+              }}
+            />
           </div>
         </div>
       </div>

@@ -56,17 +56,25 @@ export default function WhatsNewSection() {
     >
       <div style={{ maxWidth: "1080px", margin: "0 auto" }}>
         {/* Section Tag */}
-        <div style={{ marginBottom: "14px" }}>
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "8px",
+            marginBottom: "14px",
+          }}
+        >
+          <div style={{ width: "6px", height: "6px", backgroundColor: "#FF6000", borderRadius: "50%" }} />
           <span
             style={{
-              fontSize: "13px",
+              fontSize: "12px",
               color: "#FF6000",
               fontWeight: 700,
               letterSpacing: "1.5px",
               textTransform: "uppercase",
             }}
           >
-            &lt; WHAT&apos;S NEW &gt;
+            WHAT'S NEW
           </span>
         </div>
 

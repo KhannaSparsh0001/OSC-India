@@ -11,17 +11,27 @@ export default function SponsorsSection() {
     >
       <div style={{ maxWidth: "860px", margin: "0 auto", textAlign: "center" }}>
         {/* Tag */}
-        <div style={{ marginBottom: "14px" }}>
+        {/* Section Tag */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "8px",
+            marginBottom: "14px",
+          }}
+        >
+          <div style={{ width: "6px", height: "6px", backgroundColor: "#FF6000", borderRadius: "50%" }} />
           <span
             style={{
-              fontSize: "13px",
+              fontSize: "12px",
               color: "#FF6000",
               fontWeight: 700,
               letterSpacing: "1.5px",
               textTransform: "uppercase",
             }}
           >
-            &lt; OUR PARTNERS &gt;
+            OUR PARTNERS
           </span>
         </div>
 
