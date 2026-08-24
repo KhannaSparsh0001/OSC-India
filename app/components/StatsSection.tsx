@@ -187,9 +187,9 @@ export default function StatsSection() {
 
         {/* Right 2x2 Stats Grid */}
         <div
+          className="stats-inner-grid"
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr",
             gap: "24px",
           }}
         >
@@ -302,6 +302,16 @@ export default function StatsSection() {
           .stats-grid-container {
             grid-template-columns: 1fr !important;
             gap: 50px !important;
+          }
+        }
+        @media (min-width: 500px) {
+          .stats-inner-grid {
+            grid-template-columns: 1fr 1fr !important;
+          }
+        }
+        @media (max-width: 499px) {
+          .stats-inner-grid {
+            grid-template-columns: 1fr !important;
           }
         }
       `}</style>
