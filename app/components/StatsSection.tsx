@@ -61,15 +61,14 @@ export default function StatsSection() {
       id="about"
       style={{
         background: "transparent",
-        padding: "60px 24px 100px",
+        padding: "60px clamp(32px, 8vw, 120px) 100px",
         position: "relative",
         zIndex: 1,
       }}
     >
       <div
         style={{
-          maxWidth: "1280px",
-          margin: "0 auto",
+          width: "100%",
           display: "grid",
           gridTemplateColumns: "1.1fr 1fr",
           gap: "64px",

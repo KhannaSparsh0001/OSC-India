@@ -97,10 +97,10 @@ export default function WhatsNewSection() {
       id="events"
       style={{
         background: "#080808",
-        padding: "90px 24px",
+        padding: "90px clamp(32px, 8vw, 120px)",
       }}
     >
-      <div style={{ maxWidth: "1080px", margin: "0 auto" }}>
+      <div style={{ width: "100%" }}>
         {/* Section Tag */}
         <div
           style={{
@@ -170,30 +170,21 @@ export default function WhatsNewSection() {
                 gap: "24px",
               }}
             >
-              {/* Outer Glowing Ring Indicator */}
+              {/* Ring Indicator */}
               <div
                 className="whats-new-indicator"
                 style={{
-                  width: "18px",
-                  height: "18px",
+                  width: "14px",
+                  height: "14px",
                   borderRadius: "50%",
                   border: `2px solid ${update.tagColor}`,
-                  background: "#080808",
-                  boxShadow: `0 0 12px ${update.tagColor}80`,
+                  background: "transparent",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   flexShrink: 0,
                 }}
               >
-                <div
-                  style={{
-                    width: "4px",
-                    height: "4px",
-                    borderRadius: "50%",
-                    background: update.tagColor,
-                  }}
-                />
               </div>
 
               {/* Main Card with Sharp L-Brackets */}
@@ -274,12 +265,12 @@ export default function WhatsNewSection() {
                     {update.num}
                   </div>
 
-                  {/* Dark Square Icon Container */}
+                  {/* Dark Circle Icon Container */}
                   <div
                     style={{
                       width: "42px",
                       height: "42px",
-                      borderRadius: "4px",
+                      borderRadius: "50%",
                       background: "#161616",
                       border: "1px solid rgba(255, 255, 255, 0.07)",
                       display: "flex",

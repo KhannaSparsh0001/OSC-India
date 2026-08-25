@@ -50,10 +50,8 @@ export default function HeroSection() {
         style={{
           position: "relative",
           zIndex: 2,
-          maxWidth: "1280px",
-          margin: "0 auto",
-          padding: "110px 24px 80px",
           width: "100%",
+          padding: "110px clamp(32px, 8vw, 120px) 80px",
         }}
       >
         <div style={{ maxWidth: "560px" }}>
@@ -132,7 +130,7 @@ export default function HeroSection() {
               alignItems: "center",
               gap: "16px",
               flexWrap: "wrap",
-              marginBottom: "28px",
+              marginBottom: "16px",
             }}
           >
             {/* Register Now Button */}
@@ -194,6 +192,44 @@ export default function HeroSection() {
             </div>
           </div>
 
+          {/* Divider */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              width: "100%",
+              maxWidth: "380px",
+              marginBottom: "24px",
+            }}
+          >
+            <div
+              style={{
+                flex: 1,
+                height: "1.5px",
+                background: "linear-gradient(90deg, rgba(255, 96, 0, 0.2) 0%, rgba(255, 96, 0, 0) 100%)",
+              }}
+            />
+            <div
+              style={{
+                display: "flex",
+                gap: "6px",
+                alignItems: "center",
+              }}
+            >
+              <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: "rgba(255, 96, 0, 0.5)", boxShadow: "0 0 4px rgba(255, 96, 0, 0.3)" }} />
+              <div style={{ width: "7px", height: "7px", borderRadius: "50%", background: "rgba(34, 197, 94, 0.5)", boxShadow: "0 0 6px rgba(34, 197, 94, 0.3)" }} />
+              <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: "rgba(255, 96, 0, 0.5)", boxShadow: "0 0 4px rgba(255, 96, 0, 0.3)" }} />
+            </div>
+            <div
+              style={{
+                flex: 1,
+                height: "1.5px",
+                background: "linear-gradient(90deg, rgba(34, 197, 94, 0) 0%, rgba(34, 197, 94, 0.2) 100%)",
+              }}
+            />
+          </div>
+
           {/* Date Label */}
           <div
             style={{
@@ -234,88 +270,7 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Bottom Divider placed between sections as requested */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "40px",
-          left: "0",
-          right: "0",
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          pointerEvents: "none",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "1280px",
-            margin: "0 auto",
-            width: "100%",
-            padding: "0 24px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              width: "100%",
-              maxWidth: "380px",
-            }}
-          >
-            <div
-              style={{
-                flex: 1,
-                height: "1.5px",
-                background: "linear-gradient(90deg, rgba(255, 96, 0, 0.7) 0%, rgba(255, 96, 0, 0.1) 100%)",
-              }}
-            />
-            <div
-              style={{
-                display: "flex",
-                gap: "6px",
-                alignItems: "center",
-              }}
-            >
-              <div
-                style={{
-                  width: "5px",
-                  height: "5px",
-                  borderRadius: "50%",
-                  background: "#FF6000",
-                  boxShadow: "0 0 6px #FF6000",
-                }}
-              />
-              <div
-                style={{
-                  width: "7px",
-                  height: "7px",
-                  borderRadius: "50%",
-                  background: "#22C55E",
-                  boxShadow: "0 0 8px #22C55E",
-                }}
-              />
-              <div
-                style={{
-                  width: "5px",
-                  height: "5px",
-                  borderRadius: "50%",
-                  background: "#FF6000",
-                  boxShadow: "0 0 6px #FF6000",
-                }}
-              />
-            </div>
-            <div
-              style={{
-                flex: 1,
-                height: "1.5px",
-                background: "linear-gradient(90deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.7) 100%)",
-              }}
-            />
-          </div>
-        </div>
-      </div>
+
     </section>
   );
 }
