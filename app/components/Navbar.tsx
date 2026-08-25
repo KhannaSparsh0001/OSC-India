@@ -19,10 +19,10 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { label: "About Us", href: "#about" },
+    { label: "About us", href: "#about" },
     { label: "Projects", href: "#projects" },
-    { label: "Events", href: "#events" },
-    { label: "Blog", href: "#blog" },
+    { label: "Timeline", href: "#timeline" },
+    { label: "Leaderboard", href: "#leaderboard" },
   ];
 
   return (
@@ -44,17 +44,16 @@ export default function Navbar() {
     >
       <div
         style={{
-          maxWidth: "1280px",
-          margin: "0 auto",
-          padding: "0 24px",
-          display: "flex",
+          width: "100%",
+          padding: "0 40px",
+          display: "grid",
+          gridTemplateColumns: "1fr auto 1fr",
           alignItems: "center",
-          justifyContent: "space-between",
           height: "72px",
         }}
       >
         {/* Logo */}
-        <Link href="/" style={{ textDecoration: "none" }}>
+        <Link href="/" style={{ textDecoration: "none", justifySelf: "start" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <span
               style={{
@@ -75,6 +74,7 @@ export default function Navbar() {
             display: "flex",
             alignItems: "center",
             gap: "32px",
+            justifySelf: "center",
           }}
           className="desktop-nav"
         >
@@ -103,7 +103,7 @@ export default function Navbar() {
 
         {/* CTA */}
         <div
-          style={{ display: "flex", alignItems: "center", gap: "16px" }}
+          style={{ display: "flex", alignItems: "center", justifySelf: "end" }}
           className="desktop-cta"
         >
           <Link

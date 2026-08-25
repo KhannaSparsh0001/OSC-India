@@ -63,13 +63,13 @@ export default function ProjectsSection() {
     <section
       id="projects"
       style={{
-        background: "#0a0a0a",
-        padding: "80px 24px",
+        background: "#080808",
+        padding: "80px clamp(32px, 8vw, 120px)",
         position: "relative",
         overflow: "hidden",
       }}
     >
-      <div style={{ maxWidth: "1280px", margin: "0 auto", position: "relative" }}>
+      <div style={{ width: "100%", position: "relative" }}>
         {/* Tag */}
         <div style={{ marginBottom: "14px" }}>
           <span

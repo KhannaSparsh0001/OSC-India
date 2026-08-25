@@ -22,10 +22,10 @@ export default function SponsorsSection() {
       id="sponsors"
       style={{
         background: "#080808",
-        padding: "90px 24px",
+        padding: "90px clamp(32px, 8vw, 120px)",
       }}
     >
-      <div style={{ maxWidth: "860px", margin: "0 auto", textAlign: "center" }}>
+      <div style={{ width: "100%", textAlign: "center" }}>
         {/* Section Tag */}
         <div
           style={{
@@ -46,7 +46,7 @@ export default function SponsorsSection() {
               textTransform: "uppercase",
             }}
           >
-            OUR PARTNERS
+            OUR SPONSORS
           </span>
         </div>
 
@@ -64,7 +64,7 @@ export default function SponsorsSection() {
           <span style={{ color: "#22C55E" }}>Future</span>
           <br />
           <span style={{ color: "#ffffff" }}>with Amazing </span>
-          <span style={{ color: "#FF6000" }}>Partners</span>
+          <span style={{ color: "#FF6000" }}>Sponsors</span>
         </h2>
 
         <p
@@ -102,6 +102,7 @@ export default function SponsorsSection() {
                 color: "#e5e7eb",
                 letterSpacing: "1.2px",
                 marginBottom: "20px",
+                textAlign: "center",
               }}
             >
               Platinum Sponsors
@@ -155,6 +156,7 @@ export default function SponsorsSection() {
                 letterSpacing: "1.5px",
                 textTransform: "uppercase",
                 marginBottom: "16px",
+                textAlign: "center",
               }}
             >
               Gold Sponsors
@@ -208,6 +210,7 @@ export default function SponsorsSection() {
                 letterSpacing: "1.5px",
                 textTransform: "uppercase",
                 marginBottom: "16px",
+                textAlign: "center",
               }}
             >
               Silver Sponsors

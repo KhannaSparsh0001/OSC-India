@@ -40,15 +40,14 @@ export default function ContributeSection() {
   return (
     <section
       style={{
-        background: "transparent",
-        padding: "50px 24px 70px",
+        background: "#080808",
+        padding: "50px clamp(32px, 8vw, 120px) 70px",
         borderTop: "1px solid rgba(255,255,255,0.03)",
       }}
     >
       <div
         style={{
-          maxWidth: "1280px",
-          margin: "0 auto",
+          width: "100%",
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
           gap: "20px",
