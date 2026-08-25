@@ -47,6 +47,7 @@ export default function HeroSection() {
     >
       {/* Hero Content Area */}
       <div
+        className="hero-content"
         style={{
           position: "relative",
           zIndex: 2,
@@ -58,7 +59,7 @@ export default function HeroSection() {
           {/* Main Headline */}
           <h1
             style={{
-              fontSize: "clamp(40px, 5.5vw, 68px)",
+              fontSize: "clamp(32px, 8vw, 68px)",
               fontWeight: 800,
               lineHeight: 1.1,
               letterSpacing: "-1.5px",
