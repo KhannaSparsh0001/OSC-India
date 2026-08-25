@@ -70,26 +70,18 @@ export default function ProjectsSection() {
       }}
     >
       <div style={{ maxWidth: "1280px", margin: "0 auto", position: "relative" }}>
-        {/* Section Tag */}
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            marginBottom: "14px",
-          }}
-        >
-          <div style={{ width: "6px", height: "6px", backgroundColor: "#22C55E", borderRadius: "50%" }} />
+        {/* Tag */}
+        <div style={{ marginBottom: "14px" }}>
           <span
             style={{
-              fontSize: "12px",
-              color: "#22C55E",
+              fontSize: "13px",
+              color: "#FF6000",
               fontWeight: 700,
               letterSpacing: "1.5px",
               textTransform: "uppercase",
             }}
           >
-            FEATURED PROJECTS
+            &lt; FEATURED WORK &gt;
           </span>
         </div>
 
@@ -141,9 +133,9 @@ export default function ProjectsSection() {
                 key={i}
                 className="project-card-item"
                 style={{
-                  background: "#111111",
+                  background: "#0d0d0d",
                   border: "1px solid rgba(255,255,255,0.06)",
-                  borderRadius: "14px",
+                  borderRadius: "4px",
                   padding: "24px",
                   display: "flex",
                   flexDirection: "column",
@@ -164,7 +156,7 @@ export default function ProjectsSection() {
                       style={{
                         width: "36px",
                         height: "36px",
-                        borderRadius: "8px",
+                        borderRadius: "4px",
                         background: "rgba(255,255,255,0.05)",
                         border: "1px solid rgba(255,255,255,0.1)",
                         display: "flex",
@@ -185,7 +177,7 @@ export default function ProjectsSection() {
                         background: `${project.categoryColor}15`,
                         border: `1px solid ${project.categoryColor}30`,
                         padding: "3px 10px",
-                        borderRadius: "100px",
+                        borderRadius: "2px",
                       }}
                     >
                       {project.category}
@@ -231,7 +223,7 @@ export default function ProjectsSection() {
                           background: "rgba(255,255,255,0.04)",
                           border: "1px solid rgba(255,255,255,0.08)",
                           padding: "3px 8px",
-                          borderRadius: "5px",
+                          borderRadius: "2px",
                         }}
                       >
                         {tag}
@@ -280,15 +272,15 @@ export default function ProjectsSection() {
               justifyContent: "center",
               padding: "16px",
               zIndex: 10,
-              borderRadius: "16px",
+              borderRadius: "4px",
             }}
           >
             <div
               className="coming-soon-card"
               style={{
-                background: "rgba(18, 18, 18, 0.95)",
+                background: "rgba(14, 14, 14, 0.95)",
                 border: "1px solid rgba(255, 96, 0, 0.35)",
-                borderRadius: "20px",
+                borderRadius: "6px",
                 padding: "36px 28px",
                 maxWidth: "480px",
                 width: "100%",
@@ -296,8 +288,37 @@ export default function ProjectsSection() {
                 boxShadow:
                   "0 24px 70px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 96, 0, 0.15)",
                 backdropFilter: "blur(16px)",
+                position: "relative",
               }}
             >
+              {/* Sharp Top-Left L-Bracket */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "-1px",
+                  left: "-1px",
+                  width: "12px",
+                  height: "12px",
+                  borderTop: "2px solid #FF6000",
+                  borderLeft: "2px solid #FF6000",
+                  pointerEvents: "none",
+                }}
+              />
+
+              {/* Sharp Bottom-Right L-Bracket */}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "-1px",
+                  right: "-1px",
+                  width: "12px",
+                  height: "12px",
+                  borderBottom: "2px solid #FF6000",
+                  borderRight: "2px solid #FF6000",
+                  pointerEvents: "none",
+                }}
+              />
+
               {/* Pulsing Tag */}
               <div
                 style={{
@@ -307,7 +328,7 @@ export default function ProjectsSection() {
                   background: "rgba(255, 96, 0, 0.12)",
                   border: "1px solid rgba(255, 96, 0, 0.3)",
                   padding: "6px 16px",
-                  borderRadius: "100px",
+                  borderRadius: "2px",
                   marginBottom: "16px",
                 }}
               >
@@ -367,7 +388,7 @@ export default function ProjectsSection() {
                     background: "#FF6000",
                     color: "#ffffff",
                     padding: "12px 24px",
-                    borderRadius: "8px",
+                    borderRadius: "4px",
                     textDecoration: "none",
                     fontWeight: 700,
                     fontSize: "14px",
