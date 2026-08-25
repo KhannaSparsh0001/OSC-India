@@ -210,10 +210,10 @@ export default function StatsSection() {
 
         {/* Right 2x2 Stats Grid with Sharp Corner L-Brackets */}
         <div
+          className="stats-inner-grid"
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "20px",
+            gap: "24px",
           }}
         >
           {stats.map((stat, i) => (
@@ -329,6 +329,16 @@ export default function StatsSection() {
           .stats-grid-container {
             grid-template-columns: 1fr !important;
             gap: 40px !important;
+          }
+        }
+        @media (min-width: 500px) {
+          .stats-inner-grid {
+            grid-template-columns: 1fr 1fr !important;
+          }
+        }
+        @media (max-width: 499px) {
+          .stats-inner-grid {
+            grid-template-columns: 1fr !important;
           }
         }
       `}</style>
