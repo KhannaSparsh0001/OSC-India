@@ -39,6 +39,7 @@ export default function ContributeSection() {
 
   return (
     <section
+      className="contribute-section"
       style={{
         background: "#080808",
         padding: "50px clamp(32px, 8vw, 120px) 70px",
@@ -147,6 +148,13 @@ export default function ContributeSection() {
           </div>
         ))}
       </div>
+      <style>{`
+        @media (max-width: 768px) {
+          .contribute-section {
+            padding-bottom: 20px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }
