@@ -325,27 +325,6 @@ export default function StatsSection() {
         </div>
       </div>
 
-      <style>{`
-        @media (max-width: 900px) {
-          .stats-grid-container {
-            grid-template-columns: 1fr !important;
-            gap: 40px !important;
-          }
-          .stats-section {
-            padding-top: 20px !important;
-          }
-        }
-        @media (min-width: 500px) {
-          .stats-inner-grid {
-            grid-template-columns: 1fr 1fr !important;
-          }
-        }
-        @media (max-width: 499px) {
-          .stats-inner-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }

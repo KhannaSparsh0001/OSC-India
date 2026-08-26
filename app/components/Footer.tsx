@@ -180,44 +180,6 @@ export default function Footer() {
         </div>
       </div>
 
-      <style>{`
-        .footer-main-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 64px;
-        }
-        .footer-links-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 32px;
-        }
-        .footer-left-col {
-          display: flex;
-          flex-direction: column;
-        }
-        @media (max-width: 768px) {
-          .footer-section {
-            padding: 40px clamp(24px, 6vw, 32px) 24px !important;
-          }
-          .footer-main-grid {
-            grid-template-columns: 1fr;
-            gap: 36px;
-          }
-          .footer-links-grid {
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-          }
-          .footer-col-item h4 {
-            font-size: 12px !important;
-          }
-          .footer-col-item a {
-            font-size: 11px !important;
-          }
-          .footer-copyright {
-            margin-top: 40px !important;
-          }
-        }
-      `}</style>
     </footer>
   );
 }

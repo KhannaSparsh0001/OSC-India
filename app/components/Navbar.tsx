@@ -228,13 +228,6 @@ export default function Navbar() {
         </div>
       )}
 
-      <style>{`
-        @media (max-width: 768px) {
-          .desktop-nav { display: none !important; }
-          .desktop-cta { display: none !important; }
-          .mobile-menu-btn { display: block !important; }
-        }
-      `}</style>
     </nav>
   );
 }

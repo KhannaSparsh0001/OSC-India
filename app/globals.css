@@ -48,3 +48,118 @@ ul { list-style: none; }
 
 /* Image optimization */
 img { display: block; max-width: 100%; }
+
+/* Responsive Component Styles */
+
+/* Navbar */
+@media (max-width: 768px) {
+  .desktop-nav { display: none !important; }
+  .desktop-cta { display: none !important; }
+  .mobile-menu-btn { display: block !important; }
+}
+
+/* Stats Section */
+@media (max-width: 900px) {
+  .stats-grid-container {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+  .stats-section {
+    padding-top: 20px !important;
+  }
+}
+@media (min-width: 500px) {
+  .stats-inner-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+@media (max-width: 499px) {
+  .stats-inner-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Contribute Section */
+@media (max-width: 768px) {
+  .contribute-section {
+    padding-bottom: 20px !important;
+  }
+}
+
+/* What's New Section */
+@media (max-width: 640px) {
+  .whats-new-indicator {
+    display: none !important;
+  }
+  .whats-new-card {
+    padding: 18px 16px !important;
+    gap: 14px !important;
+  }
+  .whats-new-section {
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
+  }
+}
+
+/* Projects Section */
+@media (max-width: 768px) {
+  .projects-cards-container {
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    gap: 14px !important;
+    scroll-snap-type: x mandatory !important;
+    padding-bottom: 8px !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .project-card-item {
+    flex: 0 0 260px !important;
+    width: 260px !important;
+    min-width: 260px !important;
+    scroll-snap-align: start !important;
+  }
+  .coming-soon-card {
+    padding: 28px 18px !important;
+  }
+  .projects-section {
+    padding-top: 20px !important;
+  }
+}
+
+/* Footer */
+.footer-main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+}
+.footer-links-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+.footer-left-col {
+  display: flex;
+  flex-direction: column;
+}
+@media (max-width: 768px) {
+  .footer-section {
+    padding: 40px clamp(24px, 6vw, 32px) 24px !important;
+  }
+  .footer-main-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .footer-links-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .footer-col-item h4 {
+    font-size: 12px !important;
+  }
+  .footer-col-item a {
+    font-size: 11px !important;
+  }
+  .footer-copyright {
+    margin-top: 40px !important;
+  }
+}
