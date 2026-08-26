@@ -20,6 +20,7 @@ export default function SponsorsSection() {
   return (
     <section
       id="sponsors"
+      className="sponsors-section"
       style={{
         background: "#080808",
         padding: "90px clamp(32px, 8vw, 120px)",

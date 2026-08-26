@@ -23,6 +23,7 @@ export default function Home() {
       >
         {/* Full span background image starting from Hero top and extending into About Us */}
         <div
+          className="hero-bg-container"
           style={{
             position: "absolute",
             top: 0,
@@ -36,6 +37,7 @@ export default function Home() {
         >
           {/* Inner container to constrain image scaling to its native Figma size */}
           <div
+            className="hero-bg-inner"
             style={{
               position: "absolute",
               top: 0,
@@ -59,6 +61,7 @@ export default function Home() {
 
           {/* Smooth overlay across the full span for clear contrast */}
           <div
+            className="hero-bg-overlay"
             style={{
               position: "absolute",
               inset: 0,

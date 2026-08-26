@@ -43,6 +43,7 @@ export default function Navbar() {
       }}
     >
       <div
+        className="navbar-inner"
         style={{
           width: "100%",
           padding: "0 40px",
@@ -143,6 +144,7 @@ export default function Navbar() {
             color: "#fff",
             cursor: "pointer",
             padding: "4px",
+            justifySelf: "end",
           }}
           aria-label="Toggle menu"
         >

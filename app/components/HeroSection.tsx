@@ -11,7 +11,7 @@ export default function HeroSection() {
   });
 
   useEffect(() => {
-    const targetDate = new Date("2026-08-15T09:00:00+05:30").getTime();
+    const targetDate = new Date("2026-09-01T09:00:00+05:30").getTime();
 
     const interval = setInterval(() => {
       const now = new Date().getTime();
@@ -35,16 +35,17 @@ export default function HeroSection() {
 
   return (
     <section
-        id="hero"
-        className="hero-container"
-        style={{
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-          background: "transparent",
-          zIndex: 1,
-        }}
-      >
+      id="hero"
+      className="hero-container"
+      style={{
+        position: "relative",
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        background: "transparent",
+        zIndex: 1,
+      }}
+    >
       {/* Hero Content Area */}
       <div
         className="hero-content"
@@ -58,6 +59,7 @@ export default function HeroSection() {
         <div style={{ maxWidth: "560px" }}>
           {/* Main Headline */}
           <h1
+            className="hero-title"
             style={{
               fontSize: "clamp(32px, 8vw, 68px)",
               fontWeight: 800,
@@ -114,6 +116,7 @@ export default function HeroSection() {
 
           {/* Subtitle */}
           <p
+            className="hero-subtitle"
             style={{
               fontSize: "15.5px",
               color: "#9ca3af",
@@ -123,11 +126,12 @@ export default function HeroSection() {
               fontWeight: 400,
             }}
           >
-            Join us this August to connect, collaborate, and contribute to open source projects that are shaping the future of technology.
+            Join us this September to connect, collaborate, and contribute to open source projects that are shaping the future of technology.
           </p>
 
           {/* CTA Buttons */}
           <div
+            className="hero-cta-group"
             style={{
               display: "flex",
               alignItems: "center",
@@ -139,6 +143,7 @@ export default function HeroSection() {
             {/* Register Now Button */}
             <Link
               href="#register"
+              className="hero-register-btn"
               style={{
                 background: "#FF6000",
                 color: "#ffffff",
@@ -169,6 +174,7 @@ export default function HeroSection() {
 
             {/* Countdown Box */}
             <div
+              className="hero-countdown-box"
               style={{
                 background: "rgba(8, 8, 8, 0.9)",
                 border: "1.5px solid #FF6500",
@@ -197,6 +203,7 @@ export default function HeroSection() {
 
           {/* Divider */}
           <div
+            className="hero-divider"
             style={{
               display: "flex",
               alignItems: "center",
@@ -235,6 +242,7 @@ export default function HeroSection() {
 
           {/* Date Label */}
           <div
+            className="hero-date-box"
             style={{
               display: "flex",
               alignItems: "center",
@@ -267,10 +275,58 @@ export default function HeroSection() {
                 letterSpacing: "0.2px",
               }}
             >
-              August 15, 2025
+              September 1, 2026
             </span>
           </div>
         </div>
+      </div>
+
+      {/* Downward Scroll Indicator Arrow for Desktop */}
+      <div
+        className="hero-scroll-indicator"
+        style={{
+          position: "absolute",
+          bottom: "32px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 2,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Link
+          href="#about"
+          aria-label="Scroll to About section"
+          style={{
+            color: "#FF6000",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            textDecoration: "none",
+            transition: "transform 0.2s ease",
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLElement).style.transform = "translateY(3px)";
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+          }}
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#FF6000"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <polyline points="19 12 12 19 5 12" />
+          </svg>
+        </Link>
       </div>
     </section>
   );

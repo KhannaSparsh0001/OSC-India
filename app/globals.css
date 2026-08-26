@@ -49,60 +49,160 @@ ul { list-style: none; }
 /* Image optimization */
 img { display: block; max-width: 100%; }
 
-/* Responsive Component Styles */
-
-/* Navbar */
-@media (max-width: 768px) {
-  .desktop-nav { display: none !important; }
-  .desktop-cta { display: none !important; }
-  .mobile-menu-btn { display: block !important; }
+/* ===========================
+   Footer base styles
+   =========================== */
+.footer-main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+}
+.footer-links-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+.footer-left-col {
+  display: flex;
+  flex-direction: column;
 }
 
-/* Stats Section */
+/* ===========================
+   RESPONSIVE: Tablet (≤ 900px)
+   =========================== */
 @media (max-width: 900px) {
+  /* Stats: stack to single column */
   .stats-grid-container {
     grid-template-columns: 1fr !important;
-    gap: 40px !important;
+    gap: 32px !important;
   }
   .stats-section {
     padding-top: 20px !important;
+    padding-bottom: 60px !important;
   }
 }
+
+/* Stats inner grid: 2 cols on 500px+ */
 @media (min-width: 500px) {
   .stats-inner-grid {
     grid-template-columns: 1fr 1fr !important;
   }
 }
-@media (max-width: 499px) {
-  .stats-inner-grid {
-    grid-template-columns: 1fr !important;
-  }
-}
 
-/* Contribute Section */
+/* ===========================
+   RESPONSIVE: Mobile (≤ 768px)
+   =========================== */
 @media (max-width: 768px) {
-  .contribute-section {
-    padding-bottom: 20px !important;
+  /* --- Navbar: Logo left, Hamburger top-right --- */
+  .desktop-nav { display: none !important; }
+  .desktop-cta { display: none !important; }
+  
+  .navbar-inner {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0 20px !important;
+    height: 64px !important;
   }
-}
 
-/* What's New Section */
-@media (max-width: 640px) {
-  .whats-new-indicator {
+  .mobile-menu-btn {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-left: auto !important;
+  }
+
+  /* --- Hero Background & Visual Visibility --- */
+  .hero-bg-container {
+    height: 720px !important;
+  }
+  .hero-bg-inner {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 480px !important;
+    top: 0 !important;
+    right: 0 !important;
+    opacity: 0.88 !important;
+  }
+  .hero-bg-overlay {
+    background: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.48) 32%, rgba(0,0,0,0.85) 65%, #000000 100%) !important;
+  }
+
+  /* --- Hero Content & Text Contrast --- */
+  .hero-container {
+    min-height: auto !important;
+  }
+  .hero-content {
+    padding: 92px 20px 36px !important;
+  }
+  .hero-title {
+    font-size: clamp(30px, 8.5vw, 44px) !important;
+    line-height: 1.12 !important;
+    margin-bottom: 72px !important;
+  }
+  .hero-subtitle {
+    font-size: 14.5px !important;
+    line-height: 1.6 !important;
+    color: #d1d5db !important;
+    max-width: 360px !important;
+    margin-bottom: 24px !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9) !important;
+  }
+  .hero-cta-group {
+    gap: 12px !important;
+    margin-bottom: 18px !important;
+  }
+  .hero-register-btn {
+    padding: 11px 22px !important;
+    font-size: 14px !important;
+  }
+  .hero-countdown-box {
+    padding: 9px 18px !important;
+  }
+  .hero-countdown-box span {
+    font-size: 15px !important;
+    letter-spacing: 2px !important;
+  }
+  .hero-divider {
+    max-width: 320px !important;
+    margin-bottom: 18px !important;
+  }
+  .hero-date-box span {
+    font-size: 14px !important;
+  }
+  .hero-scroll-indicator {
     display: none !important;
+  }
+
+  /* --- Stats --- */
+  .stats-section {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  /* --- Contribute --- */
+  .contribute-section {
+    padding: 30px 20px 30px !important;
+  }
+
+  /* --- What's New --- */
+  .whats-new-section {
+    padding: 50px 20px !important;
   }
   .whats-new-card {
     padding: 18px 16px !important;
     gap: 14px !important;
+    flex-wrap: wrap !important;
   }
-  .whats-new-section {
-    padding-top: 20px !important;
-    padding-bottom: 20px !important;
+  .whats-new-indicator {
+    display: none !important;
   }
-}
 
-/* Projects Section */
-@media (max-width: 768px) {
+  /* --- Projects --- */
+  .projects-section {
+    padding: 50px 20px !important;
+  }
   .projects-cards-container {
     display: flex !important;
     flex-direction: row !important;
@@ -121,29 +221,10 @@ img { display: block; max-width: 100%; }
   .coming-soon-card {
     padding: 28px 18px !important;
   }
-  .projects-section {
-    padding-top: 20px !important;
-  }
-}
 
-/* Footer */
-.footer-main-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 64px;
-}
-.footer-links-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
-}
-.footer-left-col {
-  display: flex;
-  flex-direction: column;
-}
-@media (max-width: 768px) {
+  /* --- Footer --- */
   .footer-section {
-    padding: 40px clamp(24px, 6vw, 32px) 24px !important;
+    padding: 40px 20px 24px !important;
   }
   .footer-main-grid {
     grid-template-columns: 1fr;
@@ -161,5 +242,99 @@ img { display: block; max-width: 100%; }
   }
   .footer-copyright {
     margin-top: 40px !important;
+  }
+}
+
+/* ===========================
+   RESPONSIVE: Small phone (≤ 480px)
+   =========================== */
+@media (max-width: 480px) {
+  /* --- Navbar --- */
+  .navbar-inner {
+    padding: 0 16px !important;
+    height: 60px !important;
+  }
+
+  /* --- Hero fine-tuning for small screens --- */
+  .hero-bg-inner {
+    height: 400px !important;
+    opacity: 0.82 !important;
+  }
+  .hero-content {
+    padding: 82px 16px 28px !important;
+  }
+  .hero-title {
+    font-size: clamp(26px, 8vw, 34px) !important;
+    margin-bottom: 210px !important;
+  }
+  .hero-subtitle {
+    font-size: 13.5px !important;
+    line-height: 1.55 !important;
+    max-width: 310px !important;
+    margin-bottom: 20px !important;
+  }
+  .hero-register-btn {
+    padding: 10px 18px !important;
+    font-size: 13.5px !important;
+  }
+  .hero-countdown-box {
+    padding: 8px 14px !important;
+  }
+  .hero-countdown-box span {
+    font-size: 14px !important;
+    letter-spacing: 1.5px !important;
+  }
+
+  /* --- Stats: single column grid --- */
+  .stats-inner-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .stats-section {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  /* --- Contribute: force single column stacking --- */
+  .contribute-section {
+    padding: 24px 16px 24px !important;
+  }
+
+  /* --- What's New cards: stack number/icon/text vertically --- */
+  .whats-new-section {
+    padding: 40px 16px !important;
+  }
+  .whats-new-card {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding: 16px 14px !important;
+    gap: 12px !important;
+  }
+  /* Hide the right arrow on very small screens */
+  .whats-new-card > div:last-child {
+    display: none !important;
+  }
+
+  /* --- Projects --- */
+  .projects-section {
+    padding: 40px 16px !important;
+  }
+  .project-card-item {
+    flex: 0 0 240px !important;
+    width: 240px !important;
+    min-width: 240px !important;
+  }
+
+  /* --- Footer --- */
+  .footer-section {
+    padding: 32px 16px 20px !important;
+  }
+  .footer-links-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px !important;
+  }
+
+  /* --- Sponsors --- */
+  .sponsors-section {
+    padding: 50px 16px !important;
   }
 }
