@@ -59,6 +59,7 @@ export default function HeroSection() {
         <div style={{ maxWidth: "560px" }}>
           {/* Main Headline */}
           <h1
+            className="hero-title"
             style={{
               fontSize: "clamp(32px, 8vw, 68px)",
               fontWeight: 800,
@@ -115,6 +116,7 @@ export default function HeroSection() {
 
           {/* Subtitle */}
           <p
+            className="hero-subtitle"
             style={{
               fontSize: "15.5px",
               color: "#9ca3af",
@@ -129,6 +131,7 @@ export default function HeroSection() {
 
           {/* CTA Buttons */}
           <div
+            className="hero-cta-group"
             style={{
               display: "flex",
               alignItems: "center",
@@ -140,6 +143,7 @@ export default function HeroSection() {
             {/* Register Now Button */}
             <Link
               href="#register"
+              className="hero-register-btn"
               style={{
                 background: "#FF6000",
                 color: "#ffffff",
@@ -170,6 +174,7 @@ export default function HeroSection() {
 
             {/* Countdown Box */}
             <div
+              className="hero-countdown-box"
               style={{
                 background: "rgba(8, 8, 8, 0.9)",
                 border: "1.5px solid #FF6500",
@@ -198,6 +203,7 @@ export default function HeroSection() {
 
           {/* Divider */}
           <div
+            className="hero-divider"
             style={{
               display: "flex",
               alignItems: "center",
@@ -236,6 +242,7 @@ export default function HeroSection() {
 
           {/* Date Label */}
           <div
+            className="hero-date-box"
             style={{
               display: "flex",
               alignItems: "center",

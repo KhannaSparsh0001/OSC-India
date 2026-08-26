@@ -93,23 +93,83 @@ img { display: block; max-width: 100%; }
    RESPONSIVE: Mobile (≤ 768px)
    =========================== */
 @media (max-width: 768px) {
-  /* --- Navbar --- */
+  /* --- Navbar: Logo left, Hamburger top-right --- */
   .desktop-nav { display: none !important; }
   .desktop-cta { display: none !important; }
-  .mobile-menu-btn { display: block !important; }
-
-  /* Tighter navbar padding */
+  
   .navbar-inner {
-    padding: 0 16px !important;
-    height: 60px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0 20px !important;
+    height: 64px !important;
   }
 
-  /* --- Hero --- */
+  .mobile-menu-btn {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-left: auto !important;
+  }
+
+  /* --- Hero Background & Visual Visibility --- */
+  .hero-bg-container {
+    height: 720px !important;
+  }
+  .hero-bg-inner {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 480px !important;
+    top: 0 !important;
+    right: 0 !important;
+    opacity: 0.88 !important;
+  }
+  .hero-bg-overlay {
+    background: linear-gradient(180deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.48) 32%, rgba(0,0,0,0.85) 65%, #000000 100%) !important;
+  }
+
+  /* --- Hero Content & Text Contrast --- */
   .hero-container {
     min-height: auto !important;
   }
   .hero-content {
-    padding: 90px 20px 40px !important;
+    padding: 92px 20px 36px !important;
+  }
+  .hero-title {
+    font-size: clamp(30px, 8.5vw, 44px) !important;
+    line-height: 1.12 !important;
+    margin-bottom: 16px !important;
+  }
+  .hero-subtitle {
+    font-size: 14.5px !important;
+    line-height: 1.6 !important;
+    color: #d1d5db !important;
+    max-width: 360px !important;
+    margin-bottom: 24px !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9) !important;
+  }
+  .hero-cta-group {
+    gap: 12px !important;
+    margin-bottom: 18px !important;
+  }
+  .hero-register-btn {
+    padding: 11px 22px !important;
+    font-size: 14px !important;
+  }
+  .hero-countdown-box {
+    padding: 9px 18px !important;
+  }
+  .hero-countdown-box span {
+    font-size: 15px !important;
+    letter-spacing: 2px !important;
+  }
+  .hero-divider {
+    max-width: 320px !important;
+    margin-bottom: 18px !important;
+  }
+  .hero-date-box span {
+    font-size: 14px !important;
   }
   .hero-scroll-indicator {
     display: none !important;
@@ -189,9 +249,40 @@ img { display: block; max-width: 100%; }
    RESPONSIVE: Small phone (≤ 480px)
    =========================== */
 @media (max-width: 480px) {
-  /* --- Hero fine-tuning --- */
+  /* --- Navbar --- */
+  .navbar-inner {
+    padding: 0 16px !important;
+    height: 60px !important;
+  }
+
+  /* --- Hero fine-tuning for small screens --- */
+  .hero-bg-inner {
+    height: 400px !important;
+    opacity: 0.82 !important;
+  }
   .hero-content {
-    padding: 80px 16px 32px !important;
+    padding: 82px 16px 28px !important;
+  }
+  .hero-title {
+    font-size: clamp(26px, 8vw, 34px) !important;
+    margin-bottom: 12px !important;
+  }
+  .hero-subtitle {
+    font-size: 13.5px !important;
+    line-height: 1.55 !important;
+    max-width: 310px !important;
+    margin-bottom: 20px !important;
+  }
+  .hero-register-btn {
+    padding: 10px 18px !important;
+    font-size: 13.5px !important;
+  }
+  .hero-countdown-box {
+    padding: 8px 14px !important;
+  }
+  .hero-countdown-box span {
+    font-size: 14px !important;
+    letter-spacing: 1.5px !important;
   }
 
   /* --- Stats: single column grid --- */

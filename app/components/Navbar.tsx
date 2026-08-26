@@ -144,6 +144,7 @@ export default function Navbar() {
             color: "#fff",
             cursor: "pointer",
             padding: "4px",
+            justifySelf: "end",
           }}
           aria-label="Toggle menu"
         >
