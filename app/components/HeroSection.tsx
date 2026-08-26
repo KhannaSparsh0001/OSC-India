@@ -34,19 +34,21 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section
-      id="hero"
-      style={{
-        position: "relative",
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        background: "transparent",
-        zIndex: 1,
-      }}
-    >
+    <>
+      <section
+        id="hero"
+        className="hero-container"
+        style={{
+          position: "relative",
+          display: "flex",
+          alignItems: "center",
+          background: "transparent",
+          zIndex: 1,
+        }}
+      >
       {/* Hero Content Area */}
       <div
+        className="hero-content"
         style={{
           position: "relative",
           zIndex: 2,
@@ -65,11 +67,12 @@ export default function HeroSection() {
               marginBottom: "22px",
             }}
           >
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "10px 14px", alignItems: "baseline" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline" }}>
               <span
                 style={{
                   color: "#FF6000",
                   textShadow: "0 0 35px rgba(255, 96, 0, 0.35)",
+                  marginRight: "12px",
                 }}
               >
                 Open
@@ -86,11 +89,12 @@ export default function HeroSection() {
                 Source
               </span>
             </div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "10px 14px", alignItems: "baseline", marginTop: "4px" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", marginTop: "4px" }}>
               <span
                 style={{
                   color: "#FF6000",
                   textShadow: "0 0 35px rgba(255, 96, 0, 0.35)",
+                  marginRight: "12px",
                 }}
               >
                 Connect
@@ -271,6 +275,21 @@ export default function HeroSection() {
       </div>
 
 
-    </section>
+      </section>
+      <style>{`
+        .hero-container {
+          min-height: 100vh;
+        }
+        @media (max-width: 768px) {
+          .hero-container {
+            min-height: auto;
+            padding-top: 20px;
+          }
+          .hero-content {
+            padding-bottom: 20px !important;
+          }
+        }
+      `}</style>
+    </>
   );
 }
