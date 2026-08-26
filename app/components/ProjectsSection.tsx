@@ -62,6 +62,7 @@ export default function ProjectsSection() {
   return (
     <section
       id="projects"
+      className="projects-section"
       style={{
         background: "#080808",
         padding: "80px clamp(32px, 8vw, 120px)",
@@ -71,17 +72,25 @@ export default function ProjectsSection() {
     >
       <div style={{ width: "100%", position: "relative" }}>
         {/* Tag */}
-        <div style={{ marginBottom: "14px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            marginBottom: "14px",
+          }}
+        >
+          <div style={{ width: "6px", height: "6px", backgroundColor: "#FF6000", borderRadius: "50%", boxShadow: "0 0 8px #FF6000" }} />
           <span
             style={{
-              fontSize: "13px",
+              fontSize: "12px",
               color: "#FF6000",
               fontWeight: 700,
               letterSpacing: "1.5px",
               textTransform: "uppercase",
             }}
           >
-            &lt; FEATURED WORK &gt;
+            FEATURED WORK
           </span>
         </div>
 
@@ -435,6 +444,9 @@ export default function ProjectsSection() {
           }
           .coming-soon-card {
             padding: 28px 18px !important;
+          }
+          .projects-section {
+            padding-top: 20px !important;
           }
         }
       `}</style>

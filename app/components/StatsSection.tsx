@@ -59,6 +59,7 @@ export default function StatsSection() {
   return (
     <section
       id="about"
+      className="stats-section"
       style={{
         background: "transparent",
         padding: "60px clamp(32px, 8vw, 120px) 100px",
@@ -329,6 +330,9 @@ export default function StatsSection() {
           .stats-grid-container {
             grid-template-columns: 1fr !important;
             gap: 40px !important;
+          }
+          .stats-section {
+            padding-top: 20px !important;
           }
         }
         @media (min-width: 500px) {

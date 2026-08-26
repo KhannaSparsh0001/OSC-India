@@ -95,6 +95,7 @@ export default function WhatsNewSection() {
   return (
     <section
       id="events"
+      className="whats-new-section"
       style={{
         background: "#080808",
         padding: "90px clamp(32px, 8vw, 120px)",
@@ -361,6 +362,10 @@ export default function WhatsNewSection() {
           .whats-new-card {
             padding: 18px 16px !important;
             gap: 14px !important;
+          }
+          .whats-new-section {
+            padding-top: 20px !important;
+            padding-bottom: 20px !important;
           }
         }
       `}</style>
