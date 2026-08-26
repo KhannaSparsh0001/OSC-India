@@ -273,23 +273,6 @@ export default function HeroSection() {
           </div>
         </div>
       </div>
-
-
-      </section>
-      <style>{`
-        .hero-container {
-          min-height: 100vh;
-        }
-        @media (max-width: 768px) {
-          .hero-container {
-            min-height: auto;
-            padding-top: 20px;
-          }
-          .hero-content {
-            padding-bottom: 20px !important;
-          }
-        }
-      `}</style>
-    </>
+    </section>
   );
 }
