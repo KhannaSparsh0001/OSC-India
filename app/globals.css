@@ -139,7 +139,7 @@ img { display: block; max-width: 100%; }
   .hero-title {
     font-size: clamp(30px, 8.5vw, 44px) !important;
     line-height: 1.12 !important;
-    margin-bottom: 16px !important;
+    margin-bottom: 72px !important;
   }
   .hero-subtitle {
     font-size: 14.5px !important;
@@ -265,7 +265,7 @@ img { display: block; max-width: 100%; }
   }
   .hero-title {
     font-size: clamp(26px, 8vw, 34px) !important;
-    margin-bottom: 12px !important;
+    margin-bottom: 210px !important;
   }
   .hero-subtitle {
     font-size: 13.5px !important;
