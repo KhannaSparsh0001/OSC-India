@@ -148,13 +148,6 @@ export default function ContributeSection() {
           </div>
         ))}
       </div>
-      <style>{`
-        @media (max-width: 768px) {
-          .contribute-section {
-            padding-bottom: 20px !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }

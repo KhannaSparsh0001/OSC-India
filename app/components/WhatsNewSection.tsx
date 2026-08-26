@@ -354,21 +354,6 @@ export default function WhatsNewSection() {
         </div>
       </div>
 
-      <style>{`
-        @media (max-width: 640px) {
-          .whats-new-indicator {
-            display: none !important;
-          }
-          .whats-new-card {
-            padding: 18px 16px !important;
-            gap: 14px !important;
-          }
-          .whats-new-section {
-            padding-top: 20px !important;
-            padding-bottom: 20px !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }

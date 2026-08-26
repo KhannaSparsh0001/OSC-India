@@ -425,31 +425,6 @@ export default function ProjectsSection() {
         </div>
       </div>
 
-      <style>{`
-        @media (max-width: 768px) {
-          .projects-cards-container {
-            display: flex !important;
-            flex-direction: row !important;
-            overflow-x: auto !important;
-            gap: 14px !important;
-            scroll-snap-type: x mandatory !important;
-            padding-bottom: 8px !important;
-            -webkit-overflow-scrolling: touch;
-          }
-          .project-card-item {
-            flex: 0 0 260px !important;
-            width: 260px !important;
-            min-width: 260px !important;
-            scroll-snap-align: start !important;
-          }
-          .coming-soon-card {
-            padding: 28px 18px !important;
-          }
-          .projects-section {
-            padding-top: 20px !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }
