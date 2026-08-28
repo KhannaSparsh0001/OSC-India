@@ -46,19 +46,9 @@ The next objective is transitioning this static template into a fully functional
 
 ---
 
-## Phase 5: Content Management (The Blog)
-*When you're ready to start publishing articles.*
-
-- [ ] **Initialize Sanity.io**: Spin up a local Sanity Studio in a `/studio` folder.
-- [ ] **Define Schemas**: Create schemas for `Author`, `Category`, and `Post`.
-- [ ] **Frontend Integration**: Use Sanity's GROQ query language to fetch the latest articles and inject them into the `BlogCard` components on the `/blog` page.
-- [ ] **Dynamic Routing**: Create `/blog/[slug]/page.tsx` to dynamically render full-page markdown articles.
-
----
-
-## Phase 6: Deployment & CI/CD
+## Phase 5: Deployment & CI/CD
 *Pushing to production.*
 
 - [ ] **Vercel Deployment**: Connect the GitHub repository to Vercel for automatic deployments on every push.
-- [ ] **Environment Variable Sync**: Ensure Supabase, GitHub OAuth, and Sanity keys are securely added to Vercel.
+- [ ] **Environment Variable Sync**: Ensure Supabase and GitHub OAuth keys are securely added to Vercel.
 - [ ] **Final Manual Testing**: Run through the mobile layouts, auth flows, and data fetching on the live production URL.

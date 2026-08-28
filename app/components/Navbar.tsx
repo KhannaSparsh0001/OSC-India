@@ -21,11 +21,9 @@ export default function Navbar() {
   const navLinks = [
     { label: "About us", href: "/about" },
     { label: "Projects", href: "/projects" },
-    { label: "Speakers", href: "/speakers" },
     { label: "Leaderboard", href: "/leaderboard" },
     { label: "Team", href: "/team" },
     { label: "Timeline", href: "/timeline" },
-    { label: "Blog", href: "/blog" },
   ];
 
   return (

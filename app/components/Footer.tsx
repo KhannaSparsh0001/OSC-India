@@ -74,7 +74,7 @@ export default function Footer() {
                 Resources
               </h4>
               <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                {["Blog", "Newsletter"].map((item) => (
+                {["Newsletter"].map((item) => (
                   <li key={item} style={{ marginBottom: "10px" }}>
                     <Link
                       href="#"
