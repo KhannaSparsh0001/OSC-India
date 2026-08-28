@@ -25,7 +25,6 @@ export default function Navbar() {
     { label: "Leaderboard", href: "/leaderboard" },
     { label: "Team", href: "/team" },
     { label: "Timeline", href: "/timeline" },
-    { label: "Blog", href: "/blog" },
   ];
 
   return (
