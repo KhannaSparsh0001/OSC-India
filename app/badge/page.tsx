@@ -1,0 +1,455 @@
+"use client";
+
+import React, { useState, useRef, useEffect } from "react";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { Shield, Upload, User, SlidersHorizontal, RotateCw, Undo2, Check } from "lucide-react";
+import html2canvas from "html2canvas";
+
+export default function BadgePage() {
+  const [name, setName] = useState("");
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const badgeRef = useRef<HTMLDivElement>(null);
+  
+  // Image Controls State
+  const [scale, setScale] = useState(1);
+  const [rotation, setRotation] = useState(0);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isAdjusting, setIsAdjusting] = useState(false);
+  
+  // Dragging State
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const imageUrl = URL.createObjectURL(file);
+      setPhotoUrl(imageUrl);
+      
+      // Reset transforms
+      setScale(1);
+      setRotation(0);
+      setPosition({ x: 0, y: 0 });
+      setIsAdjusting(true);
+    }
+  };
+
+  const handleDownload = async () => {
+    if (badgeRef.current) {
+      try {
+        const canvas = await html2canvas(badgeRef.current, {
+          backgroundColor: null,
+          scale: 2, 
+          useCORS: true,
+        });
+        const url = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.download = `OSCI-Badge-${name || "Contributor"}.png`;
+        link.href = url;
+        link.click();
+      } catch (err) {
+        console.error("Failed to generate badge:", err);
+      }
+    }
+  };
+
+  // Mouse drag handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!photoUrl) return;
+    e.preventDefault();
+    setIsDragging(true);
+    setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    setPosition({
+      x: e.clientX - dragStart.x,
+      y: e.clientY - dragStart.y,
+    });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseLeave = () => {
+    if (isDragging) setIsDragging(false);
+  };
+
+  const resetAdjustments = () => {
+    setScale(1);
+    setRotation(0);
+    setPosition({ x: 0, y: 0 });
+  };
+
+  return (
+    <div className="min-h-screen bg-[var(--bg)] flex flex-col font-sans">
+      <Navbar />
+      {/* Spacer to clear the fixed Navbar */}
+      <div style={{ height: '96px', width: '100%', flexShrink: 0 }} aria-hidden="true" />
+      
+      <main className="flex-grow flex flex-col items-center px-6 py-12" style={{ margin: '0 auto', maxWidth: '1280px', width: '100%', paddingBottom: '96px' }}>
+        
+        {/* Header Section */}
+        <div style={{ textAlign: 'center', marginBottom: '64px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ background: 'rgba(255, 96, 0, 0.1)', border: '1px solid var(--orange)', color: 'var(--orange)', padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--orange)' }}></div>
+            Contributor Recognition
+          </div>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight" style={{ marginBottom: '16px' }}>
+            Contributor <span className="text-[var(--orange)]">Badge</span>
+          </h1>
+          <p className="text-[var(--text-secondary)] text-[15px]" style={{ maxWidth: '400px', textAlign: 'center', lineHeight: '1.6' }}>
+            Create your personalized OSCI badge to celebrate your contribution to open source.
+          </p>
+        </div>
+
+        {/* Content Layout */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '64px', justifyContent: 'center', width: '100%', maxWidth: '1000px' }}>
+          
+          {/* LEFT: Live Preview */}
+          <div style={{ flex: '1', minWidth: '320px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', width: '320px' }}>
+              <div style={{ flex: '1', height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
+              <span className="text-[11px] font-bold tracking-[0.2em] text-gray-400">LIVE PREVIEW</span>
+              <div style={{ flex: '1', height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
+            </div>
+
+            {/* The Badge Itself */}
+            <div 
+              style={{
+                position: 'relative',
+                padding: '24px',
+                borderRadius: '24px',
+                background: 'rgba(255, 96, 0, 0.05)',
+              }}
+            >
+              {/* Outer Glow */}
+              <div style={{ position: 'absolute', inset: 0, background: 'var(--orange)', opacity: 0.15, filter: 'blur(30px)', borderRadius: '24px', zIndex: 0 }}></div>
+              
+              <div 
+                ref={badgeRef}
+                style={{
+                  position: 'relative',
+                  width: '320px',
+                  height: '460px',
+                  background: 'linear-gradient(180deg, #1c1c1f 0%, #121214 100%)',
+                  border: '1px solid rgba(255, 96, 0, 0.3)',
+                  borderRadius: '20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  padding: '36px 24px',
+                  boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
+                  zIndex: 1,
+                  overflow: 'hidden'
+                }}
+              >
+                {/* Background Accent inside badge */}
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '120px', background: 'radial-gradient(ellipse at top, rgba(255,96,0,0.2) 0%, transparent 70%)' }}></div>
+
+                {/* Badge Header */}
+                <div style={{ textAlign: 'center', zIndex: 2, marginBottom: '40px', width: '100%' }}>
+                  <h3 style={{ color: 'white', fontWeight: 800, fontSize: '22px', lineHeight: '1.2' }}>Open Source</h3>
+                  <h3 style={{ color: 'white', fontWeight: 800, fontSize: '22px', lineHeight: '1.2' }}>Connect <span style={{ color: 'var(--orange)' }}>India</span></h3>
+                  <h3 style={{ color: 'var(--orange)', fontWeight: 900, fontSize: '22px', lineHeight: '1.2' }}>2026</h3>
+                </div>
+
+                {/* Avatar */}
+                <div 
+                  style={{
+                    width: '160px', // Enlarged avatar
+                    height: '160px',
+                    flexShrink: 0,
+                    borderRadius: '50%',
+                    background: '#161618',
+                    border: '3px solid var(--orange)',
+                    boxShadow: '0 0 24px rgba(255, 96, 0, 0.4)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: '36px',
+                    zIndex: 2,
+                    overflow: 'hidden',
+                    cursor: photoUrl ? (isDragging ? 'grabbing' : 'grab') : 'default'
+                  }}
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUp}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  {photoUrl ? (
+                    <img 
+                      src={photoUrl} 
+                      alt="Avatar" 
+                      style={{ 
+                        width: '100%', 
+                        height: '100%', 
+                        objectFit: 'cover',
+                        transform: `scale(${scale}) rotate(${rotation}deg) translate(${position.x / scale}px, ${position.y / scale}px)`,
+                        transformOrigin: 'center center',
+                        pointerEvents: 'none' // Let the container handle mouse events
+                      }} 
+                    />
+                  ) : (
+                    <User className="text-gray-500" style={{ width: '56px', height: '56px' }} />
+                  )}
+                </div>
+
+                {/* Name */}
+                <h2 
+                  style={{ 
+                    color: 'white', 
+                    fontSize: '24px', 
+                    fontWeight: 700, 
+                    marginBottom: '16px',
+                    textAlign: 'center',
+                    zIndex: 2,
+                    wordBreak: 'break-word',
+                    maxWidth: '100%'
+                  }}
+                >
+                  {name || "Your Name"}
+                </h2>
+
+                {/* Role */}
+                <div 
+                  style={{
+                    background: 'rgba(255, 96, 0, 0.1)',
+                    border: '1px solid rgba(255, 96, 0, 0.3)',
+                    color: 'var(--orange)',
+                    padding: '8px 20px',
+                    borderRadius: '24px',
+                    fontSize: '12px',
+                    fontWeight: 800,
+                    letterSpacing: '0.05em',
+                    zIndex: 2,
+                    marginBottom: 'auto'
+                  }}
+                >
+                  CONTRIBUTOR
+                </div>
+
+                {/* Footer updated */}
+                <div style={{ zIndex: 2, textAlign: 'center', marginTop: '24px' }}>
+                  <div style={{ color: 'gray', fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em' }}>- 2026 -</div>
+                  <div style={{ color: 'gray', fontSize: '9px', marginTop: '4px', letterSpacing: '0.05em' }}>Open Source Connect India 2026</div>
+                </div>
+              </div>
+            </div>
+
+            <p style={{ color: 'gray', fontSize: '13px', marginTop: '24px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--orange)' }}></span>
+              Your badge updates in real-time
+            </p>
+          </div>
+
+          {/* RIGHT: Form */}
+          <div style={{ flex: '1', minWidth: '320px', display: 'flex', flexDirection: 'column' }}>
+            <h2 className="text-3xl font-bold text-white mb-3 tracking-tight">Create Your <span className="text-[var(--orange)]">Badge</span></h2>
+            <p className="text-[var(--text-secondary)] text-[14px] mb-8" style={{ lineHeight: '1.6' }}>
+              Personalize your badge with your name and photo. Download and share your achievement.
+            </p>
+
+            {/* Privacy Notice */}
+            <div style={{ background: 'rgba(255, 96, 0, 0.05)', border: '1px solid rgba(255, 96, 0, 0.2)', padding: '16px', borderRadius: '12px', display: 'flex', gap: '16px', marginBottom: '32px' }}>
+              <Shield className="text-[var(--orange)]" style={{ width: '24px', height: '24px', flexShrink: 0 }} />
+              <div>
+                <h4 style={{ color: 'white', fontSize: '14px', fontWeight: 600, marginBottom: '4px' }}>Privacy First</h4>
+                <p style={{ color: 'gray', fontSize: '12px' }}>We don't store your image. Your privacy is our priority.</p>
+              </div>
+            </div>
+
+            {/* Form using flex styling to avoid Tailwind gap issues */}
+            <form style={{ display: 'flex', flexDirection: 'column', gap: '24px', paddingBottom: '32px' }}>
+              
+              {/* Name Field */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label style={{ color: 'white', fontSize: '12px', fontWeight: 700, letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <User style={{ width: '14px', height: '14px', color: 'var(--orange)' }} />
+                  YOUR NAME <span style={{ color: 'red' }}>*</span>
+                </label>
+                <input 
+                  type="text" 
+                  value={name}
+                  onChange={(e) => setName(e.target.value.slice(0, 30))}
+                  placeholder="Enter your full name"
+                  className="w-full bg-[#1c1c1f] text-white text-[14px] placeholder-gray-500 rounded-xl border border-[rgba(255,255,255,0.05)] focus:outline-none focus:border-[var(--orange)] focus:ring-1 focus:ring-[var(--orange)] transition-all"
+                  style={{ padding: '16px' }}
+                />
+                <span style={{ color: 'gray', fontSize: '11px', alignSelf: 'flex-start' }}>{name.length}/30 characters</span>
+              </div>
+
+              {/* Photo Upload / Adjust Field */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label style={{ color: 'white', fontSize: '12px', fontWeight: 700, letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Upload style={{ width: '14px', height: '14px', color: 'var(--orange)' }} />
+                  YOUR PHOTO <span style={{ color: 'red' }}>*</span>
+                </label>
+                
+                {!photoUrl ? (
+                  // Initial Upload Box
+                  <div style={{ position: 'relative', width: '100%', height: '140px', background: '#1c1c1f', border: '1px dashed rgba(255, 96, 0, 0.4)', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s', cursor: 'pointer' }} className="hover:border-[var(--orange)] hover:bg-[#252529]">
+                    <input 
+                      type="file" 
+                      accept="image/png, image/jpeg"
+                      onChange={handlePhotoUpload}
+                      style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%' }}
+                    />
+                    <Upload style={{ width: '28px', height: '28px', color: 'var(--orange)', marginBottom: '12px' }} />
+                    <p style={{ color: 'white', fontSize: '13px', fontWeight: 500 }}>
+                      Drop your photo here or <span style={{ color: 'var(--orange)' }}>browse</span>
+                    </p>
+                    <p style={{ color: 'gray', fontSize: '11px', marginTop: '4px' }}>JPG or PNG • Auto-cropped to square</p>
+                  </div>
+                ) : (
+                  // Photo Uploaded & Adjustment Tools
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {/* Compact Status Bar */}
+                    <div style={{ background: '#1c1c1f', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '12px', padding: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--bg)', border: '2px solid var(--orange)', overflow: 'hidden' }}>
+                          <img src={photoUrl} alt="Thumbnail" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </div>
+                        <div>
+                          <p style={{ color: 'var(--orange)', fontSize: '13px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <Check style={{ width: '12px', height: '12px' }} /> Photo uploaded
+                          </p>
+                          <p style={{ color: 'gray', fontSize: '11px' }}>Ready for your badge</p>
+                        </div>
+                      </div>
+                      <button 
+                        type="button" 
+                        onClick={() => setIsAdjusting(!isAdjusting)}
+                        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '6px 12px', borderRadius: '8px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                        className="hover:bg-[rgba(255,255,255,0.1)] transition-colors"
+                      >
+                        <SlidersHorizontal style={{ width: '14px', height: '14px' }} />
+                        {isAdjusting ? 'Close' : 'Adjust'}
+                      </button>
+                    </div>
+
+                    {/* Advanced Adjust Panel */}
+                    {isAdjusting && (
+                      <div style={{ background: '#161618', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                        <div>
+                          <h4 style={{ color: 'white', fontSize: '15px', fontWeight: 600, marginBottom: '4px' }}>Adjust Your Image</h4>
+                          <p style={{ color: 'gray', fontSize: '12px' }}>Fine-tune position and size by dragging the image.</p>
+                        </div>
+
+                        {/* Scale Slider */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <label style={{ color: 'gray', fontSize: '12px' }}>Scale</label>
+                            <span style={{ color: 'var(--orange)', fontSize: '12px', fontWeight: 600 }}>{scale.toFixed(2)}x</span>
+                          </div>
+                          <input 
+                            type="range" 
+                            min="0.5" max="3" step="0.1" 
+                            value={scale} 
+                            onChange={(e) => setScale(parseFloat(e.target.value))}
+                            style={{ width: '100%', accentColor: 'var(--orange)' }}
+                          />
+                        </div>
+
+                        {/* Rotation Slider */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <label style={{ color: 'gray', fontSize: '12px' }}>Rotation</label>
+                            <span style={{ color: 'var(--orange)', fontSize: '12px', fontWeight: 600 }}>{rotation}°</span>
+                          </div>
+                          <input 
+                            type="range" 
+                            min="0" max="360" step="1" 
+                            value={rotation} 
+                            onChange={(e) => setRotation(parseFloat(e.target.value))}
+                            style={{ width: '100%', accentColor: 'var(--orange)' }}
+                          />
+                        </div>
+
+                        {/* Quick Rotate Buttons */}
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          {[0, 90, 180, 270].map((deg) => (
+                            <button
+                              key={deg}
+                              type="button"
+                              onClick={() => setRotation(deg)}
+                              style={{ 
+                                flex: '1', 
+                                padding: '8px', 
+                                borderRadius: '8px', 
+                                fontSize: '12px', 
+                                fontWeight: 600,
+                                background: rotation === deg ? 'var(--orange)' : 'rgba(255,255,255,0.05)',
+                                color: rotation === deg ? 'white' : 'gray',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                              }}
+                            >
+                              {deg}°
+                            </button>
+                          ))}
+                        </div>
+
+                        {/* Actions */}
+                        <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
+                          <button 
+                            type="button" 
+                            onClick={resetAdjustments}
+                            style={{ flex: '1', background: 'rgba(255,96,0,0.1)', color: 'var(--orange)', padding: '10px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}
+                          >
+                            <Undo2 style={{ width: '14px', height: '14px' }} /> Reset All
+                          </button>
+                          <button 
+                            type="button" 
+                            onClick={() => setIsAdjusting(false)}
+                            style={{ flex: '1', background: 'var(--orange)', color: 'white', padding: '10px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}
+                          >
+                            <Check style={{ width: '14px', height: '14px' }} /> Done
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Main Actions (Upload / Download) */}
+              <div style={{ display: 'flex', gap: '16px', marginTop: '16px' }}>
+                <div style={{ position: 'relative', flex: '1' }}>
+                  <input 
+                    type="file" 
+                    accept="image/png, image/jpeg"
+                    onChange={handlePhotoUpload}
+                    style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%', zIndex: 10 }}
+                  />
+                  <button 
+                    type="button"
+                    style={{ width: '100%', background: '#1c1c1f', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '16px', borderRadius: '12px', fontSize: '13px', fontWeight: 700, letterSpacing: '0.05em', position: 'relative' }}
+                    className="hover:bg-[#252529] transition-colors"
+                  >
+                    {photoUrl ? "CHANGE IMG" : "UPLOAD IMG"}
+                  </button>
+                </div>
+                
+                <button 
+                  type="button"
+                  onClick={handleDownload}
+                  style={{ flex: '1', background: 'var(--orange)', color: 'white', padding: '16px', borderRadius: '12px', fontSize: '13px', fontWeight: 700, letterSpacing: '0.05em', boxShadow: '0 8px 20px rgba(255, 96, 0, 0.2)' }}
+                  className="hover:bg-[var(--orange-dark)] transition-colors"
+                >
+                  DOWNLOAD
+                </button>
+              </div>
+
+            </form>
+          </div>
+
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
