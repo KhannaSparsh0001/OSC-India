@@ -34,9 +34,11 @@ The next objective is transitioning this static template into a fully functional
 *Wiring up the templates we just built to the real database.*
 
 - [ ] **Dynamic Dashboard**: 
-  - Fetch the logged-in user's session data.
-  - Populate the Profile Card (Name, Avatar, @handle).
+  - Fetch the logged-in user's session data and their **Role** (Contributor, Mentor, Project Admin).
+  - Populate the Profile Card and adjust the available actions based on their role (e.g., Admins see project management tools, Mentors see mentee requests).
   - Query Supabase for their current rank, streak, and PR distribution.
+- [ ] **Role-Based Badge Generator**: 
+  - Dynamically render the badge type, title, and color scheme based on whether the user is a `Mentor`, `Admin`, or `Contributor`.
 - [ ] **Dynamic Leaderboard**: 
   - Create a server-side query to fetch the top 100 users ordered by points.
   - Dynamically render the Top 3 podium and the remaining list.
