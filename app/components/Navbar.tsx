@@ -19,10 +19,13 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { label: "About us", href: "#about" },
-    { label: "Projects", href: "#projects" },
-    { label: "Timeline", href: "#timeline" },
-    { label: "Leaderboard", href: "#leaderboard" },
+    { label: "About us", href: "/about" },
+    { label: "Projects", href: "/projects" },
+    { label: "Speakers", href: "/speakers" },
+    { label: "Leaderboard", href: "/leaderboard" },
+    { label: "Team", href: "/team" },
+    { label: "Timeline", href: "/timeline" },
+    { label: "Blog", href: "/blog" },
   ];
 
   return (
@@ -64,7 +67,7 @@ export default function Navbar() {
                 letterSpacing: "-0.2px",
               }}
             >
-              Open Source Connect India
+              Open Source Connect <span style={{ color: "var(--orange)" }}>India</span>
             </span>
           </div>
         </Link>
@@ -108,7 +111,7 @@ export default function Navbar() {
           className="desktop-cta"
         >
           <Link
-            href="#"
+            href="/sign-in"
             style={{
               color: "#d1d5db",
               textDecoration: "none",
@@ -213,7 +216,7 @@ export default function Navbar() {
           ))}
           <div style={{ display: "flex", gap: "12px", marginTop: "16px" }}>
             <Link
-              href="#"
+              href="/sign-in"
               style={{
                 color: "#ffffff",
                 textDecoration: "none",
