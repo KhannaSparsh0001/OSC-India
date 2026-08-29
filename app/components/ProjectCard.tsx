@@ -1,5 +1,61 @@
 import Link from "next/link";
-import { Star, GitFork, ExternalLink } from "lucide-react";
+
+function StarIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  );
+}
+
+function GitForkIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="18" r="3" />
+      <circle cx="6" cy="6" r="3" />
+      <circle cx="18" cy="6" r="3" />
+      <path d="M18 9v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9" />
+      <path d="M12 12v3" />
+    </svg>
+  );
+}
+
+function ExternalLinkIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+      <polyline points="15 3 21 3 21 9" />
+      <line x1="10" y1="14" x2="21" y2="3" />
+    </svg>
+  );
+}
 
 export interface ProjectCardProps {
   title: string;
@@ -73,11 +129,11 @@ export default function ProjectCard({
           <div style={{ paddingTop: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <div className="flex items-center gap-5 text-[var(--text-secondary)] text-[14px]">
               <div className="flex items-center gap-1.5">
-                <Star className="w-[18px] h-[18px]" />
+                <StarIcon className="w-[18px] h-[18px]" />
                 <span className="font-medium">{stars}</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <GitFork className="w-[18px] h-[18px]" />
+                <GitForkIcon className="w-[18px] h-[18px]" />
                 <span className="font-medium">{forks}</span>
               </div>
             </div>
@@ -87,7 +143,7 @@ export default function ProjectCard({
               target="_blank"
               className="flex items-center gap-1.5 text-[var(--orange)] text-[14px] font-semibold hover:text-[var(--orange-dark)] transition-colors w-fit"
             >
-              View Project <ExternalLink className="w-4 h-4" />
+              View Project <ExternalLinkIcon className="w-4 h-4" />
             </Link>
           </div>
         </div>
