@@ -4,58 +4,58 @@ import Link from "next/link";
 export default function ProjectsSection() {
   const projects = [
     {
-      name: "GovTrack",
-      category: "Civic Tech",
-      categoryColor: "#22C55E",
-      desc: "Open platform tracking government schemes & public fund implementation across Indian states.",
-      tags: ["React", "Python", "GraphQL"],
-      stars: "1.2k",
-      forks: "340",
+      name: "CloudNative Orchestrator",
+      language: "Go",
+      dotColor: "#06b6d4",
+      accentColor: "#22d3ee",
+      desc: "A modern container orchestration platform built for scalability and performance",
+      stars: "12.5k",
+      forks: "2.3k",
     },
     {
-      name: "HealthSync",
-      category: "Healthcare",
-      categoryColor: "#FF7518",
-      desc: "Decentralized health record sync designed specifically for rural healthcare and Asha workers.",
-      tags: ["Next.js", "Rust", "PostgreSQL"],
-      stars: "890",
-      forks: "120",
+      name: "DataFlow Pipeline",
+      language: "Python",
+      dotColor: "#3b82f6",
+      accentColor: "#34d399",
+      desc: "Real-time data processing framework with distributed architecture",
+      stars: "8.9k",
+      forks: "1.5k",
     },
     {
-      name: "CodeMentor",
-      category: "Education",
-      categoryColor: "#9ca3af",
-      desc: "AI-assisted interactive coding platform and curriculum available in 10+ Indian regional languages.",
-      tags: ["Vue.js", "FastAPI", "PyTorch"],
-      stars: "2.4k",
-      forks: "560",
+      name: "ReactUI Components",
+      language: "TypeScript",
+      dotColor: "#3b82f6",
+      accentColor: "#f472b6",
+      desc: "Comprehensive component library with accessibility-first design",
+      stars: "15.2k",
+      forks: "3.1k",
     },
     {
-      name: "GreenTrace",
-      category: "Sustainability",
-      categoryColor: "#22C55E",
-      desc: "Carbon footprint analytics and reporting tool for Indian startups and SMEs in green tech.",
-      tags: ["TypeScript", "Node.js", "Docker"],
-      stars: "750",
-      forks: "95",
+      name: "ML Vision Toolkit",
+      language: "Python",
+      dotColor: "#3b82f6",
+      accentColor: "#ef4444",
+      desc: "Computer vision library powered by cutting-edge machine learning models",
+      stars: "9.8k",
+      forks: "1.9k",
     },
     {
-      name: "OpenLiteracy",
-      category: "Education",
-      categoryColor: "#FF7518",
-      desc: "Interactive regional language literacy tools, open stories, and digital books for schools.",
-      tags: ["Flutter", "Firebase", "Dart"],
-      stars: "1.5k",
-      forks: "410",
+      name: "SecureAuth Framework",
+      language: "Rust",
+      dotColor: "#f97316",
+      accentColor: "#3b82f6",
+      desc: "Enterprise-grade authentication and authorization solution",
+      stars: "6.7k",
+      forks: "987",
     },
     {
-      name: "AIVaani",
-      category: "Voice AI",
-      categoryColor: "#38BDF8",
-      desc: "Open voice dataset, speech-to-text models, and TTS toolkit for 22 scheduled Indian languages.",
-      tags: ["Python", "TensorFlow", "WebRTC"],
-      stars: "3.1k",
-      forks: "820",
+      name: "DevOps Automation",
+      language: "JavaScript",
+      dotColor: "#eab308",
+      accentColor: "#f97316",
+      desc: "Complete CI/CD automation suite for modern development workflows",
+      stars: "11.3k",
+      forks: "2.4k",
     },
   ];
 
@@ -80,17 +80,16 @@ export default function ProjectsSection() {
             marginBottom: "14px",
           }}
         >
-          <div style={{ width: "6px", height: "6px", backgroundColor: "#FF7518", borderRadius: "50%", boxShadow: "0 0 8px #FF7518" }} />
           <span
             style={{
-              fontSize: "12px",
-              color: "#FF7518",
+              fontSize: "13px",
+              color: "#FF6000",
               fontWeight: 700,
               letterSpacing: "1.5px",
               textTransform: "uppercase",
             }}
           >
-            FEATURED WORK
+            &lt; FEATURED WORK &gt;
           </span>
         </div>
 
@@ -142,10 +141,11 @@ export default function ProjectsSection() {
                 key={i}
                 className="project-card-item"
                 style={{
-                  background: "#0d0d0d",
-                  border: "1px solid rgba(255,255,255,0.06)",
-                  borderRadius: "4px",
-                  padding: "24px",
+                  backgroundColor: "#131315",
+                  borderRadius: "16px",
+                  border: "1px solid rgba(255, 255, 255, 0.07)",
+                  borderTop: `3.5px solid ${project.accentColor}`,
+                  padding: "30px 28px",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
@@ -155,42 +155,32 @@ export default function ProjectsSection() {
                 <div>
                   <div
                     style={{
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "10px",
+                      backgroundColor: "rgba(255, 255, 255, 0.05)",
+                      border: "1px solid rgba(255, 255, 255, 0.08)",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "space-between",
-                      marginBottom: "16px",
+                      justifyContent: "center",
+                      marginBottom: "20px",
                     }}
                   >
-                    <div
-                      style={{
-                        width: "36px",
-                        height: "36px",
-                        borderRadius: "4px",
-                        background: "rgba(255,255,255,0.05)",
-                        border: "1px solid rgba(255,255,255,0.1)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontWeight: 700,
-                        color: project.categoryColor,
-                        fontSize: "14px",
-                      }}
+                    <svg
+                      style={{ width: "20px", height: "20px", color: "#e5e7eb" }}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     >
-                      {project.name.slice(0, 2)}
-                    </div>
-                    <span
-                      style={{
-                        fontSize: "11px",
-                        fontWeight: 600,
-                        color: project.categoryColor,
-                        background: `${project.categoryColor}15`,
-                        border: `1px solid ${project.categoryColor}30`,
-                        padding: "3px 10px",
-                        borderRadius: "2px",
-                      }}
-                    >
-                      {project.category}
-                    </span>
+                      <circle cx="12" cy="18" r="3" />
+                      <circle cx="6" cy="6" r="3" />
+                      <circle cx="18" cy="6" r="3" />
+                      <path d="M18 9v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9" />
+                      <path d="M12 12v3" />
+                    </svg>
                   </div>
 
                   <h3
@@ -199,6 +189,8 @@ export default function ProjectsSection() {
                       fontWeight: 700,
                       color: "#ffffff",
                       marginBottom: "8px",
+                      letterSpacing: "-0.2px",
+                      lineHeight: 1.3,
                     }}
                   >
                     {project.name}
@@ -218,84 +210,142 @@ export default function ProjectsSection() {
                   <div
                     style={{
                       display: "flex",
+                      alignItems: "center",
                       gap: "8px",
-                      flexWrap: "wrap",
                       marginBottom: "24px",
                     }}
                   >
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        style={{
-                          fontSize: "11.5px",
-                          color: "#9ca3af",
-                          background: "rgba(255,255,255,0.04)",
-                          border: "1px solid rgba(255,255,255,0.08)",
-                          padding: "3px 8px",
-                          borderRadius: "2px",
-                        }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                    <span
+                      style={{
+                        width: "8px",
+                        height: "8px",
+                        borderRadius: "50%",
+                        backgroundColor: project.dotColor,
+                        display: "inline-block",
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontSize: "13px",
+                        fontWeight: 500,
+                        color: "#e5e7eb",
+                      }}
+                    >
+                      {project.language}
+                    </span>
                   </div>
                 </div>
 
                 <div
                   style={{
                     display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    paddingTop: "16px",
-                    borderTop: "1px solid rgba(255,255,255,0.06)",
-                    fontSize: "12.5px",
-                    color: "#9ca3af",
+                    flexDirection: "column",
+                    gap: "12px",
+                    marginTop: "auto",
                   }}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                    <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-                      ★ {project.stars}
-                    </span>
-                    <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-                      ⑂ {project.forks}
-                    </span>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "18px",
+                      color: "#9ca3af",
+                      fontSize: "13.5px",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                      <svg
+                        style={{ width: "16px", height: "16px", color: "#9ca3af" }}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                      </svg>
+                      <span style={{ fontWeight: 500 }}>{project.stars}</span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                      <svg
+                        style={{ width: "16px", height: "16px", color: "#9ca3af" }}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <circle cx="12" cy="18" r="3" />
+                        <circle cx="6" cy="6" r="3" />
+                        <circle cx="18" cy="6" r="3" />
+                        <path d="M18 9v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9" />
+                        <path d="M12 12v3" />
+                      </svg>
+                      <span style={{ fontWeight: 500 }}>{project.forks}</span>
+                    </div>
                   </div>
-                  <span style={{ color: "#FF7518", fontWeight: 600, fontSize: "12.5px" }}>
-                    View Code →
+
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "6px",
+                      color: "#f97316",
+                      fontWeight: 600,
+                      fontSize: "14px",
+                    }}
+                  >
+                    View Project
+                    <svg
+                      style={{ width: "15px", height: "15px" }}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                      <polyline points="15 3 21 3 21 9" />
+                      <line x1="10" y1="14" x2="21" y2="3" />
+                    </svg>
                   </span>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* "Coming Soon" Overlay Centered Cleanly Over Project Cards */}
+          {/* Subtle Blur & Dim Overlay */}
           <div
             style={{
               position: "absolute",
               inset: 0,
               backdropFilter: "blur(6px)",
               WebkitBackdropFilter: "blur(6px)",
-              background: "rgba(10, 10, 10, 0.65)",
+              background: "rgba(10, 10, 10, 0.7)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               padding: "16px",
               zIndex: 10,
-              borderRadius: "4px",
+              borderRadius: "16px",
             }}
           >
+            {/* Center Announcement Box */}
             <div
               className="coming-soon-card"
               style={{
-                background: "rgba(14, 14, 14, 0.95)",
-                border: "1px solid rgba(255, 96, 0, 0.35)",
-                borderRadius: "6px",
-                padding: "36px 28px",
-                maxWidth: "480px",
+                background: "rgba(13, 13, 15, 0.96)",
+                border: "1px solid rgba(255, 96, 0, 0.25)",
+                borderRadius: "16px",
+                padding: "48px 36px",
+                maxWidth: "560px",
                 width: "100%",
                 textAlign: "center",
                 boxShadow:
-                  "0 24px 70px rgba(0, 0, 0, 0.9), 0 0 40px rgba(255, 96, 0, 0.15)",
+                  "0 24px 80px rgba(0, 0, 0, 0.95), 0 0 40px rgba(255, 96, 0, 0.12)",
                 backdropFilter: "blur(16px)",
                 position: "relative",
               }}
@@ -304,13 +354,14 @@ export default function ProjectsSection() {
               <div
                 style={{
                   position: "absolute",
-                  top: "-1px",
-                  left: "-1px",
-                  width: "12px",
-                  height: "12px",
-                  borderTop: "2px solid #FF7518",
-                  borderLeft: "2px solid #FF7518",
+                  top: "-2px",
+                  left: "-2px",
+                  width: "16px",
+                  height: "16px",
+                  borderTop: "3px solid #FF6000",
+                  borderLeft: "3px solid #FF6000",
                   pointerEvents: "none",
+                  borderTopLeftRadius: "6px",
                 }}
               />
 
@@ -318,13 +369,14 @@ export default function ProjectsSection() {
               <div
                 style={{
                   position: "absolute",
-                  bottom: "-1px",
-                  right: "-1px",
-                  width: "12px",
-                  height: "12px",
-                  borderBottom: "2px solid #FF7518",
-                  borderRight: "2px solid #FF7518",
+                  bottom: "-2px",
+                  right: "-2px",
+                  width: "16px",
+                  height: "16px",
+                  borderBottom: "3px solid #FF6000",
+                  borderRight: "3px solid #FF6000",
                   pointerEvents: "none",
+                  borderBottomRightRadius: "6px",
                 }}
               />
 
@@ -333,12 +385,12 @@ export default function ProjectsSection() {
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: "8px",
-                  background: "rgba(255, 96, 0, 0.12)",
-                  border: "1px solid rgba(255, 96, 0, 0.3)",
-                  padding: "6px 16px",
-                  borderRadius: "2px",
-                  marginBottom: "16px",
+                  gap: "10px",
+                  background: "rgba(255, 96, 0, 0.08)",
+                  border: "1px solid rgba(255, 96, 0, 0.35)",
+                  padding: "8px 22px",
+                  borderRadius: "6px",
+                  marginBottom: "24px",
                 }}
               >
                 <div
@@ -346,31 +398,32 @@ export default function ProjectsSection() {
                     width: "8px",
                     height: "8px",
                     borderRadius: "50%",
-                    background: "#FF7518",
-                    boxShadow: "0 0 10px #FF7518",
+                    background: "#FF6000",
+                    boxShadow: "0 0 10px #FF6000",
                   }}
                 />
                 <span
                   style={{
-                    fontSize: "12px",
-                    fontWeight: 700,
-                    color: "#FF7518",
-                    letterSpacing: "1.5px",
+                    fontSize: "13px",
+                    fontWeight: 800,
+                    color: "#FF6000",
+                    letterSpacing: "2px",
                     textTransform: "uppercase",
                   }}
                 >
-                  Coming Soon
+                  COMING SOON
                 </span>
               </div>
 
               {/* Title */}
               <h3
                 style={{
-                  fontSize: "clamp(20px, 4vw, 24px)",
+                  fontSize: "clamp(22px, 3.8vw, 30px)",
                   fontWeight: 800,
                   color: "#ffffff",
-                  marginBottom: "10px",
+                  marginBottom: "16px",
                   letterSpacing: "-0.5px",
+                  lineHeight: 1.25,
                 }}
               >
                 Projects Showcase Launching Soon
@@ -379,10 +432,11 @@ export default function ProjectsSection() {
               {/* Subtext */}
               <p
                 style={{
-                  fontSize: "13.5px",
+                  fontSize: "15px",
                   color: "#9ca3af",
-                  lineHeight: 1.6,
-                  marginBottom: "24px",
+                  lineHeight: 1.65,
+                  maxWidth: "480px",
+                  margin: "0 auto 32px",
                 }}
               >
                 We are currently onboarding and curating high-impact open source repositories, civic tech tools, and AI initiatives across India.
@@ -394,28 +448,31 @@ export default function ProjectsSection() {
                   href="https://discord.gg"
                   target="_blank"
                   style={{
-                    background: "#FF7518",
+                    background: "#FF6000",
                     color: "#ffffff",
-                    padding: "12px 24px",
-                    borderRadius: "4px",
+                    padding: "14px 32px",
+                    borderRadius: "10px",
                     textDecoration: "none",
                     fontWeight: 700,
-                    fontSize: "14px",
+                    fontSize: "15px",
                     display: "inline-flex",
                     alignItems: "center",
-                    gap: "8px",
-                    boxShadow: "0 4px 16px rgba(255, 96, 0, 0.35)",
+                    gap: "10px",
+                    boxShadow: "0 6px 25px rgba(255, 96, 0, 0.45)",
+                    transition: "all 0.2s ease",
                   }}
                   onMouseEnter={(e) => {
                     (e.currentTarget as HTMLElement).style.background = "#e65600";
+                    (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.background = "#FF7518";
+                    (e.currentTarget as HTMLElement).style.background = "#FF6000";
+                    (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
                   }}
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
                   </svg>
                   Get Notified on Launch
                 </Link>

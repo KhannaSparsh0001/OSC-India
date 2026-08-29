@@ -1,8 +1,11 @@
+"use client";
 import Link from "next/link";
+import React from "react";
 
-function StarIcon({ className }: { className?: string }) {
+function StarIcon({ style, className }: { style?: React.CSSProperties; className?: string }) {
   return (
     <svg
+      style={style}
       className={className}
       viewBox="0 0 24 24"
       fill="none"
@@ -17,9 +20,10 @@ function StarIcon({ className }: { className?: string }) {
   );
 }
 
-function GitForkIcon({ className }: { className?: string }) {
+function GitForkIcon({ style, className }: { style?: React.CSSProperties; className?: string }) {
   return (
     <svg
+      style={style}
       className={className}
       viewBox="0 0 24 24"
       fill="none"
@@ -38,14 +42,15 @@ function GitForkIcon({ className }: { className?: string }) {
   );
 }
 
-function ExternalLinkIcon({ className }: { className?: string }) {
+function ExternalLinkIcon({ style, className }: { style?: React.CSSProperties; className?: string }) {
   return (
     <svg
+      style={style}
       className={className}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
+      strokeWidth="2.2"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
@@ -68,11 +73,11 @@ export interface ProjectCardProps {
 }
 
 const languageColors: Record<string, string> = {
-  "Go": "bg-cyan-500",
-  "Python": "bg-blue-500",
-  "TypeScript": "bg-blue-600",
-  "Rust": "bg-orange-600",
-  "JavaScript": "bg-yellow-400",
+  "Go": "#06b6d4",         // Cyan
+  "Python": "#3b82f6",     // Blue
+  "TypeScript": "#3b82f6", // Blue
+  "Rust": "#f97316",       // Orange
+  "JavaScript": "#eab308", // Yellow
 };
 
 export default function ProjectCard({
@@ -84,69 +89,130 @@ export default function ProjectCard({
   githubUrl,
   accentColor,
 }: ProjectCardProps) {
-  const dotColor = languageColors[language] || "bg-gray-400";
+  const dotColor = languageColors[language] || accentColor || "#9ca3af";
 
   return (
     <div
-      className="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl flex flex-col h-full border-t-[4px]"
-      style={{ borderTopColor: accentColor }}
+      style={{
+        backgroundColor: "#131315",
+        borderRadius: "16px",
+        border: "1px solid rgba(255, 255, 255, 0.07)",
+        borderTop: `3.5px solid ${accentColor}`,
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        height: "100%",
+        padding: "30px 28px",
+        transition: "all 0.3s ease",
+        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.4)",
+      }}
+      className="hover:-translate-y-1 hover:shadow-2xl"
     >
-      <div style={{ padding: '28px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-        {/* Header Icon */}
-        <div className="w-11 h-11 rounded-xl bg-[rgba(255,255,255,0.08)] flex items-center justify-center mb-5 border border-[rgba(255,255,255,0.03)]">
-          <svg
-            className="w-5 h-5 text-gray-200"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-            <path d="M9 18c-4.51 2-5-2-7-2" />
-          </svg>
+      <div>
+        {/* Header Icon Box */}
+        <div
+          style={{
+            width: "40px",
+            height: "40px",
+            borderRadius: "10px",
+            backgroundColor: "rgba(255, 255, 255, 0.05)",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: "20px",
+          }}
+        >
+          <GitForkIcon style={{ width: "20px", height: "20px", color: "#e5e7eb" }} />
         </div>
 
-        {/* Title & Description */}
-        <h3 className="text-[19px] font-bold text-white mb-2 tracking-tight">{title}</h3>
-        <p className="text-[var(--text-secondary)] text-[14px] mb-6 leading-relaxed">
+        {/* Title */}
+        <h3
+          style={{
+            fontSize: "18px",
+            fontWeight: 700,
+            color: "#ffffff",
+            marginBottom: "8px",
+            letterSpacing: "-0.2px",
+            lineHeight: 1.3,
+          }}
+        >
+          {title}
+        </h3>
+
+        {/* Description */}
+        <p
+          style={{
+            fontSize: "13.5px",
+            color: "#9ca3af",
+            lineHeight: 1.6,
+            marginBottom: "20px",
+          }}
+        >
           {description}
         </p>
 
-        {/* Bottom Section (Tag + Stats) pushed to bottom */}
-        <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column' }}>
-          {/* Tech Tag */}
-          <div className="flex items-center gap-2 mb-6">
-          <div className="flex items-center gap-2 bg-[rgba(255,255,255,0.12)] px-3 py-1.5 rounded-full">
-            <div className={`w-2 h-2 rounded-full ${dotColor}`} />
-            <span className="text-[13px] font-medium text-gray-200 tracking-wide">{language}</span>
+        {/* Tech Language Indicator */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            marginBottom: "24px",
+          }}
+        >
+          <span
+            style={{
+              width: "8px",
+              height: "8px",
+              borderRadius: "50%",
+              backgroundColor: dotColor,
+              display: "inline-block",
+            }}
+          />
+          <span
+            style={{
+              fontSize: "13px",
+              fontWeight: 500,
+              color: "#e5e7eb",
+            }}
+          >
+            {language}
+          </span>
+        </div>
+      </div>
+
+      {/* Footer Area: Stats & Link */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "auto" }}>
+        {/* Stats Row */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "18px",
+            color: "#9ca3af",
+            fontSize: "13.5px",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <StarIcon style={{ width: "16px", height: "16px", color: "#9ca3af" }} />
+            <span style={{ fontWeight: 500 }}>{stars}</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <GitForkIcon style={{ width: "16px", height: "16px", color: "#9ca3af" }} />
+            <span style={{ fontWeight: 500 }}>{forks}</span>
           </div>
         </div>
 
-          {/* Stats & Link */}
-          <div style={{ paddingTop: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <div className="flex items-center gap-5 text-[var(--text-secondary)] text-[14px]">
-              <div className="flex items-center gap-1.5">
-                <StarIcon className="w-[18px] h-[18px]" />
-                <span className="font-medium">{stars}</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <GitForkIcon className="w-[18px] h-[18px]" />
-                <span className="font-medium">{forks}</span>
-              </div>
-            </div>
-
-            <Link
-              href={githubUrl}
-              target="_blank"
-              className="flex items-center gap-1.5 text-[var(--orange)] text-[14px] font-semibold hover:text-[var(--orange-dark)] transition-colors w-fit"
-            >
-              View Project <ExternalLinkIcon className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
+        {/* View Project Link */}
+        <Link
+          href={githubUrl}
+          target="_blank"
+          className="inline-flex items-center gap-1.5 text-[#f97316] hover:text-[#ea580c] text-[14px] font-semibold transition-colors w-fit no-underline"
+        >
+          View Project <ExternalLinkIcon style={{ width: "15px", height: "15px" }} />
+        </Link>
       </div>
     </div>
   );
