@@ -103,7 +103,7 @@ export default function ProjectCard({
         flexDirection: "column",
         justifyContent: "space-between",
         height: "100%",
-        padding: "30px 28px",
+        padding: "clamp(22px, 5vw, 30px) clamp(20px, 4vw, 28px)",
         transition: "all 0.3s ease",
         boxShadow: "0 4px 20px rgba(0, 0, 0, 0.4)",
       }}
@@ -113,29 +113,29 @@ export default function ProjectCard({
         {/* Header Icon Box */}
         <div
           style={{
-            width: "40px",
-            height: "40px",
+            width: "38px",
+            height: "38px",
             borderRadius: "10px",
             backgroundColor: "rgba(255, 255, 255, 0.05)",
             border: "1px solid rgba(255, 255, 255, 0.08)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            marginBottom: "20px",
+            marginBottom: "clamp(14px, 3vw, 20px)",
           }}
         >
-          <GitForkIcon style={{ width: "20px", height: "20px", color: "#e5e7eb" }} />
+          <GitForkIcon style={{ width: "18px", height: "18px", color: "#e5e7eb" }} />
         </div>
 
         {/* Title */}
         <h3
           style={{
-            fontSize: "18px",
+            fontSize: "clamp(16.5px, 2.5vw, 18px)",
             fontWeight: 700,
             color: "#ffffff",
             marginBottom: "8px",
             letterSpacing: "-0.2px",
-            lineHeight: 1.3,
+            lineHeight: 1.35,
           }}
         >
           {title}
@@ -144,10 +144,10 @@ export default function ProjectCard({
         {/* Description */}
         <p
           style={{
-            fontSize: "13.5px",
+            fontSize: "clamp(13px, 2vw, 13.5px)",
             color: "#9ca3af",
             lineHeight: 1.6,
-            marginBottom: "20px",
+            marginBottom: "16px",
           }}
         >
           {description}
@@ -159,7 +159,7 @@ export default function ProjectCard({
             display: "flex",
             alignItems: "center",
             gap: "8px",
-            marginBottom: "24px",
+            marginBottom: "clamp(16px, 3.5vw, 24px)",
           }}
         >
           <span
@@ -169,6 +169,7 @@ export default function ProjectCard({
               borderRadius: "50%",
               backgroundColor: dotColor,
               display: "inline-block",
+              flexShrink: 0,
             }}
           />
           <span
@@ -190,17 +191,17 @@ export default function ProjectCard({
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "18px",
+            gap: "16px",
             color: "#9ca3af",
-            fontSize: "13.5px",
+            fontSize: "13px",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <StarIcon style={{ width: "16px", height: "16px", color: "#9ca3af" }} />
+            <StarIcon style={{ width: "15px", height: "15px", color: "#9ca3af" }} />
             <span style={{ fontWeight: 500 }}>{stars}</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <GitForkIcon style={{ width: "16px", height: "16px", color: "#9ca3af" }} />
+            <GitForkIcon style={{ width: "15px", height: "15px", color: "#9ca3af" }} />
             <span style={{ fontWeight: 500 }}>{forks}</span>
           </div>
         </div>
@@ -209,7 +210,7 @@ export default function ProjectCard({
         <Link
           href={githubUrl}
           target="_blank"
-          className="inline-flex items-center gap-1.5 text-[#f97316] hover:text-[#ea580c] text-[14px] font-semibold transition-colors w-fit no-underline"
+          className="inline-flex items-center gap-1.5 text-[#f97316] hover:text-[#ea580c] text-[13.5px] sm:text-[14px] font-semibold transition-colors w-fit no-underline py-0.5"
         >
           View Project <ExternalLinkIcon style={{ width: "15px", height: "15px" }} />
         </Link>

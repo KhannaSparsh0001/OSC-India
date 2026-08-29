@@ -64,23 +64,23 @@ export default function ProjectsPage() {
   return (
     <main className="min-h-screen bg-[var(--bg)] flex flex-col">
       <Navbar />
-      <div style={{ height: '96px', width: '100%', flexShrink: 0 }} aria-hidden="true" />
+      {/* Top clearance for fixed navbar */}
+      <div className="h-24 sm:h-28 md:h-32 w-full shrink-0" aria-hidden="true" />
       
-      <div className="flex-grow px-6 py-12" style={{ margin: '0 auto', maxWidth: '1280px', width: '100%' }}>
+      <div className="flex-grow px-5 sm:px-8 md:px-12 pb-16 max-w-7xl mx-auto w-full">
         {/* Header Section */}
-        <div style={{ textAlign: 'center', marginBottom: '64px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight" style={{ marginBottom: '12px' }}>
+        <div className="text-center mb-10 sm:mb-14 md:mb-16 flex flex-col items-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight mb-3">
             Our <span className="text-white">Projects</span>
           </h1>
-          <p className="text-[var(--text-secondary)] text-lg" style={{ maxWidth: '600px', textAlign: 'center' }}>
+          <p className="text-[var(--text-secondary)] text-sm sm:text-base md:text-lg max-w-md sm:max-w-xl text-center px-3 leading-relaxed">
             Discover innovative open source projects that are shaping the future of technology
           </p>
         </div>
 
         {/* Project Grid */}
         <div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-16"
-          style={{ gap: '32px' }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-6 lg:gap-8 mb-12 sm:mb-16"
         >
           {mockProjects.map((project, index) => (
             <ProjectCard key={index} {...project} />
@@ -88,10 +88,9 @@ export default function ProjectsPage() {
         </div>
 
         {/* CTA Button */}
-        <div style={{ margin: '64px 0 96px 0', display: 'flex', justifyContent: 'center' }}>
+        <div className="my-8 sm:my-14 md:my-20 flex justify-center w-full px-4">
           <button 
-            className="bg-[var(--orange)] hover:bg-[var(--orange-dark)] text-white font-semibold rounded-full transition-colors duration-300 shadow-lg shadow-orange-500/20"
-            style={{ padding: '16px 40px' }}
+            className="bg-[var(--orange)] hover:bg-[var(--orange-dark)] text-white font-semibold rounded-full transition-all duration-300 shadow-lg shadow-orange-500/20 px-8 py-3.5 sm:px-10 sm:py-4 text-sm sm:text-base w-full sm:w-auto text-center cursor-pointer"
           >
             Explore All Projects
           </button>

@@ -64,7 +64,7 @@ export default function Navbar() {
                 letterSpacing: "-0.2px",
               }}
             >
-              Open Source Connect <span style={{ color: "var(--orange)" }}>India</span>
+              Open Source Connect India 2026
             </span>
           </div>
         </Link>
