@@ -164,15 +164,8 @@ img { display: block; max-width: 100%; }
     font-size: 15px !important;
     letter-spacing: 2px !important;
   }
-  .hero-divider {
-    max-width: 320px !important;
-    margin-bottom: 18px !important;
-  }
   .hero-date-box span {
     font-size: 14px !important;
-  }
-  .hero-scroll-indicator {
-    display: none !important;
   }
 
   /* --- Stats --- */

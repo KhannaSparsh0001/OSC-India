@@ -203,45 +203,6 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Divider */}
-          <div
-            className="hero-divider"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              width: "100%",
-              maxWidth: "380px",
-              marginBottom: "24px",
-            }}
-          >
-            <div
-              style={{
-                flex: 1,
-                height: "1.5px",
-                background: "linear-gradient(90deg, rgba(255, 96, 0, 0.2) 0%, rgba(255, 96, 0, 0) 100%)",
-              }}
-            />
-            <div
-              style={{
-                display: "flex",
-                gap: "6px",
-                alignItems: "center",
-              }}
-            >
-              <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: "rgba(255, 96, 0, 0.5)", boxShadow: "0 0 4px rgba(255, 96, 0, 0.3)" }} />
-              <div style={{ width: "7px", height: "7px", borderRadius: "50%", background: "rgba(34, 197, 94, 0.5)", boxShadow: "0 0 6px rgba(34, 197, 94, 0.3)" }} />
-              <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: "rgba(255, 96, 0, 0.5)", boxShadow: "0 0 4px rgba(255, 96, 0, 0.3)" }} />
-            </div>
-            <div
-              style={{
-                flex: 1,
-                height: "1.5px",
-                background: "linear-gradient(90deg, rgba(34, 197, 94, 0) 0%, rgba(34, 197, 94, 0.2) 100%)",
-              }}
-            />
-          </div>
-
           {/* Date Label */}
           <div
             className="hero-date-box"
@@ -281,54 +242,6 @@ export default function HeroSection() {
             </span>
           </div>
         </div>
-      </div>
-
-      {/* Downward Scroll Indicator Arrow for Desktop */}
-      <div
-        className="hero-scroll-indicator"
-        style={{
-          position: "absolute",
-          bottom: "32px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 2,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Link
-          href="#about"
-          aria-label="Scroll to About section"
-          style={{
-            color: "#FF7518",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            textDecoration: "none",
-            transition: "transform 0.2s ease",
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.transform = "translateY(3px)";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-          }}
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#FF7518"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <polyline points="19 12 12 19 5 12" />
-          </svg>
-        </Link>
       </div>
     </section>
   );
