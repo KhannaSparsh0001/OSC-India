@@ -70,7 +70,7 @@ export default function ProjectsPage() {
         {/* Header Section */}
         <div style={{ textAlign: 'center', marginBottom: '64px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight" style={{ marginBottom: '12px' }}>
-            Our <span className="text-[var(--orange)]">Projects</span>
+            Our <span className="text-white">Projects</span>
           </h1>
           <p className="text-[var(--text-secondary)] text-lg" style={{ maxWidth: '600px', textAlign: 'center' }}>
             Discover innovative open source projects that are shaping the future of technology
