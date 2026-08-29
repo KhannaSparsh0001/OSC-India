@@ -144,8 +144,8 @@ export default function WhatsNewSection() {
           }}
         >
           <span style={{ color: "#ffffff" }}>What&apos;s New in </span>
-          <span style={{ color: "#22C55E" }}>OSCI </span>
-          <span style={{ color: "#FF7518" }}>2026</span>
+          <span style={{ color: "#ffffff" }}>OSCI </span>
+          <span style={{ color: "#ffffff" }}>2026</span>
         </h2>
 
         <p

@@ -105,9 +105,9 @@ export default function ProjectsSection() {
           }}
         >
           <span style={{ color: "#ffffff" }}>Innovative projects built by </span>
-          <span style={{ color: "#22C55E" }}>our</span>
+          <span style={{ color: "#ffffff" }}>our</span>
           <br />
-          <span style={{ color: "#FF7518" }}>community.</span>
+          <span style={{ color: "#ffffff" }}>community.</span>
         </h2>
 
         <p
