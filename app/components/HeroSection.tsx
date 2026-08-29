@@ -66,13 +66,13 @@ export default function HeroSection() {
               lineHeight: 1.1,
               letterSpacing: "-1.5px",
               marginBottom: "22px",
+              color: "#ffffff",
             }}
           >
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline" }}>
               <span
                 style={{
-                  color: "#FF7518",
-                  textShadow: "0 0 35px rgba(255, 96, 0, 0.35)",
+                  color: "#ffffff",
                   marginRight: "12px",
                 }}
               >
@@ -80,10 +80,7 @@ export default function HeroSection() {
               </span>
               <span
                 style={{
-                  background:
-                    "linear-gradient(90deg, #F8D3C5 0%, #F6C8AF 12%, #4ADE80 40%, #22C55E 65%, #A7F3D0 85%, #E2FBE8 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
+                  color: "#ffffff",
                   display: "inline-block",
                 }}
               >
@@ -93,8 +90,7 @@ export default function HeroSection() {
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", marginTop: "4px" }}>
               <span
                 style={{
-                  color: "#FF7518",
-                  textShadow: "0 0 35px rgba(255, 96, 0, 0.35)",
+                  color: "#ffffff",
                   marginRight: "12px",
                 }}
               >
@@ -102,14 +98,20 @@ export default function HeroSection() {
               </span>
               <span
                 style={{
-                  background:
-                    "linear-gradient(90deg, #00C853 0%, #22C55E 40%, #86EFAC 55%, #FED7AA 80%, #FEE2D5 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
+                  color: "#ffffff",
+                  marginRight: "12px",
                   display: "inline-block",
                 }}
               >
                 India
+              </span>
+              <span
+                style={{
+                  color: "#ffffff",
+                  display: "inline-block",
+                }}
+              >
+                2026
               </span>
             </div>
           </h1>
