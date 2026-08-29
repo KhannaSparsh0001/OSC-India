@@ -331,3 +331,70 @@ img { display: block; max-width: 100%; }
     padding: 50px 16px !important;
   }
 }
+
+/* ===========================
+   PROJECTS PAGE
+   =========================== */
+
+/* Page wrapper: centred, with safe side padding */
+.projects-page-wrapper {
+  flex-grow: 1;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;        /* 20px side gap on mobile */
+}
+
+/* Cards grid: single column on mobile */
+.projects-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+/* CTA button */
+.projects-cta-btn {
+  width: 100%;
+  max-width: 340px;
+  background: var(--orange);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 14px 32px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.2s ease;
+  box-shadow: 0 4px 20px rgba(255, 117, 24, 0.3);
+}
+.projects-cta-btn:hover {
+  background: var(--orange-dark);
+}
+
+/* Tablet (≥ 640px): 2-column grid, wider padding */
+@media (min-width: 640px) {
+  .projects-page-wrapper {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .projects-cta-btn {
+    width: auto;
+  }
+}
+
+/* Desktop (≥ 1024px): 3-column grid */
+@media (min-width: 1024px) {
+  .projects-page-wrapper {
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+  .projects-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+}
+
