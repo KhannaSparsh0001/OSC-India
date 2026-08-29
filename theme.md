@@ -13,7 +13,7 @@ The website follows a **Premium Dark Mode** aesthetic. It relies heavily on deep
 *   **Card Background 2 (`--bg-card2`):** `#161616` (Slightly lighter - used for elevated elements or hover states)
 
 ### Brand & Accents
-*   **Primary Brand (`--orange`):** `#FF6000` (Vibrant Orange - used for buttons, links, highlights)
+*   **Primary Brand (`--orange`):** `#FF7518` (Vibrant Orange - used for buttons, links, highlights)
 *   **Primary Hover (`--orange-dark`):** `#e65600` (Darker orange for button hover states)
 *   **Success/Accent (`--green`):** `#22C55E` (Standard Tailwind green - used for status, "live" indicators, or positive stats)
 *   **Selection Highlight:** `rgba(255, 96, 0, 0.3)` (A translucent orange when text is highlighted)

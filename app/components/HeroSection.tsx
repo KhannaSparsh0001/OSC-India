@@ -71,7 +71,7 @@ export default function HeroSection() {
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline" }}>
               <span
                 style={{
-                  color: "#FF6000",
+                  color: "#FF7518",
                   textShadow: "0 0 35px rgba(255, 96, 0, 0.35)",
                   marginRight: "12px",
                 }}
@@ -93,7 +93,7 @@ export default function HeroSection() {
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", marginTop: "4px" }}>
               <span
                 style={{
-                  color: "#FF6000",
+                  color: "#FF7518",
                   textShadow: "0 0 35px rgba(255, 96, 0, 0.35)",
                   marginRight: "12px",
                 }}
@@ -145,7 +145,7 @@ export default function HeroSection() {
               href="#register"
               className="hero-register-btn"
               style={{
-                background: "#FF6000",
+                background: "#FF7518",
                 color: "#ffffff",
                 padding: "13px 30px",
                 borderRadius: "10px",
@@ -164,7 +164,7 @@ export default function HeroSection() {
                 (e.currentTarget as HTMLElement).style.boxShadow = "0 6px 25px rgba(255, 96, 0, 0.55)";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.background = "#FF6000";
+                (e.currentTarget as HTMLElement).style.background = "#FF7518";
                 (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
                 (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 20px rgba(255, 96, 0, 0.4)";
               }}
@@ -254,7 +254,7 @@ export default function HeroSection() {
               height="18"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#FF6000"
+              stroke="#FF7518"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -263,9 +263,9 @@ export default function HeroSection() {
               <line x1="16" y1="2" x2="16" y2="6" />
               <line x1="8" y1="2" x2="8" y2="6" />
               <line x1="3" y1="10" x2="21" y2="10" />
-              <circle cx="8" cy="15" r="1" fill="#FF6000" />
-              <circle cx="12" cy="15" r="1" fill="#FF6000" />
-              <circle cx="16" cy="15" r="1" fill="#FF6000" />
+              <circle cx="8" cy="15" r="1" fill="#FF7518" />
+              <circle cx="12" cy="15" r="1" fill="#FF7518" />
+              <circle cx="16" cy="15" r="1" fill="#FF7518" />
             </svg>
             <span
               style={{
@@ -299,7 +299,7 @@ export default function HeroSection() {
           href="#about"
           aria-label="Scroll to About section"
           style={{
-            color: "#FF6000",
+            color: "#FF7518",
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
@@ -318,7 +318,7 @@ export default function HeroSection() {
             height="20"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#FF6000"
+            stroke="#FF7518"
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"

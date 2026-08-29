@@ -117,12 +117,12 @@ export default function Navbar() {
               fontWeight: 500,
               padding: "6px 14px",
               borderRadius: "6px",
-              border: "1px solid #FF6000",
+              border: "1px solid #FF7518",
               background: "rgba(255,255,255,0.03)",
               transition: "all 0.2s",
             }}
             onMouseEnter={(e) => {
-              (e.target as HTMLElement).style.borderColor = "#FF6000";
+              (e.target as HTMLElement).style.borderColor = "#FF7518";
               (e.target as HTMLElement).style.color = "#ffffff";
             }}
             onMouseLeave={(e) => {

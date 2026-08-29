@@ -15,7 +15,7 @@ export default function ProjectsSection() {
     {
       name: "HealthSync",
       category: "Healthcare",
-      categoryColor: "#FF6000",
+      categoryColor: "#FF7518",
       desc: "Decentralized health record sync designed specifically for rural healthcare and Asha workers.",
       tags: ["Next.js", "Rust", "PostgreSQL"],
       stars: "890",
@@ -42,7 +42,7 @@ export default function ProjectsSection() {
     {
       name: "OpenLiteracy",
       category: "Education",
-      categoryColor: "#FF6000",
+      categoryColor: "#FF7518",
       desc: "Interactive regional language literacy tools, open stories, and digital books for schools.",
       tags: ["Flutter", "Firebase", "Dart"],
       stars: "1.5k",
@@ -80,11 +80,11 @@ export default function ProjectsSection() {
             marginBottom: "14px",
           }}
         >
-          <div style={{ width: "6px", height: "6px", backgroundColor: "#FF6000", borderRadius: "50%", boxShadow: "0 0 8px #FF6000" }} />
+          <div style={{ width: "6px", height: "6px", backgroundColor: "#FF7518", borderRadius: "50%", boxShadow: "0 0 8px #FF7518" }} />
           <span
             style={{
               fontSize: "12px",
-              color: "#FF6000",
+              color: "#FF7518",
               fontWeight: 700,
               letterSpacing: "1.5px",
               textTransform: "uppercase",
@@ -107,7 +107,7 @@ export default function ProjectsSection() {
           <span style={{ color: "#ffffff" }}>Innovative projects built by </span>
           <span style={{ color: "#22C55E" }}>our</span>
           <br />
-          <span style={{ color: "#FF6000" }}>community.</span>
+          <span style={{ color: "#FF7518" }}>community.</span>
         </h2>
 
         <p
@@ -260,7 +260,7 @@ export default function ProjectsSection() {
                       ⑂ {project.forks}
                     </span>
                   </div>
-                  <span style={{ color: "#FF6000", fontWeight: 600, fontSize: "12.5px" }}>
+                  <span style={{ color: "#FF7518", fontWeight: 600, fontSize: "12.5px" }}>
                     View Code →
                   </span>
                 </div>
@@ -308,8 +308,8 @@ export default function ProjectsSection() {
                   left: "-1px",
                   width: "12px",
                   height: "12px",
-                  borderTop: "2px solid #FF6000",
-                  borderLeft: "2px solid #FF6000",
+                  borderTop: "2px solid #FF7518",
+                  borderLeft: "2px solid #FF7518",
                   pointerEvents: "none",
                 }}
               />
@@ -322,8 +322,8 @@ export default function ProjectsSection() {
                   right: "-1px",
                   width: "12px",
                   height: "12px",
-                  borderBottom: "2px solid #FF6000",
-                  borderRight: "2px solid #FF6000",
+                  borderBottom: "2px solid #FF7518",
+                  borderRight: "2px solid #FF7518",
                   pointerEvents: "none",
                 }}
               />
@@ -346,15 +346,15 @@ export default function ProjectsSection() {
                     width: "8px",
                     height: "8px",
                     borderRadius: "50%",
-                    background: "#FF6000",
-                    boxShadow: "0 0 10px #FF6000",
+                    background: "#FF7518",
+                    boxShadow: "0 0 10px #FF7518",
                   }}
                 />
                 <span
                   style={{
                     fontSize: "12px",
                     fontWeight: 700,
-                    color: "#FF6000",
+                    color: "#FF7518",
                     letterSpacing: "1.5px",
                     textTransform: "uppercase",
                   }}
@@ -394,7 +394,7 @@ export default function ProjectsSection() {
                   href="https://discord.gg"
                   target="_blank"
                   style={{
-                    background: "#FF6000",
+                    background: "#FF7518",
                     color: "#ffffff",
                     padding: "12px 24px",
                     borderRadius: "4px",
@@ -410,7 +410,7 @@ export default function ProjectsSection() {
                     (e.currentTarget as HTMLElement).style.background = "#e65600";
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.background = "#FF6000";
+                    (e.currentTarget as HTMLElement).style.background = "#FF7518";
                   }}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

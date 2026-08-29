@@ -37,11 +37,11 @@ export default function SponsorsSection() {
             marginBottom: "14px",
           }}
         >
-          <div style={{ width: "6px", height: "6px", backgroundColor: "#FF6000", borderRadius: "50%", boxShadow: "0 0 8px #FF6000" }} />
+          <div style={{ width: "6px", height: "6px", backgroundColor: "#FF7518", borderRadius: "50%", boxShadow: "0 0 8px #FF7518" }} />
           <span
             style={{
               fontSize: "12px",
-              color: "#FF6000",
+              color: "#FF7518",
               fontWeight: 700,
               letterSpacing: "1.5px",
               textTransform: "uppercase",
@@ -65,7 +65,7 @@ export default function SponsorsSection() {
           <span style={{ color: "#22C55E" }}>Future</span>
           <br />
           <span style={{ color: "#ffffff" }}>with Amazing </span>
-          <span style={{ color: "#FF6000" }}>Sponsors</span>
+          <span style={{ color: "#FF7518" }}>Sponsors</span>
         </h2>
 
         <p
@@ -153,7 +153,7 @@ export default function SponsorsSection() {
               style={{
                 fontSize: "12px",
                 fontWeight: 700,
-                color: "#FF6000",
+                color: "#FF7518",
                 letterSpacing: "1.5px",
                 textTransform: "uppercase",
                 marginBottom: "16px",

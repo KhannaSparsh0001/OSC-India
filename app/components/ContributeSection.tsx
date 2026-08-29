@@ -23,7 +23,7 @@ export default function ContributeSection() {
       ),
       label: "Contribute",
       desc: "Make a difference by contributing to real world solutions.",
-      color: "#FF6000",
+      color: "#FF7518",
     },
     {
       icon: (
