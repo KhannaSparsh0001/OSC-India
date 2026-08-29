@@ -466,4 +466,17 @@ img { display: block; max-width: 100%; }
   }
 }
 
+/* ===========================
+   NAVBAR ACTIVE / HOVER UNDERLINE
+   =========================== */
+.nav-link-item:hover .nav-underline {
+  transform: scaleX(1) !important;
+  opacity: 1 !important;
+}
+.nav-link-item:hover span:first-child {
+  color: #ffffff !important;
+}
+
+
+
 
