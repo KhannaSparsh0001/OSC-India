@@ -82,9 +82,9 @@ function BadgeContent() {
     roleBorder = "rgba(245, 158, 11, 0.3)";
   } else if (person === "project-admin") {
     roleText = "PROJECT ADMIN";
-    roleColor = "#22c55e"; // Green
-    roleBg = "rgba(34, 197, 94, 0.1)";
-    roleBorder = "rgba(34, 197, 94, 0.3)";
+    roleColor = "#ef4444"; // Crimson Red
+    roleBg = "rgba(239, 68, 68, 0.1)";
+    roleBorder = "rgba(239, 68, 68, 0.3)";
   }
 
   const [name, setName] = useState("");
@@ -296,7 +296,7 @@ function BadgeContent() {
                     )}
                   </div>
                   
-                  {/* The Star Badge (for Mentor/Admin) */}
+                  {/* The Star/Shield Badge (for Mentor/Admin) */}
                   {(person === 'mentor' || person === 'project-admin') && (
                     <div style={{
                       position: 'absolute',
@@ -304,18 +304,24 @@ function BadgeContent() {
                       right: '2%',
                       width: 'clamp(20px, 6cqw, 28px)',
                       height: 'clamp(20px, 6cqw, 28px)',
-                      background: 'linear-gradient(135deg, #f59e0b, #ea580c)',
+                      background: person === 'mentor' ? 'linear-gradient(135deg, #f59e0b, #ea580c)' : 'linear-gradient(135deg, #ef4444, #b91c1c)',
                       border: '2px solid #121214',
                       borderRadius: '50%',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      boxShadow: '0 4px 10px rgba(245,158,11,0.5)',
+                      boxShadow: person === 'mentor' ? '0 4px 10px rgba(245,158,11,0.5)' : '0 4px 10px rgba(239,68,68,0.5)',
                       zIndex: 3
                     }}>
-                      <svg width="60%" height="60%" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                      </svg>
+                      {person === 'mentor' ? (
+                        <svg width="60%" height="60%" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                        </svg>
+                      ) : (
+                        <svg width="55%" height="55%" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                        </svg>
+                      )}
                     </div>
                   )}
                 </div>
