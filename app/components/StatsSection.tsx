@@ -121,8 +121,7 @@ export default function StatsSection() {
           >
             <span style={{ color: "#ffffff" }}>Building the</span>
             <br />
-            <span style={{ color: "#FF7518" }}>Future </span>
-            <span style={{ color: "#22C55E" }}>Together</span>
+            <span style={{ color: "#ffffff" }}>Future Together</span>
           </h2>
 
           <p

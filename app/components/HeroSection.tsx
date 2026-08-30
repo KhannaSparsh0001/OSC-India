@@ -66,13 +66,13 @@ export default function HeroSection() {
               lineHeight: 1.1,
               letterSpacing: "-1.5px",
               marginBottom: "22px",
+              color: "#ffffff",
             }}
           >
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline" }}>
               <span
                 style={{
-                  color: "#FF7518",
-                  textShadow: "0 0 35px rgba(255, 96, 0, 0.35)",
+                  color: "#ffffff",
                   marginRight: "12px",
                 }}
               >
@@ -80,10 +80,7 @@ export default function HeroSection() {
               </span>
               <span
                 style={{
-                  background:
-                    "linear-gradient(90deg, #F8D3C5 0%, #F6C8AF 12%, #4ADE80 40%, #22C55E 65%, #A7F3D0 85%, #E2FBE8 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
+                  color: "#ffffff",
                   display: "inline-block",
                 }}
               >
@@ -93,8 +90,7 @@ export default function HeroSection() {
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", marginTop: "4px" }}>
               <span
                 style={{
-                  color: "#FF7518",
-                  textShadow: "0 0 35px rgba(255, 96, 0, 0.35)",
+                  color: "#ffffff",
                   marginRight: "12px",
                 }}
               >
@@ -102,14 +98,20 @@ export default function HeroSection() {
               </span>
               <span
                 style={{
-                  background:
-                    "linear-gradient(90deg, #00C853 0%, #22C55E 40%, #86EFAC 55%, #FED7AA 80%, #FEE2D5 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
+                  color: "#ffffff",
+                  marginRight: "12px",
                   display: "inline-block",
                 }}
               >
                 India
+              </span>
+              <span
+                style={{
+                  color: "#ffffff",
+                  display: "inline-block",
+                }}
+              >
+                2026
               </span>
             </div>
           </h1>
@@ -201,45 +203,6 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Divider */}
-          <div
-            className="hero-divider"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              width: "100%",
-              maxWidth: "380px",
-              marginBottom: "24px",
-            }}
-          >
-            <div
-              style={{
-                flex: 1,
-                height: "1.5px",
-                background: "linear-gradient(90deg, rgba(255, 96, 0, 0.2) 0%, rgba(255, 96, 0, 0) 100%)",
-              }}
-            />
-            <div
-              style={{
-                display: "flex",
-                gap: "6px",
-                alignItems: "center",
-              }}
-            >
-              <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: "rgba(255, 96, 0, 0.5)", boxShadow: "0 0 4px rgba(255, 96, 0, 0.3)" }} />
-              <div style={{ width: "7px", height: "7px", borderRadius: "50%", background: "rgba(34, 197, 94, 0.5)", boxShadow: "0 0 6px rgba(34, 197, 94, 0.3)" }} />
-              <div style={{ width: "5px", height: "5px", borderRadius: "50%", background: "rgba(255, 96, 0, 0.5)", boxShadow: "0 0 4px rgba(255, 96, 0, 0.3)" }} />
-            </div>
-            <div
-              style={{
-                flex: 1,
-                height: "1.5px",
-                background: "linear-gradient(90deg, rgba(34, 197, 94, 0) 0%, rgba(34, 197, 94, 0.2) 100%)",
-              }}
-            />
-          </div>
-
           {/* Date Label */}
           <div
             className="hero-date-box"
@@ -279,54 +242,6 @@ export default function HeroSection() {
             </span>
           </div>
         </div>
-      </div>
-
-      {/* Downward Scroll Indicator Arrow for Desktop */}
-      <div
-        className="hero-scroll-indicator"
-        style={{
-          position: "absolute",
-          bottom: "32px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 2,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Link
-          href="#about"
-          aria-label="Scroll to About section"
-          style={{
-            color: "#FF7518",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            textDecoration: "none",
-            transition: "transform 0.2s ease",
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.transform = "translateY(3px)";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-          }}
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#FF7518"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <polyline points="19 12 12 19 5 12" />
-          </svg>
-        </Link>
       </div>
     </section>
   );

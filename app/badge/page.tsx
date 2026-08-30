@@ -3,7 +3,66 @@
 import React, { useState, useRef, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { Shield, Upload, User, SlidersHorizontal, RotateCw, Undo2, Check } from "lucide-react";
+function ShieldIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+    </svg>
+  );
+}
+
+function UploadIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="17 8 12 3 7 8" />
+      <line x1="12" y1="3" x2="12" y2="15" />
+    </svg>
+  );
+}
+
+function UserIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  );
+}
+
+function SlidersHorizontalIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="21" x2="14" y1="4" y2="4" />
+      <line x1="10" x2="3" y1="4" y2="4" />
+      <line x1="21" x2="12" y1="12" y2="12" />
+      <line x1="8" x2="3" y1="12" y2="12" />
+      <line x1="21" x2="16" y1="20" y2="20" />
+      <line x1="12" x2="3" y1="20" y2="20" />
+      <line x1="14" x2="14" y1="2" y2="6" />
+      <line x1="8" x2="8" y1="10" y2="14" />
+      <line x1="16" x2="16" y1="18" y2="22" />
+    </svg>
+  );
+}
+
+function Undo2Icon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 14 4 9l5-5" />
+      <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11" />
+    </svg>
+  );
+}
+
+function CheckIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  );
+}
+
 import html2canvas from "html2canvas";
 
 export default function BadgePage() {
@@ -194,7 +253,7 @@ export default function BadgePage() {
                       }} 
                     />
                   ) : (
-                    <User className="text-gray-500" style={{ width: '56px', height: '56px' }} />
+                    <UserIcon className="text-gray-500" style={{ width: '56px', height: '56px' }} />
                   )}
                 </div>
 
@@ -255,7 +314,7 @@ export default function BadgePage() {
 
             {/* Privacy Notice */}
             <div style={{ background: 'rgba(255, 96, 0, 0.05)', border: '1px solid rgba(255, 96, 0, 0.2)', padding: '16px', borderRadius: '12px', display: 'flex', gap: '16px', marginBottom: '32px' }}>
-              <Shield className="text-[var(--orange)]" style={{ width: '24px', height: '24px', flexShrink: 0 }} />
+              <ShieldIcon className="text-[var(--orange)]" style={{ width: '24px', height: '24px', flexShrink: 0 }} />
               <div>
                 <h4 style={{ color: 'white', fontSize: '14px', fontWeight: 600, marginBottom: '4px' }}>Privacy First</h4>
                 <p style={{ color: 'gray', fontSize: '12px' }}>We don't store your image. Your privacy is our priority.</p>
@@ -268,7 +327,7 @@ export default function BadgePage() {
               {/* Name Field */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <label style={{ color: 'white', fontSize: '12px', fontWeight: 700, letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <User style={{ width: '14px', height: '14px', color: 'var(--orange)' }} />
+                  <UserIcon style={{ width: '14px', height: '14px', color: 'var(--orange)' }} />
                   YOUR NAME <span style={{ color: 'red' }}>*</span>
                 </label>
                 <input 
@@ -285,7 +344,7 @@ export default function BadgePage() {
               {/* Photo Upload / Adjust Field */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <label style={{ color: 'white', fontSize: '12px', fontWeight: 700, letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Upload style={{ width: '14px', height: '14px', color: 'var(--orange)' }} />
+                  <UploadIcon style={{ width: '14px', height: '14px', color: 'var(--orange)' }} />
                   YOUR PHOTO <span style={{ color: 'red' }}>*</span>
                 </label>
                 
@@ -298,7 +357,7 @@ export default function BadgePage() {
                       onChange={handlePhotoUpload}
                       style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', width: '100%', height: '100%' }}
                     />
-                    <Upload style={{ width: '28px', height: '28px', color: 'var(--orange)', marginBottom: '12px' }} />
+                    <UploadIcon style={{ width: '28px', height: '28px', color: 'var(--orange)', marginBottom: '12px' }} />
                     <p style={{ color: 'white', fontSize: '13px', fontWeight: 500 }}>
                       Drop your photo here or <span style={{ color: 'var(--orange)' }}>browse</span>
                     </p>
@@ -315,7 +374,7 @@ export default function BadgePage() {
                         </div>
                         <div>
                           <p style={{ color: 'var(--orange)', fontSize: '13px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <Check style={{ width: '12px', height: '12px' }} /> Photo uploaded
+                            <CheckIcon style={{ width: '12px', height: '12px' }} /> Photo uploaded
                           </p>
                           <p style={{ color: 'gray', fontSize: '11px' }}>Ready for your badge</p>
                         </div>
@@ -326,7 +385,7 @@ export default function BadgePage() {
                         style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '6px 12px', borderRadius: '8px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}
                         className="hover:bg-[rgba(255,255,255,0.1)] transition-colors"
                       >
-                        <SlidersHorizontal style={{ width: '14px', height: '14px' }} />
+                        <SlidersHorizontalIcon style={{ width: '14px', height: '14px' }} />
                         {isAdjusting ? 'Close' : 'Adjust'}
                       </button>
                     </div>
@@ -399,14 +458,14 @@ export default function BadgePage() {
                             onClick={resetAdjustments}
                             style={{ flex: '1', background: 'rgba(255,96,0,0.1)', color: 'var(--orange)', padding: '10px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}
                           >
-                            <Undo2 style={{ width: '14px', height: '14px' }} /> Reset All
+                            <Undo2Icon style={{ width: '14px', height: '14px' }} /> Reset All
                           </button>
                           <button 
                             type="button" 
                             onClick={() => setIsAdjusting(false)}
                             style={{ flex: '1', background: 'var(--orange)', color: 'white', padding: '10px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}
                           >
-                            <Check style={{ width: '14px', height: '14px' }} /> Done
+                            <CheckIcon style={{ width: '14px', height: '14px' }} /> Done
                           </button>
                         </div>
                       </div>

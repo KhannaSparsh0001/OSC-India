@@ -2,7 +2,6 @@ import ProjectCard, { ProjectCardProps } from "../components/ProjectCard";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
-// Mock Data representing the projects from the Figma design
 const mockProjects: ProjectCardProps[] = [
   {
     title: "CloudNative Orchestrator",
@@ -11,7 +10,7 @@ const mockProjects: ProjectCardProps[] = [
     stars: "12.5k",
     forks: "2.3k",
     githubUrl: "#",
-    accentColor: "#22d3ee", // cyan
+    accentColor: "#22d3ee",
   },
   {
     title: "DataFlow Pipeline",
@@ -20,7 +19,7 @@ const mockProjects: ProjectCardProps[] = [
     stars: "8.9k",
     forks: "1.5k",
     githubUrl: "#",
-    accentColor: "#34d399", // emerald
+    accentColor: "#34d399",
   },
   {
     title: "ReactUI Components",
@@ -29,7 +28,7 @@ const mockProjects: ProjectCardProps[] = [
     stars: "15.2k",
     forks: "3.1k",
     githubUrl: "#",
-    accentColor: "#f472b6", // pink
+    accentColor: "#f472b6",
   },
   {
     title: "ML Vision Toolkit",
@@ -38,7 +37,7 @@ const mockProjects: ProjectCardProps[] = [
     stars: "9.8k",
     forks: "1.9k",
     githubUrl: "#",
-    accentColor: "#ef4444", // red
+    accentColor: "#ef4444",
   },
   {
     title: "SecureAuth Framework",
@@ -47,7 +46,7 @@ const mockProjects: ProjectCardProps[] = [
     stars: "6.7k",
     forks: "987",
     githubUrl: "#",
-    accentColor: "#3b82f6", // blue
+    accentColor: "#3b82f6",
   },
   {
     title: "DevOps Automation",
@@ -56,43 +55,57 @@ const mockProjects: ProjectCardProps[] = [
     stars: "11.3k",
     forks: "2.4k",
     githubUrl: "#",
-    accentColor: "#f97316", // orange
-  }
+    accentColor: "#f97316",
+  },
 ];
 
 export default function ProjectsPage() {
   return (
     <main className="min-h-screen bg-[var(--bg)] flex flex-col">
       <Navbar />
-      <div style={{ height: '96px', width: '100%', flexShrink: 0 }} aria-hidden="true" />
-      
-      <div className="flex-grow px-6 py-12" style={{ margin: '0 auto', maxWidth: '1280px', width: '100%' }}>
-        {/* Header Section */}
-        <div style={{ textAlign: 'center', marginBottom: '64px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight" style={{ marginBottom: '12px' }}>
-            Our <span className="text-[var(--orange)]">Projects</span>
+
+      {/* Spacer for fixed navbar */}
+      <div style={{ height: "72px", flexShrink: 0 }} aria-hidden="true" />
+
+      {/* Page wrapper with side padding applied via CSS */}
+      <div className="projects-page-wrapper">
+        {/* Header */}
+        <div style={{ textAlign: "center", marginBottom: "48px" }}>
+          <h1
+            style={{
+              fontSize: "clamp(28px, 6vw, 52px)",
+              fontWeight: 800,
+              color: "#ffffff",
+              letterSpacing: "-1px",
+              lineHeight: 1.15,
+              marginBottom: "12px",
+            }}
+          >
+            Our Projects
           </h1>
-          <p className="text-[var(--text-secondary)] text-lg" style={{ maxWidth: '600px', textAlign: 'center' }}>
+          <p
+            style={{
+              fontSize: "clamp(13.5px, 2.5vw, 18px)",
+              color: "#9ca3af",
+              lineHeight: 1.65,
+              maxWidth: "520px",
+              margin: "0 auto",
+            }}
+          >
             Discover innovative open source projects that are shaping the future of technology
           </p>
         </div>
 
-        {/* Project Grid */}
-        <div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-16"
-          style={{ gap: '32px' }}
-        >
+        {/* Cards grid — responsive via CSS class */}
+        <div className="projects-grid" style={{ marginBottom: "40px" }}>
           {mockProjects.map((project, index) => (
             <ProjectCard key={index} {...project} />
           ))}
         </div>
 
-        {/* CTA Button */}
-        <div style={{ margin: '64px 0 96px 0', display: 'flex', justifyContent: 'center' }}>
-          <button 
-            className="bg-[var(--orange)] hover:bg-[var(--orange-dark)] text-white font-semibold rounded-full transition-colors duration-300 shadow-lg shadow-orange-500/20"
-            style={{ padding: '16px 40px' }}
-          >
+        {/* CTA */}
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <button className="projects-cta-btn">
             Explore All Projects
           </button>
         </div>
