@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, Suspense } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 function ShieldIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
@@ -63,9 +63,30 @@ function CheckIcon({ className, style }: { className?: string; style?: React.CSS
   );
 }
 
+import { useSearchParams } from "next/navigation";
 import html2canvas from "html2canvas";
 
-export default function BadgePage() {
+function BadgeContent() {
+  const searchParams = useSearchParams();
+  const person = searchParams.get("person")?.toLowerCase();
+  
+  let roleText = "CONTRIBUTOR";
+  let roleColor = "var(--orange)";
+  let roleBg = "rgba(255, 96, 0, 0.1)";
+  let roleBorder = "rgba(255, 96, 0, 0.3)";
+
+  if (person === "mentor") {
+    roleText = "MENTOR";
+    roleColor = "#f59e0b"; // Premium Amber/Gold
+    roleBg = "rgba(245, 158, 11, 0.1)";
+    roleBorder = "rgba(245, 158, 11, 0.3)";
+  } else if (person === "project-admin") {
+    roleText = "PROJECT ADMIN";
+    roleColor = "#22c55e"; // Green
+    roleBg = "rgba(34, 197, 94, 0.1)";
+    roleBorder = "rgba(34, 197, 94, 0.3)";
+  }
+
   const [name, setName] = useState("");
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
@@ -104,7 +125,7 @@ export default function BadgePage() {
         });
         const url = canvas.toDataURL("image/png");
         const link = document.createElement("a");
-        link.download = `OSCI-Badge-${name || "Contributor"}.png`;
+        link.download = `OSCI-Badge-${name || roleText}.png`;
         link.href = url;
         link.click();
       } catch (err) {
@@ -149,28 +170,28 @@ export default function BadgePage() {
       {/* Spacer to clear the fixed Navbar */}
       <div style={{ height: '96px', width: '100%', flexShrink: 0 }} aria-hidden="true" />
       
-      <main className="flex-grow flex flex-col items-center px-6 py-12" style={{ margin: '0 auto', maxWidth: '1280px', width: '100%', paddingBottom: '96px' }}>
+      <main className="flex-grow flex flex-col items-center py-12" style={{ margin: '0 auto', maxWidth: '1280px', width: '100%', paddingBottom: '96px', paddingLeft: 'clamp(20px, 5vw, 64px)', paddingRight: 'clamp(20px, 5vw, 64px)', overflowX: 'hidden', boxSizing: 'border-box' }}>
         
         {/* Header Section */}
-        <div style={{ textAlign: 'center', marginBottom: '64px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <div style={{ background: 'rgba(255, 96, 0, 0.1)', border: '1px solid var(--orange)', color: 'var(--orange)', padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--orange)' }}></div>
-            Contributor Recognition
+        <div style={{ textAlign: 'center', marginBottom: '64px', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+          <div style={{ background: roleBg, border: `1px solid ${roleColor}`, color: roleColor, padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: roleColor }}></div>
+            {roleText} Recognition
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight" style={{ marginBottom: '16px' }}>
-            Contributor <span className="text-[var(--orange)]">Badge</span>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight" style={{ marginBottom: '16px', wordBreak: 'break-word' }}>
+            {roleText === "CONTRIBUTOR" ? "Contributor" : roleText === "MENTOR" ? "Mentor" : "Project Admin"} <span style={{ color: roleColor }}>Badge</span>
           </h1>
-          <p className="text-[var(--text-secondary)] text-[15px]" style={{ maxWidth: '400px', textAlign: 'center', lineHeight: '1.6' }}>
+          <p className="text-[var(--text-secondary)] text-[15px]" style={{ maxWidth: '400px', textAlign: 'center', lineHeight: '1.6', padding: '0 16px' }}>
             Create your personalized OSCI badge to celebrate your contribution to open source.
           </p>
         </div>
 
         {/* Content Layout */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '64px', justifyContent: 'center', width: '100%', maxWidth: '1000px' }}>
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 justify-center items-center lg:items-start w-full max-w-[1000px]">
           
           {/* LEFT: Live Preview */}
-          <div style={{ flex: '1', minWidth: '320px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', width: '320px' }}>
+          <div className="w-full flex flex-col items-center flex-1 box-border" style={{ minWidth: 0, maxWidth: '100%' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', width: '100%', maxWidth: '368px' }}>
               <div style={{ flex: '1', height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
               <span className="text-[11px] font-bold tracking-[0.2em] text-gray-400">LIVE PREVIEW</span>
               <div style={{ flex: '1', height: '1px', background: 'rgba(255,255,255,0.1)' }}></div>
@@ -180,80 +201,122 @@ export default function BadgePage() {
             <div 
               style={{
                 position: 'relative',
-                padding: '24px',
+                padding: 'clamp(12px, 4vw, 24px)',
                 borderRadius: '24px',
-                background: 'rgba(255, 96, 0, 0.05)',
+                background: 'rgba(255, 255, 255, 0.02)',
+                width: '100%',
+                maxWidth: '368px',
+                display: 'flex',
+                justifyContent: 'center'
               }}
             >
               {/* Outer Glow */}
-              <div style={{ position: 'absolute', inset: 0, background: 'var(--orange)', opacity: 0.15, filter: 'blur(30px)', borderRadius: '24px', zIndex: 0 }}></div>
+              <div style={{ position: 'absolute', inset: 0, background: roleColor, opacity: 0.15, filter: 'blur(30px)', borderRadius: '24px', zIndex: 0 }}></div>
               
               <div 
                 ref={badgeRef}
+                className="badge-container"
                 style={{
                   position: 'relative',
-                  width: '320px',
-                  height: '460px',
+                  width: '100%',
+                  maxWidth: '320px',
+                  aspectRatio: '320 / 460',
+                  margin: '0 auto',
                   background: 'linear-gradient(180deg, #1c1c1f 0%, #121214 100%)',
-                  border: '1px solid rgba(255, 96, 0, 0.3)',
+                  border: `1px solid ${roleBorder}`,
                   borderRadius: '20px',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  padding: '36px 24px',
+                  padding: '8% 6%',
                   boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
                   zIndex: 1,
-                  overflow: 'hidden'
+                  overflow: 'hidden',
+                  boxSizing: 'border-box'
                 }}
               >
                 {/* Background Accent inside badge */}
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '120px', background: 'radial-gradient(ellipse at top, rgba(255,96,0,0.2) 0%, transparent 70%)' }}></div>
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '60%', background: `radial-gradient(ellipse at top, ${roleBg.replace('0.1', '0.3')} 0%, transparent 70%)` }}></div>
+                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '50%', background: `radial-gradient(ellipse at bottom, rgba(255,96,0,0.15) 0%, transparent 70%)` }}></div>
 
                 {/* Badge Header */}
-                <div style={{ textAlign: 'center', zIndex: 2, marginBottom: '40px', width: '100%' }}>
-                  <h3 style={{ color: 'white', fontWeight: 800, fontSize: '22px', lineHeight: '1.2' }}>Open Source</h3>
-                  <h3 style={{ color: 'white', fontWeight: 800, fontSize: '22px', lineHeight: '1.2' }}>Connect <span style={{ color: 'var(--orange)' }}>India</span></h3>
-                  <h3 style={{ color: 'var(--orange)', fontWeight: 900, fontSize: '22px', lineHeight: '1.2' }}>2026</h3>
+                <div style={{ textAlign: 'center', zIndex: 2, marginBottom: '8%', width: '100%' }}>
+                  <h3 style={{ color: 'white', fontWeight: 800, fontSize: 'clamp(18px, 6cqw, 22px)', lineHeight: '1.2' }}>Open Source</h3>
+                  <h3 style={{ color: 'white', fontWeight: 800, fontSize: 'clamp(18px, 6cqw, 22px)', lineHeight: '1.2' }}>Connect <span style={{ color: roleColor }}>India</span></h3>
+                  <h3 style={{ color: roleColor, fontWeight: 900, fontSize: 'clamp(18px, 6cqw, 22px)', lineHeight: '1.2' }}>2026</h3>
                 </div>
 
-                {/* Avatar */}
-                <div 
-                  style={{
-                    width: '160px', // Enlarged avatar
-                    height: '160px',
-                    flexShrink: 0,
-                    borderRadius: '50%',
-                    background: '#161618',
-                    border: '3px solid var(--orange)',
-                    boxShadow: '0 0 24px rgba(255, 96, 0, 0.4)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: '36px',
-                    zIndex: 2,
-                    overflow: 'hidden',
-                    cursor: photoUrl ? (isDragging ? 'grabbing' : 'grab') : 'default'
-                  }}
-                  onMouseDown={handleMouseDown}
-                  onMouseMove={handleMouseMove}
-                  onMouseUp={handleMouseUp}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  {photoUrl ? (
-                    <img 
-                      src={photoUrl} 
-                      alt="Avatar" 
-                      style={{ 
-                        width: '100%', 
-                        height: '100%', 
-                        objectFit: 'cover',
-                        transform: `scale(${scale}) rotate(${rotation}deg) translate(${position.x / scale}px, ${position.y / scale}px)`,
-                        transformOrigin: 'center center',
-                        pointerEvents: 'none' // Let the container handle mouse events
-                      }} 
-                    />
-                  ) : (
-                    <UserIcon className="text-gray-500" style={{ width: '56px', height: '56px' }} />
+                {/* Avatar Container */}
+                <div style={{ position: 'relative', width: '45%', marginBottom: '8%', zIndex: 2 }}>
+                  <div 
+                    style={{
+                      width: '100%',
+                      aspectRatio: '1/1',
+                      flexShrink: 0,
+                      borderRadius: '50%',
+                      background: '#161618',
+                      border: `3px solid ${roleColor}`,
+                      boxShadow: `0 0 24px ${roleBg.replace('0.1', '0.4')}`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      overflow: 'hidden',
+                      cursor: photoUrl ? (isDragging ? 'grabbing' : 'grab') : 'default'
+                    }}
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
+                    onMouseLeave={handleMouseLeave}
+                    onTouchStart={(e) => {
+                      if (!photoUrl) return;
+                      setIsDragging(true);
+                      setDragStart({ x: e.touches[0].clientX - position.x, y: e.touches[0].clientY - position.y });
+                    }}
+                    onTouchMove={(e) => {
+                      if (!isDragging) return;
+                      setPosition({ x: e.touches[0].clientX - dragStart.x, y: e.touches[0].clientY - dragStart.y });
+                    }}
+                    onTouchEnd={handleMouseUp}
+                  >
+                    {photoUrl ? (
+                      <img 
+                        src={photoUrl} 
+                        alt="Avatar" 
+                        style={{ 
+                          width: '100%', 
+                          height: '100%', 
+                          objectFit: 'cover',
+                          transform: `scale(${scale}) rotate(${rotation}deg) translate(${position.x / scale}px, ${position.y / scale}px)`,
+                          transformOrigin: 'center center',
+                          pointerEvents: 'none' // Let the container handle mouse events
+                        }} 
+                      />
+                    ) : (
+                      <UserIcon className="text-gray-500" style={{ width: '35%', height: '35%' }} />
+                    )}
+                  </div>
+                  
+                  {/* The Star Badge (for Mentor/Admin) */}
+                  {(person === 'mentor' || person === 'project-admin') && (
+                    <div style={{
+                      position: 'absolute',
+                      bottom: '2%',
+                      right: '2%',
+                      width: 'clamp(20px, 6cqw, 28px)',
+                      height: 'clamp(20px, 6cqw, 28px)',
+                      background: 'linear-gradient(135deg, #f59e0b, #ea580c)',
+                      border: '2px solid #121214',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 4px 10px rgba(245,158,11,0.5)',
+                      zIndex: 3
+                    }}>
+                      <svg width="60%" height="60%" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                      </svg>
+                    </div>
                   )}
                 </div>
 
@@ -261,9 +324,9 @@ export default function BadgePage() {
                 <h2 
                   style={{ 
                     color: 'white', 
-                    fontSize: '24px', 
+                    fontSize: 'clamp(18px, 6cqw, 24px)', 
                     fontWeight: 700, 
-                    marginBottom: '16px',
+                    marginBottom: '4%',
                     textAlign: 'center',
                     zIndex: 2,
                     wordBreak: 'break-word',
@@ -276,19 +339,19 @@ export default function BadgePage() {
                 {/* Role */}
                 <div 
                   style={{
-                    background: 'rgba(255, 96, 0, 0.1)',
-                    border: '1px solid rgba(255, 96, 0, 0.3)',
-                    color: 'var(--orange)',
-                    padding: '8px 20px',
+                    background: roleBg,
+                    border: `1px solid ${roleBorder}`,
+                    color: roleColor,
+                    padding: '2% 5%',
                     borderRadius: '24px',
-                    fontSize: '12px',
+                    fontSize: 'clamp(10px, 3.5cqw, 12px)',
                     fontWeight: 800,
                     letterSpacing: '0.05em',
                     zIndex: 2,
                     marginBottom: 'auto'
                   }}
                 >
-                  CONTRIBUTOR
+                  {roleText}
                 </div>
 
                 {/* Footer updated */}
@@ -306,8 +369,8 @@ export default function BadgePage() {
           </div>
 
           {/* RIGHT: Form */}
-          <div style={{ flex: '1', minWidth: '320px', display: 'flex', flexDirection: 'column' }}>
-            <h2 className="text-3xl font-bold text-white mb-3 tracking-tight">Create Your <span className="text-[var(--orange)]">Badge</span></h2>
+          <div className="w-full flex flex-col flex-1 max-w-[480px] box-border" style={{ minWidth: 0 }}>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 tracking-tight">Create Your <span className="text-[var(--orange)]">Badge</span></h2>
             <p className="text-[var(--text-secondary)] text-[14px] mb-8" style={{ lineHeight: '1.6' }}>
               Personalize your badge with your name and photo. Download and share your achievement.
             </p>
@@ -475,8 +538,8 @@ export default function BadgePage() {
               </div>
 
               {/* Main Actions (Upload / Download) */}
-              <div style={{ display: 'flex', gap: '16px', marginTop: '16px' }}>
-                <div style={{ position: 'relative', flex: '1' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '16px' }}>
+                <div style={{ position: 'relative', flex: '1 1 120px' }}>
                   <input 
                     type="file" 
                     accept="image/png, image/jpeg"
@@ -495,7 +558,7 @@ export default function BadgePage() {
                 <button 
                   type="button"
                   onClick={handleDownload}
-                  style={{ flex: '1', background: 'var(--orange)', color: 'white', padding: '16px', borderRadius: '12px', fontSize: '13px', fontWeight: 700, letterSpacing: '0.05em', boxShadow: '0 8px 20px rgba(255, 96, 0, 0.2)' }}
+                  style={{ flex: '1 1 120px', background: 'var(--orange)', color: 'white', padding: '16px', borderRadius: '12px', fontSize: '13px', fontWeight: 700, letterSpacing: '0.05em', boxShadow: '0 8px 20px rgba(255, 96, 0, 0.2)' }}
                   className="hover:bg-[var(--orange-dark)] transition-colors"
                 >
                   DOWNLOAD
@@ -510,5 +573,13 @@ export default function BadgePage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function BadgePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[var(--bg)] flex items-center justify-center text-white">Loading...</div>}>
+      <BadgeContent />
+    </Suspense>
   );
 }

@@ -125,11 +125,8 @@ export default function ProjectsSection() {
         <div style={{ position: "relative", width: "100%" }}>
           {/* Projects Cards Container */}
           <div
-            className="projects-cards-container"
+            className="projects-cards-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
-              gap: "24px",
               opacity: 0.35,
               pointerEvents: "none",
               userSelect: "none",
