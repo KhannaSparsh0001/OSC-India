@@ -292,7 +292,7 @@ function BadgeContent() {
                         }} 
                       />
                     ) : (
-                      <UserIcon className="text-gray-500" style={{ width: '35%', height: '35%' }} />
+                      <UserIcon style={{ width: '35%', height: '35%', color: '#6b7280' }} />
                     )}
                   </div>
                   
