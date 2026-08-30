@@ -37,7 +37,7 @@ export default function SignInPage() {
         {/* Sign In Card */}
         <div 
           className="w-full max-w-[440px] rounded-[24px] border border-[rgba(255,255,255,0.05)] shadow-2xl"
-          style={{ background: '#121214', padding: '48px 40px' }}
+          style={{ background: '#121214', padding: 'clamp(32px, 8vw, 48px) clamp(20px, 6vw, 40px)' }}
         >
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
             <h1 className="text-[28px] font-bold text-white mb-2 tracking-tight">Welcome Back</h1>

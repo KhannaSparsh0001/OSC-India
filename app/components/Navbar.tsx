@@ -61,9 +61,10 @@ export default function Navbar() {
             <span
               style={{
                 fontWeight: 700,
-                fontSize: "15px",
+                fontSize: "clamp(12px, 4vw, 15px)",
                 color: "#ffffff",
                 letterSpacing: "-0.2px",
+                whiteSpace: "normal"
               }}
             >
               Open Source Connect India 2026

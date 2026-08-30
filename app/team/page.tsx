@@ -39,7 +39,7 @@ export default function TeamPage() {
           <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight" style={{ marginBottom: '12px' }}>
             Meet Our <span className="text-[var(--orange)]">Team</span>
           </h1>
-          <p className="text-[var(--text-secondary)] text-lg" style={{ maxWidth: '600px', textAlign: 'center' }}>
+          <p className="text-base md:text-lg text-[var(--text-secondary)]" style={{ maxWidth: '600px', textAlign: 'center' }}>
             Dedicated professionals working together to build the future of open source collaboration
           </p>
         </div>
@@ -48,9 +48,10 @@ export default function TeamPage() {
         <div 
           style={{ 
             display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', 
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 220px), 1fr))', 
             gap: '24px',
-            justifyItems: 'center'
+            justifyItems: 'center',
+            paddingBottom: '80px'
           }}
         >
           {teamMembers.map((member, index) => (

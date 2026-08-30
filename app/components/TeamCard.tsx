@@ -9,10 +9,10 @@ interface TeamCardProps {
 
 export default function TeamCard({ name, role, linkedinUrl }: TeamCardProps) {
   return (
-    <div 
-      className="group w-full rounded-[24px] border border-[rgba(255,255,255,0.05)] shadow-lg hover:border-[var(--orange)] transition-colors duration-300"
-      style={{ background: '#121214', padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-    >
+      <div 
+        className="group w-full rounded-[24px] border border-[rgba(255,255,255,0.05)] shadow-lg hover:border-[var(--orange)] transition-colors duration-300"
+        style={{ background: '#121214', padding: 'clamp(16px, 5vw, 24px)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+      >
       {/* Avatar Placeholder */}
       <div 
         style={{ 

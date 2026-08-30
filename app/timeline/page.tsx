@@ -57,17 +57,17 @@ export default function TimelinePage() {
       <main className="flex-grow flex flex-col items-center px-6" style={{ margin: '0 auto', maxWidth: '1000px', width: '100%', paddingBottom: '96px', paddingTop: '48px' }}>
         
         {/* Header Section */}
-        <div style={{ textAlign: 'center', marginBottom: '80px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <h1 style={{ color: 'white', fontSize: '48px', fontWeight: 800, marginBottom: '24px', letterSpacing: '-0.02em' }}>
+        <div style={{ textAlign: 'center', marginBottom: 'clamp(40px, 8vw, 80px)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <h1 style={{ color: 'white', fontSize: 'clamp(32px, 10vw, 48px)', fontWeight: 800, marginBottom: '24px', letterSpacing: '-0.02em', lineHeight: 1.2 }}>
             Event <span style={{ color: 'var(--orange)' }}>Timeline</span>
           </h1>
-          <p style={{ color: '#9ca3af', fontSize: '16px', lineHeight: '1.7', maxWidth: '600px' }}>
+          <p style={{ color: '#9ca3af', fontSize: 'clamp(14px, 4vw, 16px)', lineHeight: '1.7', maxWidth: '600px', padding: '0 16px' }}>
             Join us at upcoming events and workshops designed to inspire and connect developers
           </p>
         </div>
 
         {/* Timeline Container */}
-        <div style={{ width: '100%', maxWidth: '800px', display: 'flex', flexDirection: 'column', gap: '48px' }}>
+        <div style={{ width: '100%', maxWidth: '800px', display: 'flex', flexDirection: 'column', gap: 'clamp(24px, 6vw, 48px)' }}>
           
           {events.map((event, index) => {
             const isLast = index === events.length - 1;
@@ -85,7 +85,7 @@ export default function TimelinePage() {
                   background: 'rgba(255,255,255,0.02)', 
                   border: `1px solid ${borderColor}`,
                   borderRadius: '16px',
-                  padding: '32px',
+                  padding: 'clamp(20px, 5vw, 32px)',
                   zIndex: 10
                 }}
               >
@@ -112,7 +112,7 @@ export default function TimelinePage() {
 
                 {/* Line to the next card (Gap line) */}
                 {!isLast && (
-                  <div style={{ position: 'absolute', bottom: '-48px', left: '50%', transform: 'translateX(-50%)', width: '2px', height: '48px', background: lineColor }} />
+                  <div style={{ position: 'absolute', bottom: 'calc(-1 * clamp(24px, 6vw, 48px))', left: '50%', transform: 'translateX(-50%)', width: '2px', height: 'clamp(24px, 6vw, 48px)', background: lineColor }} />
                 )}
 
                 {/* Top Row: Pill & Date */}
