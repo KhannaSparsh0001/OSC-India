@@ -1,10 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 export default function LeaderboardPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+
   const topThree = [
     { rank: 2, name: "Dipanita Mondal", username: "@Dipanita45", points: 340, prs: 33 },
     { rank: 1, name: "Samrat Saha", username: "@samrat21saha", points: 540, prs: 36, isFirst: true },
@@ -19,6 +21,16 @@ export default function LeaderboardPage() {
     { rank: 8, name: "Sneha Patel", username: "@snehasp", points: 230, prs: 15 },
     { rank: 9, name: "Aditya Singh", username: "@adityasingh", points: 215, prs: 14 },
   ];
+
+  const filteredTopThree = topThree.filter(user => 
+    user.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    user.username.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const filteredOthers = othersList.filter(user => 
+    user.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    user.username.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-[var(--bg)] flex flex-col font-sans text-white">
@@ -37,9 +49,32 @@ export default function LeaderboardPage() {
           </p>
         </div>
 
+        {/* Search Bar */}
+        <div style={{ width: '100%', maxWidth: '500px', marginBottom: '48px' }}>
+          <input 
+            type="text" 
+            placeholder="Search by name or username..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{ 
+              width: '100%', 
+              padding: '16px 24px', 
+              borderRadius: '12px', 
+              background: 'rgba(255,255,255,0.05)', 
+              border: '1px solid rgba(255,255,255,0.1)', 
+              color: 'white', 
+              fontSize: '15px',
+              outline: 'none',
+              transition: 'all 0.2s'
+            }}
+            onFocus={(e) => e.target.style.borderColor = 'var(--orange)'}
+            onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
+          />
+        </div>
+
         {/* Top 3 Section */}
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: '24px', marginBottom: '64px', width: '100%', flexWrap: 'wrap' }}>
-          {topThree.map((user) => (
+          {filteredTopThree.map((user) => (
             <div 
               key={user.rank}
               style={{
@@ -91,7 +126,7 @@ export default function LeaderboardPage() {
 
         {/* List Section (Ranks 4-9) */}
         <div style={{ width: '100%', maxWidth: '800px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {othersList.map((user) => (
+          {filteredOthers.map((user) => (
             <div 
               key={user.rank}
               style={{
