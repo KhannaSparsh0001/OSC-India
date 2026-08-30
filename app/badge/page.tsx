@@ -376,7 +376,7 @@ function BadgeContent() {
 
           {/* RIGHT: Form */}
           <div className="w-full flex flex-col flex-1 max-w-[480px] box-border" style={{ minWidth: 0 }}>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 tracking-tight">Create Your <span className="text-[var(--orange)]">Badge</span></h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 tracking-tight">Create Your <span className="text-[var(--orange)] italic">Badge</span></h2>
             <p className="text-[var(--text-secondary)] text-[14px] mb-8" style={{ lineHeight: '1.6' }}>
               Personalize your badge with your name and photo. Download and share your achievement.
             </p>
