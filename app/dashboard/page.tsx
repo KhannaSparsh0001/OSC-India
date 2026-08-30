@@ -22,7 +22,7 @@ export default function DashboardPage() {
       <Navbar />
       <div style={{ height: '96px', width: '100%', flexShrink: 0 }} aria-hidden="true" />
       
-      <main className="flex-grow flex flex-col items-center" style={{ margin: '0 auto', maxWidth: '1200px', width: '100%', paddingBottom: '96px', paddingTop: '24px', paddingLeft: 'clamp(20px, 5vw, 64px)', paddingRight: 'clamp(20px, 5vw, 64px)', overflowX: 'hidden', boxSizing: 'border-box' }}>
+      <main className="flex-grow flex flex-col items-center" style={{ margin: '0 auto', maxWidth: '1440px', width: '100%', paddingBottom: '96px', paddingTop: '24px', paddingLeft: 'clamp(20px, 5vw, 64px)', paddingRight: 'clamp(20px, 5vw, 64px)', overflowX: 'hidden', boxSizing: 'border-box' }}>
         
         {/* Header */}
         <div style={{ width: '100%', marginBottom: '40px' }}>
@@ -38,7 +38,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full mb-12">
           
           {/* LEFT COLUMN: Profile info */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="md:col-span-1 xl:col-span-1" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             
             {/* Main Profile Card */}
             <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: 'clamp(24px, 4vw, 40px) 24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -104,7 +104,7 @@ export default function DashboardPage() {
           </div>
 
           {/* RIGHT COLUMN: Stats & Charts */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="md:col-span-1 xl:col-span-2" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             
             {/* Rank Card */}
             <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: 'clamp(20px, 4vw, 32px)', position: 'relative' }}>
