@@ -5,7 +5,7 @@ export default auth((req) => {
   const isDashboardRoute = req.nextUrl.pathname.startsWith('/dashboard');
 
   if (isDashboardRoute && !isLoggedIn) {
-    return Response.redirect(new URL('/', req.nextUrl));
+    return Response.redirect(new URL('/sign-in', req.nextUrl));
   }
 })
 
