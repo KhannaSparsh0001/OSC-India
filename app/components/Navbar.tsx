@@ -104,10 +104,9 @@ export default function Navbar() {
               >
                 <span
                   style={{
-                    color: isActive ? "#ffffff" : "#9ca3af",
+                    color: "#ffffff",
                     fontSize: "16px",
                     fontWeight: isActive ? 600 : 500,
-                    transition: "color 0.2s ease",
                   }}
                 >
                   {link.label}
@@ -143,7 +142,7 @@ export default function Navbar() {
           <Link
             href="/sign-in"
             style={{
-              color: "#d1d5db",
+              color: "#ffffff",
               textDecoration: "none",
               fontSize: "15px",
               fontWeight: 600,
@@ -155,11 +154,11 @@ export default function Navbar() {
             }}
             onMouseEnter={(e) => {
               (e.target as HTMLElement).style.borderColor = "#FF7518";
-              (e.target as HTMLElement).style.color = "#ffffff";
+              (e.target as HTMLElement).style.background = "rgba(255, 117, 24, 0.1)";
             }}
             onMouseLeave={(e) => {
-              (e.target as HTMLElement).style.borderColor = "rgba(255,255,255,0.15)";
-              (e.target as HTMLElement).style.color = "#d1d5db";
+              (e.target as HTMLElement).style.borderColor = "#FF7518";
+              (e.target as HTMLElement).style.background = "rgba(255,255,255,0.03)";
             }}
           >
             Sign In
@@ -237,7 +236,7 @@ export default function Navbar() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  color: isActive ? "#ffffff" : "#9ca3af",
+                  color: "#ffffff",
                   textDecoration: "none",
                   fontSize: "16.5px",
                   fontWeight: isActive ? 600 : 500,

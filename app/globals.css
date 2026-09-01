@@ -473,9 +473,6 @@ img { display: block; max-width: 100%; }
   transform: scaleX(1) !important;
   opacity: 1 !important;
 }
-.nav-link-item:hover span:first-child {
-  color: #ffffff !important;
-}
 
 /* ===========================
    NAVBAR & FOOTER LOGO
