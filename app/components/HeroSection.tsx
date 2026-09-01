@@ -68,12 +68,14 @@ export default function HeroSection() {
               marginBottom: "22px",
             }}
           >
-            <div style={{ whiteSpace: "nowrap" }}>
+            <div className="hero-title-line-1">
               <span className="tricolor-gradient">Open Source</span>
             </div>
-            <div style={{ whiteSpace: "nowrap", marginTop: "4px", display: "flex", alignItems: "baseline", gap: "14px" }}>
+            <div className="hero-title-line-2">
               <span className="tricolor-gradient">Connect India</span>
-              <span style={{ color: "#FF8822", display: "inline-block" }}>2026</span>
+              <span className="hero-year-tag" style={{ color: "#FF8822" }}>
+                2026
+              </span>
             </div>
           </h1>
 

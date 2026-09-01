@@ -513,3 +513,32 @@ img { display: block; max-width: 100%; }
   -webkit-text-fill-color: transparent !important;
   background-clip: text !important;
 }
+
+/* ===========================
+   HERO TITLE LINES & RESPONSIVE
+   =========================== */
+.hero-title-line-1,
+.hero-title-line-2 {
+  white-space: nowrap;
+}
+
+.hero-title-line-2 {
+  margin-top: 4px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.hero-year-tag {
+  display: inline-block;
+}
+
+@media (max-width: 768px) {
+  .hero-title-line-2 {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
+  }
+}
+
