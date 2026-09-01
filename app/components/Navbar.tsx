@@ -81,7 +81,7 @@ export default function Navbar() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "32px",
+            gap: "36px",
             justifySelf: "center",
           }}
           className="desktop-nav"
@@ -105,7 +105,7 @@ export default function Navbar() {
                 <span
                   style={{
                     color: isActive ? "#ffffff" : "#9ca3af",
-                    fontSize: "14px",
+                    fontSize: "16px",
                     fontWeight: isActive ? 600 : 500,
                     transition: "color 0.2s ease",
                   }}
@@ -145,10 +145,10 @@ export default function Navbar() {
             style={{
               color: "#d1d5db",
               textDecoration: "none",
-              fontSize: "14px",
-              fontWeight: 500,
-              padding: "6px 14px",
-              borderRadius: "6px",
+              fontSize: "15px",
+              fontWeight: 600,
+              padding: "8px 18px",
+              borderRadius: "8px",
               border: "1px solid #FF7518",
               background: "rgba(255,255,255,0.03)",
               transition: "all 0.2s",
@@ -239,7 +239,7 @@ export default function Navbar() {
                   justifyContent: "space-between",
                   color: isActive ? "#ffffff" : "#9ca3af",
                   textDecoration: "none",
-                  fontSize: "15px",
+                  fontSize: "16.5px",
                   fontWeight: isActive ? 600 : 500,
                   padding: "12px 8px",
                   borderBottom: "1px solid rgba(255,255,255,0.05)",
@@ -269,10 +269,10 @@ export default function Navbar() {
               style={{
                 color: "#ffffff",
                 textDecoration: "none",
-                fontSize: "14px",
-                fontWeight: 500,
-                padding: "8px 18px",
-                borderRadius: "6px",
+                fontSize: "15px",
+                fontWeight: 600,
+                padding: "10px 22px",
+                borderRadius: "8px",
                 border: "1px solid rgba(255,255,255,0.2)",
               }}
             >
