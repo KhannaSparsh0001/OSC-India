@@ -48,7 +48,7 @@ export default function Home() {
             }}
           >
             <Image
-              src="/hero-bg.png"
+              src="/hero-bg-clean.png"
               alt="Open Source Connect India Artwork"
               fill
               priority
