@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 export default function Navbar() {
@@ -56,19 +57,28 @@ export default function Navbar() {
         }}
       >
         {/* Logo */}
-        <Link href="/" style={{ textDecoration: "none", justifySelf: "start" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <span
-              style={{
-                fontWeight: 700,
-                fontSize: "15px",
-                color: "#ffffff",
-                letterSpacing: "-0.2px",
-              }}
-            >
-              Open Source Connect India 2026
-            </span>
-          </div>
+        <Link
+          href="/"
+          style={{
+            textDecoration: "none",
+            justifySelf: "start",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Image
+            src="/logo.png"
+            alt="Open Source Connect India"
+            width={130}
+            height={38}
+            priority
+            style={{
+              height: "36px",
+              width: "auto",
+              objectFit: "contain",
+              display: "block",
+            }}
+          />
         </Link>
 
         {/* Desktop Nav */}

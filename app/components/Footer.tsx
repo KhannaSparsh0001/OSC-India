@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -18,17 +19,20 @@ export default function Footer() {
           <div className="footer-left-col">
             {/* Brand Section */}
             <div style={{ marginBottom: "32px" }}>
-              <div
-                style={{
-                  fontWeight: 700,
-                  fontSize: "16px",
-                  color: "#ffffff",
-                  marginBottom: "16px",
-                  letterSpacing: "0.3px",
-                }}
-              >
-                Open Source Connect India
-              </div>
+              <Link href="/" style={{ textDecoration: "none", display: "inline-block", marginBottom: "16px" }}>
+                <Image
+                  src="/logo.png"
+                  alt="Open Source Connect India"
+                  width={140}
+                  height={40}
+                  style={{
+                    height: "36px",
+                    width: "auto",
+                    objectFit: "contain",
+                    display: "block",
+                  }}
+                />
+              </Link>
               <p
                 style={{
                   fontSize: "13px",
