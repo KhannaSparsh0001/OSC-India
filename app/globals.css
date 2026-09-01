@@ -494,3 +494,26 @@ img { display: block; max-width: 100%; }
     height: 40px !important;
   }
 }
+
+/* ===========================
+   HERO TITLE GRADIENT (SAME AS DESIGN)
+   =========================== */
+.hero-title-gradient {
+  display: inline-block;
+  background: linear-gradient(
+    90deg,
+    #FF7518 0%,
+    #FF7518 20%,
+    #FEC497 30%,
+    #F5F8EC 37%,
+    #16C91C 48%,
+    #16C91C 52%,
+    #F0F8E4 63%,
+    #FFCF9D 70%,
+    #FF8001 76%,
+    #FF8001 100%
+  );
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}

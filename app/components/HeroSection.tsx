@@ -56,63 +56,47 @@ export default function HeroSection() {
           padding: "110px clamp(32px, 8vw, 120px) 80px",
         }}
       >
-        <div style={{ maxWidth: "560px" }}>
+        <div style={{ maxWidth: "720px" }}>
           {/* Main Headline */}
           <h1
             className="hero-title"
             style={{
-              fontSize: "clamp(32px, 8vw, 68px)",
+              fontSize: "clamp(28px, 5.2vw, 64px)",
               fontWeight: 800,
-              lineHeight: 1.1,
+              lineHeight: 1.12,
               letterSpacing: "-1.5px",
               marginBottom: "22px",
-              color: "#ffffff",
             }}
           >
-            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline" }}>
+            <div style={{ whiteSpace: "nowrap" }}>
+              <span style={{ color: "#FF7518", marginRight: "14px" }}>Open</span>
               <span
                 style={{
-                  color: "#ffffff",
-                  marginRight: "12px",
-                }}
-              >
-                Open
-              </span>
-              <span
-                style={{
-                  color: "#ffffff",
+                  background: "linear-gradient(90deg, #F8F5E7 0%, #16C91C 45%, #16C91C 65%, #F8F5E7 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
                   display: "inline-block",
                 }}
               >
                 Source
               </span>
             </div>
-            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", marginTop: "4px" }}>
+            <div style={{ whiteSpace: "nowrap", marginTop: "4px" }}>
+              <span style={{ color: "#FF7518", marginRight: "14px" }}>Connect</span>
               <span
                 style={{
-                  color: "#ffffff",
-                  marginRight: "12px",
-                }}
-              >
-                Connect
-              </span>
-              <span
-                style={{
-                  color: "#ffffff",
-                  marginRight: "12px",
+                  background: "linear-gradient(90deg, #16C91C 0%, #16C91C 40%, #22C55E 70%, #F8F5E7 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  marginRight: "14px",
                   display: "inline-block",
                 }}
               >
                 India
               </span>
-              <span
-                style={{
-                  color: "#ffffff",
-                  display: "inline-block",
-                }}
-              >
-                2026
-              </span>
+              <span style={{ color: "#FF7518", display: "inline-block" }}>2026</span>
             </div>
           </h1>
 
