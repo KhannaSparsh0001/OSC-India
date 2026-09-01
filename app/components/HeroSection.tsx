@@ -73,7 +73,7 @@ export default function HeroSection() {
             </div>
             <div style={{ whiteSpace: "nowrap", marginTop: "4px", display: "flex", alignItems: "baseline", gap: "14px" }}>
               <span className="tricolor-gradient">Connect India</span>
-              <span style={{ color: "#FF7518", display: "inline-block" }}>2026</span>
+              <span style={{ color: "#FF8822", display: "inline-block" }}>2026</span>
             </div>
           </h1>
 
