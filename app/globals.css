@@ -496,22 +496,18 @@ img { display: block; max-width: 100%; }
 }
 
 /* ===========================
-   HERO TITLE GRADIENT (SAME AS DESIGN)
+   TRI-COLOUR BLENDING GRADIENT
    =========================== */
-.hero-title-gradient {
+.tricolor-gradient {
   display: inline-block;
   background: linear-gradient(
     90deg,
-    #FF7518 0%,
-    #FF7518 20%,
-    #FEC497 30%,
-    #F5F8EC 37%,
-    #16C91C 48%,
-    #16C91C 52%,
-    #F0F8E4 63%,
-    #FFCF9D 70%,
-    #FF8001 76%,
-    #FF8001 100%
+    #FF6F00 0%,
+    #FF8822 25%,
+    #FFFFFF 48%,
+    #FFFFFF 52%,
+    #3CE85E 76%,
+    #00C853 100%
   );
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;

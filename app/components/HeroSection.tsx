@@ -69,33 +69,10 @@ export default function HeroSection() {
             }}
           >
             <div style={{ whiteSpace: "nowrap" }}>
-              <span style={{ color: "#FF7518", marginRight: "14px" }}>Open</span>
-              <span
-                style={{
-                  background: "linear-gradient(90deg, #F8F5E7 0%, #16C91C 45%, #16C91C 65%, #F8F5E7 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  display: "inline-block",
-                }}
-              >
-                Source
-              </span>
+              <span className="tricolor-gradient">Open Source</span>
             </div>
-            <div style={{ whiteSpace: "nowrap", marginTop: "4px" }}>
-              <span style={{ color: "#FF7518", marginRight: "14px" }}>Connect</span>
-              <span
-                style={{
-                  background: "linear-gradient(90deg, #16C91C 0%, #16C91C 40%, #22C55E 70%, #F8F5E7 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  marginRight: "14px",
-                  display: "inline-block",
-                }}
-              >
-                India
-              </span>
+            <div style={{ whiteSpace: "nowrap", marginTop: "4px", display: "flex", alignItems: "baseline", gap: "14px" }}>
+              <span className="tricolor-gradient">Connect India</span>
               <span style={{ color: "#FF7518", display: "inline-block" }}>2026</span>
             </div>
           </h1>
