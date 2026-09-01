@@ -33,26 +33,19 @@ export default function TeamPage() {
       {/* Spacer to clear the fixed Navbar */}
       <div style={{ height: '96px', width: '100%', flexShrink: 0 }} aria-hidden="true" />
       
-      <main className="flex-grow px-6 py-12" style={{ margin: '0 auto', maxWidth: '1280px', width: '100%' }}>
+      <main className="flex-grow pt-12 pb-24 md:pb-32" style={{ margin: '0 auto', maxWidth: '1280px', width: '100%', paddingLeft: 'clamp(20px, 5vw, 64px)', paddingRight: 'clamp(20px, 5vw, 64px)', overflowX: 'hidden', boxSizing: 'border-box' }}>
         {/* Header Section */}
         <div style={{ textAlign: 'center', marginBottom: '64px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight" style={{ marginBottom: '12px' }}>
             Meet Our <span className="text-[var(--orange)]">Team</span>
           </h1>
-          <p className="text-[var(--text-secondary)] text-lg" style={{ maxWidth: '600px', textAlign: 'center' }}>
+          <p className="text-base md:text-lg text-[var(--text-secondary)]" style={{ maxWidth: '600px', textAlign: 'center' }}>
             Dedicated professionals working together to build the future of open source collaboration
           </p>
         </div>
 
         {/* Team Grid */}
-        <div 
-          style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', 
-            gap: '24px',
-            justifyItems: 'center'
-          }}
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 justify-items-center w-full" style={{ marginBottom: '64px' }}>
           {teamMembers.map((member, index) => (
             <TeamCard 
               key={index} 

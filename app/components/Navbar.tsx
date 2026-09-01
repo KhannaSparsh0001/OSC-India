@@ -57,23 +57,31 @@ export default function Navbar() {
         }}
       >
         {/* Logo */}
-        <Link
-          href="/"
-          style={{
-            textDecoration: "none",
-            justifySelf: "start",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Image
-            src="/logo.png"
-            alt="Open Source Connect India"
-            width={186}
-            height={48}
-            priority
-            className="navbar-logo"
-          />
+        <Link href="/" className="logo-link" style={{ textDecoration: "none", justifySelf: "start" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <span
+              className="hidden sm:inline-block"
+              style={{
+                fontWeight: 700,
+                fontSize: "15px",
+                color: "#ffffff",
+                letterSpacing: "-0.2px",
+              }}
+            >
+              Open Source Connect India 2026
+            </span>
+            <span
+              className="inline-block sm:hidden"
+              style={{
+                fontWeight: 700,
+                fontSize: "15px",
+                color: "#ffffff",
+                letterSpacing: "-0.2px",
+              }}
+            >
+              OSC India
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Nav */}

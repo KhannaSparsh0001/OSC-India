@@ -22,6 +22,7 @@
 html {
   scroll-behavior: smooth;
   background-color: #000000;
+  overflow-x: hidden;
 }
 
 body {
@@ -59,7 +60,7 @@ img { display: block; max-width: 100%; }
 }
 .footer-links-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 32px;
 }
 .footer-left-col {
@@ -224,7 +225,7 @@ img { display: block; max-width: 100%; }
     gap: 36px;
   }
   .footer-links-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 16px;
   }
   .footer-col-item h4 {
@@ -322,7 +323,7 @@ img { display: block; max-width: 100%; }
     padding: 32px 16px 20px !important;
   }
   .footer-links-grid {
-    grid-template-columns: 1fr 1fr !important;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
     gap: 24px !important;
   }
 

@@ -46,14 +46,7 @@ export default function ContributeSection() {
         borderTop: "1px solid rgba(255,255,255,0.03)",
       }}
     >
-      <div
-        style={{
-          width: "100%",
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          gap: "20px",
-        }}
-      >
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" style={{ maxWidth: "1280px", margin: "0 auto" }}>
         {items.map((item, i) => (
           <div
             key={i}

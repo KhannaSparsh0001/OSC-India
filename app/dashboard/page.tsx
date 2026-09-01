@@ -9,8 +9,8 @@ export default function DashboardPage() {
   const matrixCols = 25; // 25 weeks to fit in the card
   const matrixRows = 7;
   const matrixDots = Array.from({ length: matrixCols * matrixRows }, (_, i) => {
-    // Randomize some active dots for the template look
-    const val = Math.random();
+    // Deterministic pseudo-random generation to prevent hydration error
+    const val = (i * 9301 + 49297) % 233280 / 233280;
     if (val > 0.85) return 'var(--orange)';
     if (val > 0.7) return 'rgba(255,96,0,0.5)';
     if (val > 0.5) return 'rgba(255,96,0,0.2)';
@@ -22,7 +22,7 @@ export default function DashboardPage() {
       <Navbar />
       <div style={{ height: '96px', width: '100%', flexShrink: 0 }} aria-hidden="true" />
       
-      <main className="flex-grow flex flex-col items-center px-6" style={{ margin: '0 auto', maxWidth: '1200px', width: '100%', paddingBottom: '96px', paddingTop: '24px' }}>
+      <main className="flex-grow flex flex-col items-center" style={{ margin: '0 auto', maxWidth: '1440px', width: '100%', paddingBottom: '96px', paddingTop: '24px', paddingLeft: 'clamp(20px, 5vw, 64px)', paddingRight: 'clamp(20px, 5vw, 64px)', overflowX: 'hidden', boxSizing: 'border-box' }}>
         
         {/* Header */}
         <div style={{ width: '100%', marginBottom: '40px' }}>
@@ -30,18 +30,18 @@ export default function DashboardPage() {
             <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--orange)' }} />
             Dashboard Active
           </div>
-          <h1 style={{ fontSize: '40px', fontWeight: 800, marginBottom: '8px', letterSpacing: '-0.02em' }}>Command Center</h1>
+          <h1 style={{ fontSize: 'clamp(32px, 8vw, 40px)', fontWeight: 800, marginBottom: '8px', letterSpacing: '-0.02em' }}>Command Center</h1>
           <p style={{ color: '#9ca3af', fontSize: '15px' }}>Your open source journey at a glance</p>
         </div>
 
         {/* Top Grid Area (Profile + Stats) */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '24px', width: '100%', marginBottom: '48px' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full mb-12">
           
           {/* LEFT COLUMN: Profile info */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="md:col-span-1 xl:col-span-1" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             
             {/* Main Profile Card */}
-            <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: '40px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: 'clamp(24px, 4vw, 40px) 24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <div style={{ width: '120px', height: '120px', borderRadius: '50%', border: '2px solid var(--orange)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px', fontWeight: 800, color: 'white', marginBottom: '20px', position: 'relative' }}>
                 O
                 <div style={{ position: 'absolute', bottom: '0', right: '0', background: 'var(--bg)', borderRadius: '50%', padding: '4px' }}>
@@ -104,10 +104,10 @@ export default function DashboardPage() {
           </div>
 
           {/* RIGHT COLUMN: Stats & Charts */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="md:col-span-1 xl:col-span-2" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             
             {/* Rank Card */}
-            <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: '32px', position: 'relative' }}>
+            <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: 'clamp(20px, 4vw, 32px)', position: 'relative' }}>
                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '32px' }}>
                  <div>
                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#9ca3af', fontSize: '12px', fontWeight: 600, marginBottom: '8px', letterSpacing: '0.05em' }}>
@@ -227,7 +227,7 @@ export default function DashboardPage() {
           <p style={{ color: '#9ca3af', fontSize: '14px' }}>Track your daily contributions and build your streak</p>
         </div>
 
-        <div style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: '32px', marginBottom: '48px', overflowX: 'auto' }}>
+        <div style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: 'clamp(16px, 4vw, 32px)', marginBottom: '48px', overflowX: 'auto' }}>
           <div style={{ fontSize: '14px', fontWeight: 700, marginBottom: '4px' }}>Activity Matrix</div>
           <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '32px' }}>118 contributions in the last 59 days</div>
           
@@ -272,7 +272,7 @@ export default function DashboardPage() {
           <p style={{ color: '#9ca3af', fontSize: '14px' }}>Unlock badges and milestones as you contribute</p>
         </div>
 
-        <div style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: '32px', marginBottom: '48px' }}>
+        <div style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: 'clamp(16px, 4vw, 32px)', marginBottom: '48px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
             <div style={{ fontSize: '14px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ color: 'var(--orange)' }}>✨</span> Achievements
@@ -303,10 +303,10 @@ export default function DashboardPage() {
           <p style={{ color: '#9ca3af', fontSize: '14px' }}>Your contribution metrics and community impact</p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '24px', width: '100%', marginBottom: '64px' }}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full mb-16">
           
           {/* 2x2 Stats Grid */}
-          <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: '24px' }}>
+          <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: 'clamp(16px, 4vw, 24px)' }}>
              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
                <div style={{ fontSize: '14px', fontWeight: 700 }}>Impact Overview</div>
                <div style={{ fontSize: '12px', color: '#9ca3af', display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -360,7 +360,7 @@ export default function DashboardPage() {
           </div>
 
           {/* CTA Banner */}
-          <div style={{ background: 'rgba(255,96,0,0.05)', border: '1px solid rgba(255,96,0,0.1)', borderRadius: '24px', padding: '40px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+          <div style={{ background: 'rgba(255,96,0,0.05)', border: '1px solid rgba(255,96,0,0.1)', borderRadius: '24px', padding: 'clamp(24px, 4vw, 40px) 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
             <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'var(--orange)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px', boxShadow: '0 8px 24px rgba(255,96,0,0.3)' }}>
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
             </div>
