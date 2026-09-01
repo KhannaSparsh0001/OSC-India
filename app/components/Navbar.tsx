@@ -69,15 +69,10 @@ export default function Navbar() {
           <Image
             src="/logo.png"
             alt="Open Source Connect India"
-            width={130}
-            height={38}
+            width={186}
+            height={48}
             priority
-            style={{
-              height: "36px",
-              width: "auto",
-              objectFit: "contain",
-              display: "block",
-            }}
+            className="navbar-logo"
           />
         </Link>
 

@@ -477,6 +477,23 @@ img { display: block; max-width: 100%; }
   color: #ffffff !important;
 }
 
+/* ===========================
+   NAVBAR & FOOTER LOGO
+   =========================== */
+.navbar-logo {
+  height: 48px !important;
+  width: auto !important;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.2s ease;
+}
 
+.navbar-logo:hover {
+  transform: scale(1.03);
+}
 
-
+@media (max-width: 768px) {
+  .navbar-logo {
+    height: 40px !important;
+  }
+}

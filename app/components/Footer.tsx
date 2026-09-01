@@ -23,14 +23,9 @@ export default function Footer() {
                 <Image
                   src="/logo.png"
                   alt="Open Source Connect India"
-                  width={140}
-                  height={40}
-                  style={{
-                    height: "36px",
-                    width: "auto",
-                    objectFit: "contain",
-                    display: "block",
-                  }}
+                  width={186}
+                  height={48}
+                  className="navbar-logo"
                 />
               </Link>
               <p
