@@ -144,7 +144,9 @@ export default function HeroSection() {
           >
             {/* Register Now Button */}
             <Link
-              href="#register"
+              href="https://luma.com/3u22sml7"
+              target="_blank"
+              rel="noopener noreferrer"
               className="hero-register-btn"
               style={{
                 background: "#FF7518",

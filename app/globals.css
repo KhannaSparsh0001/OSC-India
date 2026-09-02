@@ -59,9 +59,9 @@ img { display: block; max-width: 100%; }
   gap: 64px;
 }
 .footer-links-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 32px;
+  display: flex;
+  justify-content: flex-end;
+  gap: clamp(40px, 8vw, 120px);
 }
 .footer-left-col {
   display: flex;
@@ -225,6 +225,7 @@ img { display: block; max-width: 100%; }
     gap: 36px;
   }
   .footer-links-grid {
+    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 16px;
   }
@@ -323,6 +324,7 @@ img { display: block; max-width: 100%; }
     padding: 32px 16px 20px !important;
   }
   .footer-links-grid {
+    display: grid !important;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
     gap: 24px !important;
   }

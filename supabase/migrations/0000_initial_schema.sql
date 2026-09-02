@@ -1,23 +1,24 @@
--- Initial Schema for OSC-India
+-- 1. Create the schema and grant basic usage
+CREATE SCHEMA IF NOT EXISTS next_auth;
+GRANT USAGE ON SCHEMA next_auth TO service_role;
+GRANT ALL ON SCHEMA next_auth TO postgres;
 
--- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
--- 1. Roles Table
-CREATE TABLE public.roles (
+-- 2. Create public roles
+CREATE TABLE IF NOT EXISTS public.roles (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name VARCHAR NOT NULL UNIQUE,
   permissions JSONB DEFAULT '{}'::jsonb
 );
 
--- Insert Default Roles
+-- Insert Default Roles (ignore if they exist)
 INSERT INTO public.roles (name) VALUES 
 ('Contributor'),
 ('Mentor'),
-('Project Admin');
+('Project Admin')
+ON CONFLICT (name) DO NOTHING;
 
--- 2. Users Table (Compatible with NextAuth @auth/supabase-adapter)
-CREATE TABLE public.users (
+-- 3. Create next_auth tables
+CREATE TABLE IF NOT EXISTS next_auth.users (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name VARCHAR,
   email VARCHAR UNIQUE,
@@ -27,10 +28,9 @@ CREATE TABLE public.users (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- NextAuth specific tables
-CREATE TABLE public.accounts (
+CREATE TABLE IF NOT EXISTS next_auth.accounts (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "userId" UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  "userId" UUID NOT NULL REFERENCES next_auth.users(id) ON DELETE CASCADE,
   type VARCHAR NOT NULL,
   provider VARCHAR NOT NULL,
   "providerAccountId" VARCHAR NOT NULL,
@@ -44,42 +44,40 @@ CREATE TABLE public.accounts (
   UNIQUE(provider, "providerAccountId")
 );
 
-CREATE TABLE public.sessions (
+CREATE TABLE IF NOT EXISTS next_auth.sessions (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   "sessionToken" VARCHAR NOT NULL UNIQUE,
-  "userId" UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  "userId" UUID NOT NULL REFERENCES next_auth.users(id) ON DELETE CASCADE,
   expires TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
-CREATE TABLE public.verification_tokens (
+CREATE TABLE IF NOT EXISTS next_auth.verification_tokens (
   identifier VARCHAR,
   token VARCHAR UNIQUE,
   expires TIMESTAMP WITH TIME ZONE NOT NULL,
   PRIMARY KEY (identifier, token)
 );
 
--- 3. Profiles Table
-CREATE TABLE public.profiles (
+-- 4. Create public profile/project/contribution tables
+CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID NOT NULL UNIQUE REFERENCES public.users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL UNIQUE REFERENCES next_auth.users(id) ON DELETE CASCADE,
   full_name VARCHAR,
   avatar_url VARCHAR,
   bio TEXT,
   tech_stack TEXT[] DEFAULT '{}'
 );
 
--- 4. Projects Table
-CREATE TABLE public.projects (
+CREATE TABLE IF NOT EXISTS public.projects (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name VARCHAR NOT NULL,
   github_repo_url VARCHAR NOT NULL UNIQUE,
   description TEXT
 );
 
--- 5. Contributions Table
-CREATE TABLE public.contributions (
+CREATE TABLE IF NOT EXISTS public.contributions (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES next_auth.users(id) ON DELETE CASCADE,
   project_id UUID NOT NULL REFERENCES public.projects(id) ON DELETE CASCADE,
   type VARCHAR NOT NULL CHECK (type IN ('pr', 'issue', 'commit')),
   github_url VARCHAR NOT NULL UNIQUE,
@@ -88,56 +86,49 @@ CREATE TABLE public.contributions (
   contributed_at TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
--- 6. Leaderboard Stats Table
-CREATE TABLE public.leaderboard_stats (
-  user_id UUID PRIMARY KEY REFERENCES public.users(id) ON DELETE CASCADE,
+CREATE TABLE IF NOT EXISTS public.leaderboard_stats (
+  user_id UUID PRIMARY KEY REFERENCES next_auth.users(id) ON DELETE CASCADE,
   total_points INTEGER DEFAULT 0,
   current_streak INTEGER DEFAULT 0,
   rank INTEGER,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- TRIGGER: Auto-create Profile and Leaderboard row for new Users
+-- 5. Set up Triggers (Using DROP FIRST to avoid conflicts)
+DROP FUNCTION IF EXISTS public.handle_new_user CASCADE;
 CREATE OR REPLACE FUNCTION public.handle_new_user() 
 RETURNS TRIGGER AS $$
 DECLARE
   default_role_id UUID;
 BEGIN
-  -- Get the Contributor role ID
   SELECT id INTO default_role_id FROM public.roles WHERE name = 'Contributor';
-
-  -- Set default role
   NEW.role_id = default_role_id;
-
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 CREATE TRIGGER on_auth_user_created_before
-  BEFORE INSERT ON public.users
+  BEFORE INSERT ON next_auth.users
   FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
 
+DROP FUNCTION IF EXISTS public.handle_new_user_after CASCADE;
 CREATE OR REPLACE FUNCTION public.handle_new_user_after() 
 RETURNS TRIGGER AS $$
 BEGIN
-  -- Create profile
   INSERT INTO public.profiles (user_id, full_name, avatar_url)
   VALUES (NEW.id, NEW.name, NEW.image);
   
-  -- Create leaderboard stat row
   INSERT INTO public.leaderboard_stats (user_id)
   VALUES (NEW.id);
-
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 CREATE TRIGGER on_auth_user_created_after
-  AFTER INSERT ON public.users
+  AFTER INSERT ON next_auth.users
   FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user_after();
 
-
--- TRIGGER: Auto-update Leaderboard Points when a PR is merged
+DROP FUNCTION IF EXISTS public.update_leaderboard_points CASCADE;
 CREATE OR REPLACE FUNCTION public.update_leaderboard_points() 
 RETURNS TRIGGER AS $$
 BEGIN
@@ -150,7 +141,6 @@ BEGIN
     ),
     updated_at = NOW()
   WHERE user_id = NEW.user_id;
-  
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -159,21 +149,41 @@ CREATE TRIGGER on_contribution_added
   AFTER INSERT OR UPDATE ON public.contributions
   FOR EACH ROW EXECUTE PROCEDURE public.update_leaderboard_points();
 
--- ROW LEVEL SECURITY (RLS)
--- We will enable RLS but allow public reads. Writes will be performed by the Next.js Server Actions using the Service Role Key.
+-- 6. Enable RLS and Policies
 ALTER TABLE public.roles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.accounts ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.sessions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE next_auth.users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE next_auth.accounts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE next_auth.sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.contributions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.leaderboard_stats ENABLE ROW LEVEL SECURITY;
 
--- Allow Public Reads
+DROP POLICY IF EXISTS "Enable read access for all users" ON public.roles;
 CREATE POLICY "Enable read access for all users" ON public.roles FOR SELECT USING (true);
-CREATE POLICY "Enable read access for all users" ON public.users FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Enable read access for all users" ON next_auth.users;
+CREATE POLICY "Enable read access for all users" ON next_auth.users FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Enable read access for all users" ON public.profiles;
 CREATE POLICY "Enable read access for all users" ON public.profiles FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Enable read access for all users" ON public.projects;
 CREATE POLICY "Enable read access for all users" ON public.projects FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Enable read access for all users" ON public.contributions;
 CREATE POLICY "Enable read access for all users" ON public.contributions FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Enable read access for all users" ON public.leaderboard_stats;
 CREATE POLICY "Enable read access for all users" ON public.leaderboard_stats FOR SELECT USING (true);
+
+-- 7. Grant Table Permissions for NextAuth Service Role
+GRANT ALL ON ALL TABLES IN SCHEMA next_auth TO service_role;
+GRANT ALL ON ALL ROUTINES IN SCHEMA next_auth TO service_role;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA next_auth TO service_role;
+
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA next_auth GRANT ALL ON TABLES TO service_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA next_auth GRANT ALL ON ROUTINES TO service_role;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA next_auth GRANT ALL ON SEQUENCES TO service_role;
+
+-- 8. Expose Schema to API
+ALTER ROLE authenticator SET pgrst.db_schemas = 'public, storage, graphql_public, next_auth';
+
+-- 9. Reload config and schema
+NOTIFY pgrst, 'reload config';
+NOTIFY pgrst, 'reload schema';
