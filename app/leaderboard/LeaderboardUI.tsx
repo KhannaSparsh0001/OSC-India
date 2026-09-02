@@ -1,19 +1,33 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 export default function LeaderboardUI({ users }: { users: any[] }) {
-  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
 
-  const filteredUsers = users.filter(user => 
-    (user.name && user.name.toLowerCase().includes(searchQuery.toLowerCase())) || 
-    (user.username && user.username.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      const params = new URLSearchParams(searchParams);
+      if (searchQuery) {
+        params.set("q", searchQuery);
+      } else {
+        params.delete("q");
+      }
+      router.push(`/leaderboard?${params.toString()}`);
+    }, 300);
 
-  const filteredTopThree = filteredUsers.slice(0, 3);
-  const filteredOthers = filteredUsers.slice(3, 13);
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery, router, searchParams]);
+
+  const isSearching = searchParams.get("q") ? true : false;
+
+  const topThree = users.slice(0, 3);
+  const others = users.slice(3);
 
   return (
     <div className="min-h-screen bg-[var(--bg)] flex flex-col font-sans text-white">
@@ -56,9 +70,9 @@ export default function LeaderboardUI({ users }: { users: any[] }) {
         </div>
 
         {/* Podium - Only show if not searching */}
-        {searchQuery === "" && (
+        {!isSearching && topThree.length > 0 && (
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: '24px', marginBottom: '48px', width: '100%', flexWrap: 'wrap' }}>
-            {filteredTopThree.map((user, index) => (
+            {topThree.map((user, index) => (
               <div 
                 key={user.rank}
                 style={{
@@ -115,7 +129,7 @@ export default function LeaderboardUI({ users }: { users: any[] }) {
 
         {/* List Section */}
         <div style={{ width: '100%', maxWidth: '800px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {(searchQuery === "" ? filteredOthers : filteredUsers).map((user, index) => (
+          {(isSearching ? users : others).map((user, index) => (
             <div 
               key={user.rank}
               style={{

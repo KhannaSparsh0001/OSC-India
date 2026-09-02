@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { saveTechStack } from "../dashboard/actions";
 
 interface TechStackProps {
@@ -12,6 +12,16 @@ export default function TechStack({ initialStack, providerAccountId }: TechStack
   const [stack, setStack] = useState<string[]>(initialStack);
   const [isSyncing, setIsSyncing] = useState(false);
   const [error, setError] = useState("");
+  const hasAutoSynced = useRef(false);
+
+  useEffect(() => {
+    // Auto-sync if stack is completely empty on first load
+    if (initialStack.length === 0 && providerAccountId && !hasAutoSynced.current) {
+      hasAutoSynced.current = true;
+      handleSync();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [providerAccountId, initialStack.length]);
 
   const handleSync = async () => {
     if (!providerAccountId) {
