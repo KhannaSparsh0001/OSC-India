@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { saveContributions } from "../dashboard/actions";
+import React, { useState, useEffect } from "react";
+import { fetchFullActivityGraph } from "../dashboard/actions";
 
 interface Contribution {
   date: string;
@@ -9,29 +9,34 @@ interface Contribution {
 }
 
 interface ActivityMatrixProps {
-  contributions: Contribution[];
   providerAccountId: string | null;
 }
 
-export default function ActivityMatrix({ contributions, providerAccountId }: ActivityMatrixProps) {
-  // Generate the last 25 weeks of days (175 days)
-  const today = new Date();
-  const days = [];
-  for (let i = 174; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
-    days.push(d.toISOString().split("T")[0]);
-  }
-
-  // Create a map for quick lookup
-  const countMap = new Map<string, number>();
-  contributions.forEach((c) => {
-    countMap.set(c.date, c.count);
-  });
-
-  const [hoveredDay, setHoveredDay] = useState<{ date: string; count: number; x: number; y: number } | null>(null);
+export default function ActivityMatrix({ providerAccountId }: ActivityMatrixProps) {
+  const [contributions, setContributions] = useState<Contribution[]>([]);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState("");
+
+  // Check localStorage on mount
+  useEffect(() => {
+    const cached = localStorage.getItem('github_activity');
+    if (cached) {
+      try {
+        setContributions(JSON.parse(cached));
+        setIsLoaded(true);
+      } catch (e) {
+        localStorage.removeItem('github_activity');
+      }
+    } else {
+      // Auto-fetch if nothing is cached
+      if (providerAccountId) {
+        handleSync();
+      } else {
+        setIsLoaded(true);
+      }
+    }
+  }, [providerAccountId]);
 
   const handleSync = async () => {
     if (!providerAccountId) {
@@ -48,40 +53,39 @@ export default function ActivityMatrix({ contributions, providerAccountId }: Act
       const userData = await userRes.json();
       const githubUsername = userData.login;
 
-      // 2. Fetch last 100 events
-      const eventsRes = await fetch(`https://api.github.com/users/${githubUsername}/events?per_page=100`);
-      if (!eventsRes.ok) throw new Error("Failed to fetch events.");
-      const events = await eventsRes.json();
+      // 2. Fetch full contribution graph via Native Server Action
+      const graphRes = await fetchFullActivityGraph(githubUsername);
+      if (graphRes.error || !graphRes.contributions) throw new Error(graphRes.error || "Failed to fetch contribution graph.");
 
-      // 3. Parse Push and PR events
-      const parsedEvents = [];
-      for (const e of events) {
-        if (e.type === 'PushEvent') {
-          parsedEvents.push({ type: 'commit', url: `https://github.com/event/${e.id}`, created_at: e.created_at });
-        } else if (e.type === 'PullRequestEvent') {
-          parsedEvents.push({ type: 'pr', url: e.payload?.pull_request?.html_url || `https://github.com/pr/${e.id}`, created_at: e.created_at });
-        } else if (e.type === 'IssuesEvent') {
-          parsedEvents.push({ type: 'issue', url: e.payload?.issue?.html_url || `https://github.com/issue/${e.id}`, created_at: e.created_at });
-        }
-      }
-
-      if (parsedEvents.length === 0) {
-        setError("No recent public activity found.");
-        setIsSyncing(false);
-        return;
-      }
-
-      // 4. Save to DB
-      const res = await saveContributions(parsedEvents);
-      if (res.error) throw new Error(res.error);
-
-      // Successfully saved! Next.js will revalidate the path and refresh the data.
+      const parsedEvents = graphRes.contributions;
+      
+      // 3. Save to localStorage & State
+      setContributions(parsedEvents);
+      localStorage.setItem('github_activity', JSON.stringify(parsedEvents));
+      setIsLoaded(true);
     } catch (err: any) {
       setError(err.message || "Failed to sync.");
     } finally {
       setIsSyncing(false);
     }
   };
+
+  // Generate the last 25 weeks of days (175 days)
+  const today = new Date();
+  const days = [];
+  for (let i = 174; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    days.push(d.toISOString().split("T")[0]);
+  }
+
+  // Create a map for quick lookup during render
+  const countMap = new Map<string, number>();
+  contributions.forEach((c) => {
+    countMap.set(c.date, c.count);
+  });
+
+  const [hoveredDay, setHoveredDay] = useState<{ date: string; count: number; x: number; y: number } | null>(null);
 
   const getColor = (count: number) => {
     if (count === 0) return "rgba(255,255,255,0.05)";
@@ -134,7 +138,7 @@ export default function ActivityMatrix({ contributions, providerAccountId }: Act
         </div>
         
         {/* Grid */}
-        <div style={{ display: "flex", gap: "4px" }}>
+        <div style={{ display: "flex", gap: "4px" }} className={(!isLoaded || isSyncing) ? "animate-pulse opacity-50" : "transition-opacity duration-300"}>
           {/* We need to group days into columns of 7 */}
           {Array.from({ length: 25 }).map((_, colIndex) => {
             const colDays = days.slice(colIndex * 7, (colIndex + 1) * 7);
@@ -166,7 +170,7 @@ export default function ActivityMatrix({ contributions, providerAccountId }: Act
       </div>
 
       {/* Tooltip */}
-      {hoveredDay && (
+      {hoveredDay && isLoaded && !isSyncing && (
         <div
           style={{
             position: "fixed",

@@ -3,11 +3,11 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { auth } from "@/auth";
 import { createClient } from "@/lib/supabase/server";
-import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import ActivityMatrix from "../components/ActivityMatrix";
 import TechStack from "../components/TechStack";
+import { getProviderAccountId } from "./actions";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -56,39 +56,11 @@ export default async function DashboardPage() {
   const streak = statsData?.current_streak || 0;
   const mergedPRs = prCount || 0;
 
-  // Fetch contributions for Activity Matrix
-  const { data: rawContributions } = await supabase
-    .from('contributions')
-    .select('created_at')
-    .eq('user_id', session.user.id)
-    .gte('created_at', new Date(Date.now() - 175 * 24 * 60 * 60 * 1000).toISOString());
-
-  const contributionMap = new Map<string, number>();
-  if (rawContributions) {
-    rawContributions.forEach((c: any) => {
-      const date = c.created_at.split('T')[0];
-      contributionMap.set(date, (contributionMap.get(date) || 0) + 1);
-    });
-  }
-  const contributionsData = Array.from(contributionMap.entries()).map(([date, count]) => ({ date, count }));
-
+  // Tech stack from DB
   const techStack = profileData?.tech_stack || [];
 
   // Fetch providerAccountId for client-side API calls
-  const supabaseAdmin = createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { db: { schema: 'next_auth' } }
-  );
-  
-  const { data: accountData } = await supabaseAdmin
-    .from("accounts")
-    .select('"providerAccountId"')
-    .eq('"userId"', session.user.id)
-    .eq("provider", "github")
-    .single();
-
-  const providerAccountId = accountData?.providerAccountId || null;
+  const providerAccountId = await getProviderAccountId();
 
   return (
     <div className="min-h-screen bg-[var(--bg)] flex flex-col font-sans text-white">
@@ -218,7 +190,7 @@ export default async function DashboardPage() {
           <div style={{ fontSize: '14px', fontWeight: 700, marginBottom: '4px' }}>Activity Matrix</div>
           <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '16px' }}>Contributions this year</div>
           
-          <ActivityMatrix contributions={contributionsData} providerAccountId={providerAccountId} />
+          <ActivityMatrix providerAccountId={providerAccountId} />
         </div>
 
         {/* Back to top */}

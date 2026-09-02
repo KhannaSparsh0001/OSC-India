@@ -3,6 +3,27 @@
 import { auth } from "@/auth";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+
+export async function getProviderAccountId() {
+  const session = await auth();
+  if (!session?.user) return null;
+
+  const supabaseAdmin = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { db: { schema: 'next_auth' } }
+  );
+
+  const { data } = await supabaseAdmin
+    .from("accounts")
+    .select('"providerAccountId"')
+    .eq('"userId"', session.user.id)
+    .eq("provider", "github")
+    .single();
+
+  return data?.providerAccountId || null;
+}
 
 export async function saveTechStack(languages: string[]) {
   const session = await auth();
@@ -35,39 +56,39 @@ export async function saveTechStack(languages: string[]) {
   }
 }
 
-export async function saveContributions(events: { type: string, url: string, created_at: string }[]) {
-  const session = await auth();
-  if (!session?.user) {
-    throw new Error("Unauthorized");
-  }
-
+export async function fetchFullActivityGraph(githubUsername: string) {
   try {
-    const supabase = await createClient();
+    const res = await fetch(`https://github.com/users/${githubUsername}/contributions`);
+    if (!res.ok) throw new Error("Failed to fetch GitHub contributions.");
+    const html = await res.text();
+
+    const countMap = new Map<string, number>();
+    const regex = /data-date="([^"]+)"[^>]*id="([^"]+)"[\s\S]*?<tool-tip[^>]*for="\2"[^>]*>([^<]*)<\/tool-tip>/g;
     
-    // Clear old auto-synced GitHub events (project_id is null)
-    await supabase
-      .from("contributions")
-      .delete()
-      .eq("user_id", session.user.id)
-      .is("project_id", null);
-
-    if (events && events.length > 0) {
-      const records = events.map(e => ({
-        user_id: session.user.id,
-        type: e.type,
-        url: e.url,
-        created_at: e.created_at,
-        status: 'merged' // Auto-approve synced GitHub activity
-      }));
-
-      const { error } = await supabase.from("contributions").insert(records);
-      if (error) throw error;
+    let match;
+    while ((match = regex.exec(html)) !== null) {
+      const date = match[1];
+      const text = match[3];
+      
+      let count = 0;
+      if (text && !text.toLowerCase().includes('no contributions')) {
+        const matchCount = text.match(/^(\d+)/);
+        if (matchCount) {
+          count = parseInt(matchCount[1], 10);
+        }
+      }
+      
+      if (count > 0) {
+        countMap.set(date, count);
+      }
     }
 
-    revalidatePath("/dashboard");
-    return { success: true };
+    return { 
+      success: true, 
+      contributions: Array.from(countMap.entries()).map(([date, count]) => ({ date, count })) 
+    };
   } catch (error: any) {
-    console.error("Save contributions error:", error);
-    return { error: error.message || "Failed to save contributions" };
+    console.error("Fetch full activity error:", error);
+    return { error: error.message || "Failed to fetch full activity graph" };
   }
 }
