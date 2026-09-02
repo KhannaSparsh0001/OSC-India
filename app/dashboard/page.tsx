@@ -3,7 +3,11 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { auth } from "@/auth";
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { redirect } from "next/navigation";
+import Link from "next/link";
+import ActivityMatrix from "../components/ActivityMatrix";
+import TechStack from "../components/TechStack";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -19,6 +23,7 @@ export default async function DashboardPage() {
     .select(`
       full_name, 
       avatar_url, 
+      tech_stack,
       users ( 
         roles ( name ) 
       )
@@ -51,17 +56,39 @@ export default async function DashboardPage() {
   const streak = statsData?.current_streak || 0;
   const mergedPRs = prCount || 0;
 
-  // Dummy data for the contribution matrix (GitHub style)
-  const matrixCols = 25; // 25 weeks to fit in the card
-  const matrixRows = 7;
-  const matrixDots = Array.from({ length: matrixCols * matrixRows }, (_, i) => {
-    // Deterministic pseudo-random generation
-    const val = (i * 9301 + 49297) % 233280 / 233280;
-    if (val > 0.85) return 'var(--orange)';
-    if (val > 0.7) return 'rgba(255,96,0,0.5)';
-    if (val > 0.5) return 'rgba(255,96,0,0.2)';
-    return 'rgba(255,255,255,0.05)';
-  });
+  // Fetch contributions for Activity Matrix
+  const { data: rawContributions } = await supabase
+    .from('contributions')
+    .select('created_at')
+    .eq('user_id', session.user.id)
+    .gte('created_at', new Date(Date.now() - 175 * 24 * 60 * 60 * 1000).toISOString());
+
+  const contributionMap = new Map<string, number>();
+  if (rawContributions) {
+    rawContributions.forEach((c: any) => {
+      const date = c.created_at.split('T')[0];
+      contributionMap.set(date, (contributionMap.get(date) || 0) + 1);
+    });
+  }
+  const contributionsData = Array.from(contributionMap.entries()).map(([date, count]) => ({ date, count }));
+
+  const techStack = profileData?.tech_stack || [];
+
+  // Fetch providerAccountId for client-side API calls
+  const supabaseAdmin = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { db: { schema: 'next_auth' } }
+  );
+  
+  const { data: accountData } = await supabaseAdmin
+    .from("accounts")
+    .select('"providerAccountId"')
+    .eq('"userId"', session.user.id)
+    .eq("provider", "github")
+    .single();
+
+  const providerAccountId = accountData?.providerAccountId || null;
 
   return (
     <div className="min-h-screen bg-[var(--bg)] flex flex-col font-sans text-white">
@@ -123,7 +150,11 @@ export default async function DashboardPage() {
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: '8px' }}>
-                  <button style={{ flex: 1, background: 'var(--orange)', color: 'white', padding: '10px', borderRadius: '8px', fontSize: '13px', fontWeight: 600 }}>View Badge</button>
+                  <Link href="/badge" style={{ flex: 1, textDecoration: 'none' }}>
+                    <button style={{ width: '100%', background: 'var(--orange)', color: 'white', padding: '10px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, transition: 'all 0.2s', cursor: 'pointer' }}>
+                      View Badge
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -164,21 +195,7 @@ export default async function DashboardPage() {
 
             {/* Bottom Row inside Right Column (Tech Stack + PR Distribution) */}
             <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
-              
-              {/* Tech Stack */}
-              <div style={{ flex: 1, minWidth: '200px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: '24px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 600, marginBottom: '20px' }}>
-                  <span style={{ color: 'var(--orange)' }}>⚡</span> Tech Stack
-                </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                  {['React', 'Next.js', 'PostgreSQL', 'Tailwind'].map(tech => (
-                    <div key={tech} style={{ background: 'rgba(255,255,255,0.05)', padding: '6px 12px', borderRadius: '12px', fontSize: '12px', fontWeight: 500 }}>
-                      {tech}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
+              <TechStack initialStack={techStack} providerAccountId={providerAccountId} />
             </div>
           </div>
         </div>
@@ -199,23 +216,9 @@ export default async function DashboardPage() {
 
         <div style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: 'clamp(16px, 4vw, 32px)', marginBottom: '48px', overflowX: 'auto' }}>
           <div style={{ fontSize: '14px', fontWeight: 700, marginBottom: '4px' }}>Activity Matrix</div>
-          <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '32px' }}>Contributions this year</div>
+          <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '16px' }}>Contributions this year</div>
           
-          <div style={{ display: 'flex', gap: '16px', minWidth: '800px' }}>
-            {/* Days labels */}
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', fontSize: '11px', color: '#9ca3af', padding: '8px 0', height: '136px' }}>
-              <div>Mon</div>
-              <div>Wed</div>
-              <div>Fri</div>
-              <div>Sun</div>
-            </div>
-            {/* Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${matrixCols}, 16px)`, gridTemplateRows: 'repeat(7, 16px)', gap: '4px' }}>
-              {matrixDots.map((color, i) => (
-                <div key={i} style={{ width: '16px', height: '16px', borderRadius: '4px', background: color }} />
-              ))}
-            </div>
-          </div>
+          <ActivityMatrix contributions={contributionsData} providerAccountId={providerAccountId} />
         </div>
 
         {/* Back to top */}
