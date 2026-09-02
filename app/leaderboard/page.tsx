@@ -3,16 +3,20 @@ import LeaderboardUI from "./LeaderboardUI";
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
-export default async function LeaderboardPage() {
+export default async function LeaderboardPage(props: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const searchParams = await props.searchParams;
+  const q = searchParams?.q as string || "";
+  
   const supabase = await createClient();
 
-  // Fetch top 100 users from leaderboard_stats, joining with profiles and users
-  const { data: stats } = await supabase
+  let query = supabase
     .from("leaderboard_stats")
     .select(`
       total_points,
       rank,
-      users (
+      users!inner (
         name,
         email,
         image
@@ -22,8 +26,13 @@ export default async function LeaderboardPage() {
         avatar_url
       )
     `)
-    .order("total_points", { ascending: false })
-    .limit(100);
+    .order("total_points", { ascending: false });
+
+  if (q) {
+    query = query.ilike("users.name", `%${q}%`);
+  }
+
+  const { data: stats } = await query.limit(100);
 
   // Format data for the UI
   const users = stats?.map((stat: any, index: number) => {

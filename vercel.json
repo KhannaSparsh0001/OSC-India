@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "/api/cron/sync-github",
+      "path": "/api/cron/sync-leaderboard",
       "schedule": "0 * * * *"
     }
   ]

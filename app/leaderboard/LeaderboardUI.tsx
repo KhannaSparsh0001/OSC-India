@@ -32,63 +32,7 @@ export default function LeaderboardUI({ users }: { users: any[] }) {
           </p>
         </div>
 
-        {/* Top 3 Section */}
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: '24px', marginBottom: '48px', width: '100%', flexWrap: 'wrap' }}>
-          {filteredTopThree.map((user, index) => (
-            <div 
-              key={user.rank}
-              style={{
-                background: 'rgba(255,255,255,0.02)',
-                border: user.isFirst ? '1px solid var(--orange)' : '1px solid rgba(255,255,255,0.05)',
-                borderRadius: '16px',
-                padding: user.isFirst ? '40px 32px' : '32px 24px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                width: user.isFirst ? '280px' : '240px',
-                boxShadow: user.isFirst ? '0 8px 32px rgba(255,96,0,0.1)' : 'none',
-                position: 'relative'
-              }}
-            >
-              {/* Avatar */}
-              <div style={{ position: 'relative', marginBottom: '24px' }}>
-                <div style={{ width: '80px', height: '80px', borderRadius: '50%', border: '2px solid var(--orange)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1c1c1f', overflow: 'hidden' }}>
-                  {user.avatar ? (
-                    <img src={user.avatar} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  ) : (
-                    <div style={{ fontSize: '32px' }}>{user.name ? user.name[0] : 'U'}</div>
-                  )}
-                </div>
-                {user.isFirst && (
-                  <div style={{ position: 'absolute', top: '-12px', right: '-8px', fontSize: '24px' }}>👑</div>
-                )}
-              </div>
-
-              {/* Rank */}
-              <div style={{ color: 'var(--orange)', fontSize: '24px', fontWeight: 800, marginBottom: '8px' }}>#{user.rank}</div>
-              
-              {/* Name & Username */}
-              <h2 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '4px', textAlign: 'center' }}>{user.name}</h2>
-              <div style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '24px' }}>{user.username}</div>
-
-              {/* Points */}
-              <div style={{ fontSize: '32px', fontWeight: 800, lineHeight: '1' }}>{user.points}</div>
-              <div style={{ color: '#9ca3af', fontSize: '11px', marginBottom: '16px' }}>Points</div>
-
-              {/* PRs */}
-              <div style={{ color: 'var(--orange)', fontSize: '14px', fontWeight: 700, marginBottom: '24px' }}>
-                {user.prs} Merged PRs
-              </div>
-
-              {/* Button */}
-              <button style={{ width: '100%', background: 'var(--orange)', color: 'white', padding: '10px', borderRadius: '8px', fontSize: '13px', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
-                View Profile
-              </button>
-            </div>
-          ))}
-        </div>
-
-        {/* Search Bar */}
+        {/* Search Bar - Moved to the top so UI doesn't jump */}
         <div style={{ width: '100%', maxWidth: '500px', marginBottom: '48px' }}>
           <input 
             type="text" 
@@ -111,9 +55,67 @@ export default function LeaderboardUI({ users }: { users: any[] }) {
           />
         </div>
 
-        {/* List Section (Ranks 4-9) */}
+        {/* Podium - Only show if not searching */}
+        {searchQuery === "" && (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: '24px', marginBottom: '48px', width: '100%', flexWrap: 'wrap' }}>
+            {filteredTopThree.map((user, index) => (
+              <div 
+                key={user.rank}
+                style={{
+                  background: 'rgba(255,255,255,0.02)',
+                  border: user.isFirst ? '1px solid var(--orange)' : '1px solid rgba(255,255,255,0.05)',
+                  borderRadius: '16px',
+                  padding: user.isFirst ? '40px 32px' : '32px 24px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  width: user.isFirst ? '280px' : '240px',
+                  boxShadow: user.isFirst ? '0 8px 32px rgba(255,96,0,0.1)' : 'none',
+                  position: 'relative'
+                }}
+              >
+                {/* Avatar */}
+                <div style={{ position: 'relative', marginBottom: '24px' }}>
+                  <div style={{ width: '80px', height: '80px', borderRadius: '50%', border: '2px solid var(--orange)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1c1c1f', overflow: 'hidden' }}>
+                    {user.avatar ? (
+                      <img src={user.avatar} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      <div style={{ fontSize: '32px' }}>{user.name ? user.name[0] : 'U'}</div>
+                    )}
+                  </div>
+                  {user.isFirst && (
+                    <div style={{ position: 'absolute', top: '-12px', right: '-8px', fontSize: '24px' }}>👑</div>
+                  )}
+                </div>
+
+                {/* Rank */}
+                <div style={{ color: 'var(--orange)', fontSize: '24px', fontWeight: 800, marginBottom: '8px' }}>#{user.rank}</div>
+                
+                {/* Name & Username */}
+                <h2 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '4px', textAlign: 'center' }}>{user.name}</h2>
+                <div style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '24px' }}>{user.username}</div>
+
+                {/* Points */}
+                <div style={{ fontSize: '32px', fontWeight: 800, lineHeight: '1' }}>{user.points}</div>
+                <div style={{ color: '#9ca3af', fontSize: '11px', marginBottom: '16px' }}>Points</div>
+
+                {/* PRs */}
+                <div style={{ color: 'var(--orange)', fontSize: '14px', fontWeight: 700, marginBottom: '24px' }}>
+                  {user.prs} Merged PRs
+                </div>
+
+                {/* Button */}
+                <button style={{ width: '100%', background: 'var(--orange)', color: 'white', padding: '10px', borderRadius: '8px', fontSize: '13px', fontWeight: 700, border: 'none', cursor: 'pointer' }}>
+                  View Profile
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* List Section */}
         <div style={{ width: '100%', maxWidth: '800px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {filteredOthers.map((user, index) => (
+          {(searchQuery === "" ? filteredOthers : filteredUsers).map((user, index) => (
             <div 
               key={user.rank}
               style={{
