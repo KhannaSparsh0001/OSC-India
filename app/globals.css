@@ -476,10 +476,72 @@ img { display: block; max-width: 100%; }
   transform: scaleX(1) !important;
   opacity: 1 !important;
 }
-.nav-link-item:hover span:first-child {
-  color: #ffffff !important;
+
+/* ===========================
+   NAVBAR & FOOTER LOGO
+   =========================== */
+.navbar-logo {
+  height: 48px !important;
+  width: auto !important;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.2s ease;
 }
 
+.navbar-logo:hover {
+  transform: scale(1.03);
+}
 
+@media (max-width: 768px) {
+  .navbar-logo {
+    height: 40px !important;
+  }
+}
 
+/* ===========================
+   TRI-COLOUR BLENDING GRADIENT
+   =========================== */
+.tricolor-gradient {
+  display: inline-block;
+  background: linear-gradient(
+    90deg,
+    #FF6F00 0%,
+    #FF8822 25%,
+    #FFFFFF 48%,
+    #FFFFFF 52%,
+    #3CE85E 76%,
+    #00C853 100%
+  );
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* ===========================
+   HERO TITLE LINES & RESPONSIVE
+   =========================== */
+.hero-title-line-1,
+.hero-title-line-2 {
+  white-space: nowrap;
+}
+
+.hero-title-line-2 {
+  margin-top: 4px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.hero-year-tag {
+  display: inline-block;
+}
+
+@media (max-width: 768px) {
+  .hero-title-line-2 {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
+  }
+}
 

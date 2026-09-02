@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 export default function Navbar() {
@@ -56,31 +57,24 @@ export default function Navbar() {
         }}
       >
         {/* Logo */}
-        <Link href="/" className="logo-link" style={{ textDecoration: "none", justifySelf: "start" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <span
-              className="hidden sm:inline-block"
-              style={{
-                fontWeight: 700,
-                fontSize: "15px",
-                color: "#ffffff",
-                letterSpacing: "-0.2px",
-              }}
-            >
-              Open Source Connect India 2026
-            </span>
-            <span
-              className="inline-block sm:hidden"
-              style={{
-                fontWeight: 700,
-                fontSize: "15px",
-                color: "#ffffff",
-                letterSpacing: "-0.2px",
-              }}
-            >
-              OSC India
-            </span>
-          </div>
+        <Link
+          href="/"
+          className="logo-link"
+          style={{
+            textDecoration: "none",
+            justifySelf: "start",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Image
+            src="/logo.png"
+            alt="Open Source Connect India"
+            width={186}
+            height={48}
+            priority
+            className="navbar-logo"
+          />
         </Link>
 
         {/* Desktop Nav */}
@@ -88,7 +82,7 @@ export default function Navbar() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "32px",
+            gap: "36px",
             justifySelf: "center",
           }}
           className="desktop-nav"
@@ -111,10 +105,9 @@ export default function Navbar() {
               >
                 <span
                   style={{
-                    color: isActive ? "#ffffff" : "#9ca3af",
-                    fontSize: "14px",
+                    color: "#ffffff",
+                    fontSize: "16px",
                     fontWeight: isActive ? 600 : 500,
-                    transition: "color 0.2s ease",
                   }}
                 >
                   {link.label}
@@ -150,23 +143,23 @@ export default function Navbar() {
           <Link
             href="/sign-in"
             style={{
-              color: "#d1d5db",
+              color: "#ffffff",
               textDecoration: "none",
-              fontSize: "14px",
-              fontWeight: 500,
-              padding: "6px 14px",
-              borderRadius: "6px",
+              fontSize: "15px",
+              fontWeight: 600,
+              padding: "8px 18px",
+              borderRadius: "8px",
               border: "1px solid #FF7518",
               background: "rgba(255,255,255,0.03)",
               transition: "all 0.2s",
             }}
             onMouseEnter={(e) => {
               (e.target as HTMLElement).style.borderColor = "#FF7518";
-              (e.target as HTMLElement).style.color = "#ffffff";
+              (e.target as HTMLElement).style.background = "rgba(255, 117, 24, 0.1)";
             }}
             onMouseLeave={(e) => {
-              (e.target as HTMLElement).style.borderColor = "rgba(255,255,255,0.15)";
-              (e.target as HTMLElement).style.color = "#d1d5db";
+              (e.target as HTMLElement).style.borderColor = "#FF7518";
+              (e.target as HTMLElement).style.background = "rgba(255,255,255,0.03)";
             }}
           >
             Sign In
@@ -244,9 +237,9 @@ export default function Navbar() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  color: isActive ? "#ffffff" : "#9ca3af",
+                  color: "#ffffff",
                   textDecoration: "none",
-                  fontSize: "15px",
+                  fontSize: "16.5px",
                   fontWeight: isActive ? 600 : 500,
                   padding: "12px 8px",
                   borderBottom: "1px solid rgba(255,255,255,0.05)",
@@ -276,10 +269,10 @@ export default function Navbar() {
               style={{
                 color: "#ffffff",
                 textDecoration: "none",
-                fontSize: "14px",
-                fontWeight: 500,
-                padding: "8px 18px",
-                borderRadius: "6px",
+                fontSize: "15px",
+                fontWeight: 600,
+                padding: "10px 22px",
+                borderRadius: "8px",
                 border: "1px solid rgba(255,255,255,0.2)",
               }}
             >
