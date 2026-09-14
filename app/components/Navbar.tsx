@@ -68,11 +68,13 @@ export default function Navbar({ initialProfile }: NavbarProps = {}) {
         { label: "Dashboard", href: "/dashboard" },
         { label: "Leaderboard", href: "/leaderboard" },
         { label: "Projects", href: "/projects" },
+        { label: "Team", href: "/team" },
         { label: "Timeline", href: "/timeline" },
       ]
     : [
         { label: "About us", href: "/about" },
         { label: "Projects", href: "/projects" },
+        { label: "Team", href: "/team" },
         { label: "Timeline", href: "/timeline" },
       ];
 
