@@ -2,31 +2,44 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface TeamCardProps {
   name: string;
   role: string;
   linkedinUrl: string;
+  imageUrl: string;
+  priority?: boolean;
 }
 
-export default function TeamCard({ name, role, linkedinUrl }: TeamCardProps) {
+export default function TeamCard({ name, role, linkedinUrl, imageUrl, priority = false }: TeamCardProps) {
   return (
       <div 
         className="group w-full max-w-full rounded-[24px] border border-[rgba(255,255,255,0.18)] shadow-lg hover:border-[var(--orange)] transition-colors duration-300"
-        style={{ background: '#121214', padding: 'clamp(16px, 5vw, 24px)', display: 'flex', flexDirection: 'column', alignItems: 'center', boxSizing: 'border-box', minWidth: 0 }}
+        style={{ background: '#121214', padding: 'clamp(16px, 5vw, 24px)', display: 'flex', flexDirection: 'column', alignItems: 'center', boxSizing: 'border-box', minWidth: 0, height: '100%' }}
       >
-      {/* Avatar Placeholder */}
+      {/* Avatar Image */}
       <div 
         style={{ 
           width: '120px', 
           height: '120px', 
-          background: '#1c1c1f', 
           borderRadius: '24px',
           border: '1px solid rgba(255,255,255,0.02)',
           marginBottom: '20px',
-          flexShrink: 0
+          flexShrink: 0,
+          position: 'relative',
+          overflow: 'hidden'
         }} 
-      />
+      >
+        <Image 
+          src={imageUrl} 
+          alt={name} 
+          fill 
+          sizes="120px"
+          priority={priority}
+          style={{ objectFit: 'cover', objectPosition: 'top' }} 
+        />
+      </div>
 
       {/* Text Info */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', marginBottom: '20px', textAlign: 'center', width: '100%', minWidth: 0 }}>

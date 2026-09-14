@@ -6,24 +6,23 @@ import Footer from "../components/Footer";
 import TeamCard from "../components/TeamCard";
 
 const teamMembers = [
-  { name: "Deb Mukherjee", role: "Role", linkedinUrl: "#" },
-  { name: "Dev Agarwal", role: "Role", linkedinUrl: "#" },
-  { name: "Priyansh Narang", role: "Role", linkedinUrl: "#" },
-  { name: "Eswaramuthu M", role: "Role", linkedinUrl: "#" },
-  { name: "Aratrik Bandyopadhyay", role: "Role", linkedinUrl: "#" },
-  { name: "Yejarla Srinivas", role: "Role", linkedinUrl: "#" },
-  { name: "Annapoorna SJ", role: "Role", linkedinUrl: "#" },
-  { name: "Abhijna Laxmi", role: "Role", linkedinUrl: "#" },
-  { name: "Durgeshwar Kumar Shaw", role: "Role", linkedinUrl: "#" },
-  { name: "Kunam Santosh Reddy", role: "Role", linkedinUrl: "#" },
-  { name: "Shiwani Dodke", role: "Role", linkedinUrl: "#" },
-  { name: "Sakshi Chaturvedi", role: "Role", linkedinUrl: "#" },
-  { name: "Rumaysa Khalid Yadwad", role: "Role", linkedinUrl: "#" },
-  { name: "Aryan Kumar", role: "Role", linkedinUrl: "#" },
-  { name: "Ananyaa", role: "Role", linkedinUrl: "#" },
-  { name: "Miloni Panchal", role: "Role", linkedinUrl: "#" },
-  { name: "Simrithi S", role: "Role", linkedinUrl: "#" },
-  { name: "Anurag Adarsh", role: "Role", linkedinUrl: "#" },
+  { name: "Sparsh Khanna", role: "Program Manager", linkedinUrl: "https://www.linkedin.com/in/khannasparsh/", imageUrl: "/team/sparsh_khanna.png" },
+  { name: "Gulam Shaikh", role: "Program Manager", linkedinUrl: "https://www.linkedin.com/in/gulam-shaikh/", imageUrl: "/team/gulam_shaikh.jpg" },
+  { name: "Adrisha Biswas", role: "Program Manager", linkedinUrl: "https://www.linkedin.com/in/adrisha-biswas/", imageUrl: "/team/adrisha_biswas.png" },
+  { name: "Krishna Dev Pathak", role: "Community Manager", linkedinUrl: "https://www.linkedin.com/in/krishna-dev-pathak-157937320/", imageUrl: "/team/krishna_dev_pathak.jpg" },
+  { name: "Shashwat Gupta", role: "Community Manager", linkedinUrl: "https://www.linkedin.com/in/shashwatg22/", imageUrl: "/team/shashwat_gupta.png" },
+  { name: "Aryan Pandey", role: "Manager", linkedinUrl: "https://www.linkedin.com/in/aryan-pandey-pyx/", imageUrl: "/team/aryan_pandey.jpeg" },
+  { name: "Abhradip Pal", role: "Next.js Developer", linkedinUrl: "https://www.linkedin.com/in/abhradip-pal-159a20313/", imageUrl: "/team/abhradip_pal.jpg" },
+  { name: "Agniva Mukherjee", role: "YT streamer and Next.js developer", linkedinUrl: "https://www.linkedin.com/in/agniva-mukherjee-a09042267/", imageUrl: "/team/agniva_mukherjee.jpg" },
+  { name: "Ansika Singh", role: "Developer", linkedinUrl: "https://www.linkedin.com/in/ansika-singh-992b22388/", imageUrl: "/team/ansika_singh.png" },
+  { name: "Yejarla Srinivas", role: "Ui Ux Designer", linkedinUrl: "https://www.linkedin.com/in/yejarla-srinivas/", imageUrl: "/team/yejarla_srinivas.jpg" },
+  { name: "Himanish Chatterjee", role: "Designer", linkedinUrl: "https://www.linkedin.com/in/himanish-chatterjee-153a50327/", imageUrl: "/team/himanish_chatterjee.png" },
+  { name: "Souvik Das", role: "Graphic Designer", linkedinUrl: "https://www.linkedin.com/in/souvikdas12102005/", imageUrl: "/team/souvik_das.png" },
+  { name: "Jahaan Gauri", role: "Community Manager", linkedinUrl: "https://www.linkedin.com/in/jahaan-gauri-705182349/", imageUrl: "/team/jahaan_gauri.png" },
+  { name: "Pallavi M", role: "Event Host Manager", linkedinUrl: "https://www.linkedin.com/in/pallavi-m-ise/", imageUrl: "/team/pallavi_m.jpg" },
+  { name: "Ishita Zope", role: "Partnership and Collaboration", linkedinUrl: "https://www.linkedin.com/in/ishita-zope/", imageUrl: "/team/ishita_zope.jpg" },
+  { name: "Sania Khanna", role: "Content Creator", linkedinUrl: "https://www.linkedin.com/in/saniakhanna/", imageUrl: "/team/sania_khanna.png" },
+  { name: "Adrishikhar Chowdhury", role: "Technical Content Writer", linkedinUrl: "https://www.linkedin.com/in/adrishikhar-chowdhury/", imageUrl: "/team/adrishikhar_chowdhury.png" }
 ];
 
 export default function TeamPage() {
@@ -52,6 +51,8 @@ export default function TeamPage() {
               name={member.name} 
               role={member.role} 
               linkedinUrl={member.linkedinUrl} 
+              imageUrl={member.imageUrl}
+              priority={index < 5}
             />
           ))}
         </div>
