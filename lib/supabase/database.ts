@@ -1,8 +1,11 @@
-import { createClient } from "./server";
-import { createAdminClient } from "./admin";
+/**
+ * Shared database types for the OSC-India project.
+ * Profile is the canonical user record stored in public.profiles.
+ */
 
 export interface Profile {
   id: string;
+  user_id?: string;
   full_name: string | null;
   email: string | null;
   github: string | null;
@@ -21,138 +24,4 @@ export interface Profile {
   tech_stack?: string[];
   created_at: string;
   updated_at: string;
-}
-
-/**
- * Fetches the user profile by user UUID.
- */
-export async function getProfile(userId: string): Promise<Profile | null> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", userId)
-    .single();
-
-  if (error) {
-    // If not found with user client, try admin client in case of RLS edge cases
-    const admin = createAdminClient();
-    const { data: adminData } = await admin
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .single();
-    return (adminData as Profile) || null;
-  }
-
-  return data as Profile;
-}
-
-/**
- * Updates an existing profile.
- */
-export async function updateProfile(userId: string, updates: Partial<Profile>) {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("profiles")
-    .update({ ...updates, updated_at: new Date().toISOString() })
-    .eq("id", userId)
-    .select()
-    .single();
-
-  if (error) {
-    return { success: false, error: error.message };
-  }
-
-  return { success: true, profile: data as Profile };
-}
-
-/**
- * Increments the badge count for a user, enforcing the 3-badge maximum limit.
- */
-export async function incrementBadgeCount(userId: string): Promise<{ success: boolean; error?: string; count?: number }> {
-  const admin = createAdminClient();
-  
-  // 1. Fetch current count from user_metadata or profiles
-  let currentCount = 0;
-  try {
-    const { data: userData } = await admin.auth.admin.getUserById(userId);
-    if (userData?.user?.user_metadata) {
-      currentCount = Number(userData.user.user_metadata.badges_created ?? 0);
-    }
-  } catch {
-    // fallback
-  }
-
-  try {
-    const { data: profile } = await admin
-      .from("profiles")
-      .select("badges_created")
-      .eq("id", userId)
-      .maybeSingle();
-
-    if (profile && profile.badges_created !== undefined && profile.badges_created !== null) {
-      currentCount = Number(profile.badges_created);
-    }
-  } catch {
-    // fallback
-  }
-
-  if (currentCount >= 3) {
-    return {
-      success: false,
-      error: "Maximum badge creation limit reached (3 badges per account).",
-      count: currentCount,
-    };
-  }
-
-  // 2. Increment count
-  const newCount = currentCount + 1;
-
-  // 3. Save to auth user_metadata
-  try {
-    const { data: userData } = await admin.auth.admin.getUserById(userId);
-    if (userData?.user) {
-      await admin.auth.admin.updateUserById(userId, {
-        user_metadata: {
-          ...userData.user.user_metadata,
-          badges_created: newCount,
-        },
-      });
-    }
-  } catch (authErr) {
-    console.warn("Notice: saving badges_created to auth metadata:", authErr);
-  }
-
-  // 4. Also try updating profiles table
-  try {
-    await admin
-      .from("profiles")
-      .update({ badges_created: newCount, updated_at: new Date().toISOString() })
-      .eq("id", userId);
-  } catch (dbErr) {
-    console.warn("Notice: saving badges_created to profiles table:", dbErr);
-  }
-
-  return { success: true, count: newCount };
-}
-
-/**
- * Fetches contributors for the leaderboard.
- */
-export async function getLeaderboard(limit = 100): Promise<Profile[]> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("role", "contributor")
-    .order("score", { ascending: false })
-    .limit(limit);
-
-  if (error) {
-    console.error("Leaderboard fetch error:", error);
-    return [];
-  }
-
-  return (data as Profile[]) || [];
 }

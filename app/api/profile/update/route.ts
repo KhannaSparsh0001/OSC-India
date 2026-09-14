@@ -11,41 +11,43 @@ export async function POST(request: Request) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     const body = await request.json();
-    const languages = body.languages;
-
-    if (!languages || !Array.isArray(languages)) {
-      return NextResponse.json({ error: "Invalid languages data" }, { status: 400 });
-    }
+    const { full_name, bio, target_user_id } = body;
 
     const admin = createAdminClient();
+    const updateUserId = user ? user.id : target_user_id;
+
+    if (!updateUserId) {
+      return NextResponse.json({ error: "No user specified" }, { status: 400 });
+    }
+
+    const updatePayload: Record<string, unknown> = {
+      updated_at: new Date().toISOString(),
+    };
+    if (full_name !== undefined) updatePayload.full_name = full_name;
+    if (bio !== undefined) updatePayload.bio = bio;
+
     let { error } = await admin
       .from("profiles")
-      .update({ tech_stack: languages, updated_at: new Date().toISOString() })
-      .eq("user_id", user.id);
+      .update(updatePayload)
+      .or(`user_id.eq.${updateUserId},id.eq.${updateUserId}`);
 
-    // If updated_at column does not exist in schema, retry without it
     if (error && (error.message?.includes("updated_at") || error.code === "42703")) {
+      delete updatePayload.updated_at;
       const retry = await admin
         .from("profiles")
-        .update({ tech_stack: languages })
-        .eq("user_id", user.id);
+        .update(updatePayload)
+        .or(`user_id.eq.${updateUserId},id.eq.${updateUserId}`);
       error = retry.error;
     }
 
     if (error) {
-      console.error("Save tech stack API database error:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to save tech stack";
-    console.error("Save tech stack API error:", err);
+    const message = err instanceof Error ? err.message : "Failed to update profile";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

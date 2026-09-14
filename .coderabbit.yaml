@@ -1,0 +1,93 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: "en-US"
+early_access: false
+
+reviews:
+  profile: "chill"
+  request_changes_workflow: false
+  high_level_summary: true
+  collapse_walkthrough: false
+  changed_files_summary: true
+  sequence_diagrams: true
+  poem: false
+  review_status: true
+
+  auto_review:
+    enabled: true
+    drafts: false
+    auto_incremental_review: true
+    ignore_title_keywords:
+      - "WIP"
+      - "wip"
+      - "draft"
+      - "Draft"
+      - "DO NOT MERGE"
+
+  pre_merge_checks:
+    title:
+      mode: "warning"
+      requirements: "PR title should be descriptive, summarizing the change clearly."
+    description:
+      mode: "warning"
+    docstrings:
+      mode: "off"
+
+  tools:
+    eslint:
+      enabled: true
+      config_file: "eslint.config.mjs"
+    github-checks:
+      enabled: true
+    markdownlint:
+      enabled: true
+    reactDoctor:
+      enabled: true
+
+  path_filters:
+    - "!**/.next/**"
+    - "!**/node_modules/**"
+    - "!**/bun.lock"
+    - "!**/package-lock.json"
+    - "!**/*.tsbuildinfo"
+    - "!**/public/**"
+
+  path_instructions:
+    - path: "app/**/*.{ts,tsx}"
+      instructions: |
+        Review Next.js App Router and React 19 components:
+        - Favor Server Components by default; only add 'use client' when state, effects, or browser APIs are required.
+        - Ensure async route params and searchParams are properly awaited (Next.js 15+ convention).
+        - Verify proper loading states, error boundaries, and robust error handling.
+        - Ensure sensitive credentials or service-role keys are never exposed to the client.
+
+    - path: "app/api/**/*.{ts,tsx}"
+      instructions: |
+        Review Next.js Route Handlers:
+        - Validate request bodies and query parameters thoroughly.
+        - Enforce authorization and session checks before performing mutations.
+        - Return proper HTTP status codes and structured JSON errors.
+        - Do not leak internal stack traces or database errors in API responses.
+
+    - path: "supabase/**/*.sql"
+      instructions: |
+        Review PostgreSQL schema and migrations for Supabase:
+        - Ensure every table has Row Level Security (RLS) enabled.
+        - Ensure policies are explicitly defined for SELECT, INSERT, UPDATE, and DELETE operations.
+        - Verify foreign key constraints, indexes on frequently queried columns, and idempotent migrations.
+
+    - path: "lib/**/*.{ts,tsx}"
+      instructions: |
+        Review utility and library code:
+        - Maintain strict TypeScript typings and avoid unnecessary 'any' types.
+        - Ensure Supabase client creation uses appropriate helpers for server/client contexts.
+        - Safely validate environment variables.
+
+chat:
+  auto_reply: true
+
+knowledge_base:
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - "CLAUDE.md"
+      - "DATABASE_SCHEMA.md"

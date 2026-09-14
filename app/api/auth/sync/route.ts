@@ -18,10 +18,11 @@ export async function POST() {
 
     const profile = await syncUserProfile(user);
     return NextResponse.json({ success: true, profile });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to synchronize profile";
     console.error("Auth sync error:", err);
     return NextResponse.json(
-      { error: err?.message || "Failed to synchronize profile" },
+      { error: message },
       { status: 500 }
     );
   }

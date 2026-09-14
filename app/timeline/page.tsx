@@ -21,6 +21,7 @@ interface TimelineEvent {
   secondaryCtaHref?: string;
 }
 
+
 export default function TimelinePage() {
   const [filter, setFilter] = useState<"all" | "active-upcoming" | "completed">("all");
 

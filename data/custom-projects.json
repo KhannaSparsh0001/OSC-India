@@ -1,13 +1,27 @@
 [
   {
+    "id": "86052217-73a6-4f0a-80b1-3288fd3e4388",
+    "title": "LawSaathi-RAG",
+    "description": "LawSaathi-RAG benchmarks different Retrieval-Augmented Generation architectures for Indian legal question answering. It evaluates retrieval approaches such as BM25 and dense retrieval to determine their effectiveness for Indian legal document QA, with reproducible code, datasets, and evaluation results.",
+    "githubUrl": "https://github.com/SidakSethi-Singh/LawSathi-Rag",
+    "language": "Python",
+    "accentColor": "#f59e0b",
+    "stars": "3",
+    "forks": "8",
+    "openIssues": "8",
+    "unassignedIssues": "8"
+  },
+  {
     "id": "662dbbb3-6e77-42ef-99af-57273a1c36e1",
     "title": "Truxify – Broker-Free Freight Marketplace",
     "description": "Truxify is an open-source, broker-free freight marketplace connecting manufacturers directly with truck drivers. It addresses broker commissions, empty return trips, inefficient truck discovery, payment delays, and limited shipment visibility through ML-powered matching, route optimization, live tracking, blockchain-based escrow, voice AI, and automation.",
     "githubUrl": "https://github.com/KanishJebaMathewM/Truxify",
     "language": "Flutter",
     "accentColor": "#FF7518",
-    "stars": "23",
-    "forks": "113"
+    "stars": "30",
+    "forks": "137",
+    "openIssues": "1074",
+    "unassignedIssues": "655"
   },
   {
     "id": "ce0a4ddd-a220-4f05-bf3a-24b949761c40",
@@ -15,9 +29,11 @@
     "description": "An end-to-end Machine Learning and Predictive Analytics pipeline that identifies customer behavior patterns and predicts churn risks. It uses K-Means clustering for customer segmentation and a Random Forest classifier for churn prediction, with model optimization and evaluation using ROC-AUC and confusion matrix analysis.",
     "githubUrl": "https://github.com/abhaycs24/CBSOT_SIP_PROJECT-1-",
     "language": "Python",
-    "accentColor": "#3b82f6",
-    "stars": "0",
-    "forks": "0"
+    "accentColor": "#a855f7",
+    "stars": "6",
+    "forks": "20",
+    "openIssues": "16",
+    "unassignedIssues": "16"
   },
   {
     "id": "7c93a1c9-b8f4-4bce-ba8b-a18032728165",
@@ -25,9 +41,11 @@
     "description": "AdapTQ is a production-grade C++17 KV cache quantization engine for Large Language Model inference on edge and memory-constrained systems.",
     "githubUrl": "https://github.com/l3tchupkt/adaptq",
     "language": "C++",
-    "accentColor": "#a855f7",
-    "stars": "3",
-    "forks": "0"
+    "accentColor": "#10b981",
+    "stars": "6",
+    "forks": "12",
+    "openIssues": "4",
+    "unassignedIssues": "4"
   },
   {
     "id": "775d868d-332d-42c8-ad8d-a5c0f7041464",
@@ -36,8 +54,10 @@
     "githubUrl": "https://github.com/AdityaPainuli/clippings-vids",
     "language": "Python",
     "accentColor": "#ef4444",
-    "stars": "0",
-    "forks": "0"
+    "stars": "1",
+    "forks": "5",
+    "openIssues": "7",
+    "unassignedIssues": "7"
   },
   {
     "id": "f6cc1cbd-b614-4415-9abb-c5316d3b95ff",
@@ -46,8 +66,10 @@
     "githubUrl": "https://github.com/AseemPrasad/Air-Quality-Intelligence",
     "language": "Python",
     "accentColor": "#10b981",
-    "stars": "0",
-    "forks": "0"
+    "stars": "3",
+    "forks": "13",
+    "openIssues": "12",
+    "unassignedIssues": "1"
   },
   {
     "id": "585baad7-e2ca-46aa-bc1d-12d1040abb9e",
@@ -55,9 +77,11 @@
     "description": "EcoVision is an AI-based environmental monitoring project that uses computer vision and data analysis to identify waste, monitor environmental conditions, and promote proper waste management. It aims to support cleaner surroundings through smart, technology-driven environmental solutions.",
     "githubUrl": "https://github.com/Sushmitha-2007/Eco-vision",
     "language": "Python",
-    "accentColor": "#22c55e",
-    "stars": "1",
-    "forks": "0"
+    "accentColor": "#3b82f6",
+    "stars": "5",
+    "forks": "9",
+    "openIssues": "4",
+    "unassignedIssues": "4"
   },
   {
     "id": "9f889e2e-df21-4901-b349-cde7943b689d",
@@ -65,19 +89,59 @@
     "description": "SecureFlow integrates with GitHub through a GitHub App and webhooks to analyze pull requests for security issues. Its AI engine uses Groq's Llama 3.1 to analyze code diffs and provide security findings, explanations, and remediation steps through a centralized dashboard.",
     "githubUrl": "https://github.com/GauravKarakoti/Secureflow",
     "language": "TypeScript",
-    "accentColor": "#6366f1",
-    "stars": "4",
-    "forks": "45"
+    "accentColor": "#8b5cf6",
+    "stars": "5",
+    "forks": "56",
+    "openIssues": "10",
+    "unassignedIssues": "0"
   },
   {
-    "id": "86052217-73a6-4f0a-80b1-3288fd3e4388",
-    "title": "LawSaathi-RAG",
-    "description": "LawSaathi-RAG benchmarks different Retrieval-Augmented Generation architectures for Indian legal question answering. It evaluates retrieval approaches such as BM25 and dense retrieval to determine their effectiveness for Indian legal document QA, with reproducible code, datasets, and evaluation results.",
-    "githubUrl": "https://github.com/SidakSethi-Singh/LawSathi-Rag",
+    "id": "db1a69c6-e71d-4ba8-87ff-922af70bc5bc",
+    "title": "CreatorOS",
+    "description": "CreatorOS is an open-source all-in-one dashboard for creators to manage their business from a single platform. It combines bio links, DM automation, CRM, analytics, and content planning, reducing the need to use multiple separate creator tools.",
+    "githubUrl": "https://github.com/aashutoshkumarbhardwaj/CreatorOs",
+    "language": "JavaScript",
+    "accentColor": "#f43f5e",
+    "stars": "37",
+    "forks": "72",
+    "openIssues": "13",
+    "unassignedIssues": "4"
+  },
+  {
+    "id": "513cc16c-ecb2-4723-84a8-ed66f217aaf8",
+    "title": "AI Stock Analyzer",
+    "description": "A web-based stock analysis application built with React and Flask. It provides interactive stock visualizations and uses machine learning-based techniques for stock price prediction and analysis.",
+    "githubUrl": "https://github.com/SrigadaAkshayKumar/stock",
     "language": "Python",
-    "accentColor": "#eab308",
-    "stars": "1",
-    "forks": "0"
+    "accentColor": "#14b8a6",
+    "stars": "36",
+    "forks": "99",
+    "openIssues": "9",
+    "unassignedIssues": "9"
+  },
+  {
+    "id": "d77fa34f-61da-44b5-828b-c4da597f9c3a",
+    "title": "Dockfleet",
+    "description": "Dockfleet is a free and open-source, local-first orchestration tool that helps solo developers and small teams run and manage multiple projects on a single machine or VPS using Docker containers.",
+    "githubUrl": "https://github.com/pratyushjha06/Dockfleet",
+    "language": "Python",
+    "accentColor": "#0284c7",
+    "stars": "11",
+    "forks": "13",
+    "openIssues": "2",
+    "unassignedIssues": "0"
+  },
+  {
+    "id": "114895df-f5da-4eea-b3f6-00c5c27f9e72",
+    "title": "AtomicBinding",
+    "description": "AtomicBinding is a dual-source content platform where documentation lives in Git while application content is managed through a custom CMS. Both sources are normalized into a single typed content graph consumed by one frontend, with six build gates providing validation and quality control between the content graph and production.",
+    "githubUrl": "https://github.com/SrishtiSonam/AtomicBinding",
+    "language": "TypeScript",
+    "accentColor": "#06b6d4",
+    "stars": "2",
+    "forks": "3",
+    "openIssues": "5",
+    "unassignedIssues": "0"
   },
   {
     "id": "89e45dfc-04fa-4f20-8686-ced183db0de4",
@@ -87,77 +151,9 @@
     "language": "TypeScript",
     "accentColor": "#ec4899",
     "stars": "0",
-    "forks": "0"
-  },
-  {
-    "id": "db1a69c6-e71d-4ba8-87ff-922af70bc5bc",
-    "title": "CreatorOS",
-    "description": "CreatorOS is an open-source all-in-one dashboard for creators to manage their business from a single platform. It combines bio links, DM automation, CRM, analytics, and content planning, reducing the need to use multiple separate creator tools.",
-    "githubUrl": "https://github.com/aashutoshkumarbhardwaj/CreatorOs",
-    "language": "JavaScript",
-    "accentColor": "#f43f5e",
-    "stars": "28",
-    "forks": "54"
-  },
-  {
-    "id": "513cc16c-ecb2-4723-84a8-ed66f217aaf8",
-    "title": "AI Stock Analyzer",
-    "description": "A web-based stock analysis application built with React and Flask. It provides interactive stock visualizations and uses machine learning-based techniques for stock price prediction and analysis.",
-    "githubUrl": "https://github.com/SrigadaAkshayKumar/stock",
-    "language": "Python",
-    "accentColor": "#14b8a6",
-    "stars": "32",
-    "forks": "89"
-  },
-  {
-    "id": "d77fa34f-61da-44b5-828b-c4da597f9c3a",
-    "title": "Dockfleet",
-    "description": "Dockfleet is a free and open-source, local-first orchestration tool that helps solo developers and small teams run and manage multiple projects on a single machine or VPS using Docker containers.",
-    "githubUrl": "https://github.com/pratyushjha06/Dockfleet",
-    "language": "Python",
-    "accentColor": "#0284c7",
-    "stars": "8",
-    "forks": "3"
-  },
-  {
-    "id": "114895df-f5da-4eea-b3f6-00c5c27f9e72",
-    "title": "AtomicBinding",
-    "description": "AtomicBinding is a dual-source content platform where documentation lives in Git while application content is managed through a custom CMS. Both sources are normalized into a single typed content graph consumed by one frontend, with six build gates providing validation and quality control between the content graph and production.",
-    "githubUrl": "https://github.com/SrishtiSonam/AtomicBinding",
-    "language": "TypeScript",
-    "accentColor": "#06b6d4",
-    "stars": "0",
-    "forks": "0"
-  },
-  {
-    "id": "f61fb2ac-2858-4965-a3c6-e24ee653384b",
-    "title": "InnoVision",
-    "description": "InnoVision is an AI-powered learning platform that dynamically generates structured and engaging courses from any topic. It aims to overcome limitations of traditional courses by providing a flexible and adaptive learning experience powered by AI and machine learning.",
-    "githubUrl": "https://github.com/ItsVikasA/Innovision-Open-Source",
-    "language": "JavaScript",
-    "accentColor": "#38bdf8",
-    "stars": "0",
-    "forks": "1"
-  },
-  {
-    "id": "28593cc9-2bda-4cab-b139-9c748ffcd434",
-    "title": "JugaadLang",
-    "description": "JugaadLang is a modern programming language designed with Hindi keywords for Indian developers. It provides an alternative programming experience where developers can write code using familiar Hindi terminology.",
-    "githubUrl": "https://github.com/JugaadLang/jugaadlang",
-    "language": "Python",
-    "accentColor": "#f97316",
-    "stars": "10",
-    "forks": "21"
-  },
-  {
-    "id": "3a31685f-daff-4b73-aaa2-817c2abda189",
-    "title": "WalletWise",
-    "description": "WalletWise is a comprehensive financial guidance platform designed to help students, early-career professionals, and other users manage their finances. Beyond basic expense tracking, it combines behavioral insights, predictive analytics, and real-time financial advisory features to help users make better financial decisions.",
-    "githubUrl": "https://github.com/SoumyaMishra-7/WalletWise",
-    "language": "JavaScript",
-    "accentColor": "#10b981",
-    "stars": "17",
-    "forks": "59"
+    "forks": "7",
+    "openIssues": "2",
+    "unassignedIssues": "1"
   },
   {
     "id": "103bf228-a981-40d3-98dd-19ff4da0fda8",
@@ -166,7 +162,45 @@
     "githubUrl": "https://github.com/Sandesh13fr/TCalc",
     "language": "TypeScript",
     "accentColor": "#8b5cf6",
-    "stars": "1",
-    "forks": "0"
+    "stars": "7",
+    "forks": "7",
+    "openIssues": "2",
+    "unassignedIssues": "2"
+  },
+  {
+    "id": "f61fb2ac-2858-4965-a3c6-e24ee653384b",
+    "title": "InnoVision",
+    "description": "InnoVision is an AI-powered learning platform that dynamically generates structured and engaging courses from any topic. It aims to overcome limitations of traditional courses by providing a flexible and adaptive learning experience powered by AI and machine learning.",
+    "githubUrl": "https://github.com/ItsVikasA/Innovision-Open-Source",
+    "language": "JavaScript",
+    "accentColor": "#38bdf8",
+    "stars": "4",
+    "forks": "14",
+    "openIssues": "19",
+    "unassignedIssues": "19"
+  },
+  {
+    "id": "28593cc9-2bda-4cab-b139-9c748ffcd434",
+    "title": "JugaadLang",
+    "description": "JugaadLang is a modern programming language designed with Hindi keywords for Indian developers. It provides an alternative programming experience where developers can write code using familiar Hindi terminology.",
+    "githubUrl": "https://github.com/JugaadLang/jugaadlang",
+    "language": "Python",
+    "accentColor": "#f97316",
+    "stars": "17",
+    "forks": "29",
+    "openIssues": "4",
+    "unassignedIssues": "0"
+  },
+  {
+    "id": "3a31685f-daff-4b73-aaa2-817c2abda189",
+    "title": "WalletWise",
+    "description": "WalletWise is a comprehensive financial guidance platform designed to help students, early-career professionals, and other users manage their finances. Beyond basic expense tracking, it combines behavioral insights, predictive analytics, and real-time financial advisory features to help users make better financial decisions.",
+    "githubUrl": "https://github.com/SoumyaMishra-7/WalletWise",
+    "language": "JavaScript",
+    "accentColor": "#10b981",
+    "stars": "25",
+    "forks": "77",
+    "openIssues": "101",
+    "unassignedIssues": "19"
   }
 ]

@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "sync": "node scripts/backfill-contributions-table.js",
+    "sync:watch": "node scripts/auto-sync-scheduler.js"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.5",

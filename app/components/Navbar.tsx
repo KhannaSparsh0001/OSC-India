@@ -1,27 +1,35 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useSyncExternalStore } from "react";
 import Link from "next/link";
 
 import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { getClientProfile, signOutClient } from "@/lib/auth/client";
+import { getClientProfile, signOutClient, type ClientProfilePayload } from "@/lib/auth/client";
 
 interface NavbarProps {
-  initialProfile?: any;
+  initialProfile?: ClientProfilePayload | null;
 }
+
+const emptySubscribe = () => () => {};
 
 export default function Navbar({ initialProfile }: NavbarProps = {}) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
-  const [profile, setProfile] = useState<any>(initialProfile);
-  const [mounted, setMounted] = useState(false);
+  const [profile, setProfile] = useState<ClientProfilePayload | null>(initialProfile || null);
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
+    setDropdownOpen(false);
+    setMobileOpen(false);
+  }
+
   useEffect(() => {
-    setMounted(true);
     if (!initialProfile) {
       getClientProfile().then((res) => setProfile(res || null));
     }
@@ -39,11 +47,6 @@ export default function Navbar({ initialProfile }: NavbarProps = {}) {
       subscription.unsubscribe();
     };
   }, [initialProfile]);
-
-  useEffect(() => {
-    setDropdownOpen(false);
-    setMobileOpen(false);
-  }, [pathname]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -159,6 +162,42 @@ export default function Navbar({ initialProfile }: NavbarProps = {}) {
             <div style={{ width: "80px", height: "38px" }} /> // Invisible placeholder matching button height
           ) : profile ? (
             <>
+              {/* Notification Bell Icon */}
+              <button
+                aria-label="Notifications"
+                style={{
+                  position: "relative",
+                  background: "transparent",
+                  border: "none",
+                  padding: "8px",
+                  color: "#9ca3af",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginRight: "10px",
+                  transition: "color 0.15s ease",
+                }}
+                className="hover:text-white focus:outline-none"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                </svg>
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "7px",
+                    right: "7px",
+                    width: "7px",
+                    height: "7px",
+                    borderRadius: "50%",
+                    background: "var(--orange)",
+                    boxShadow: "0 0 6px rgba(255, 117, 24, 0.8)",
+                  }}
+                />
+              </button>
+
               <button 
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 aria-expanded={dropdownOpen}

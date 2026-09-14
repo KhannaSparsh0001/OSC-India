@@ -1,95 +1,80 @@
-import { NextResponse, type NextRequest } from "next/server";
-import { createServerClient } from "@supabase/ssr";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-export async function proxy(request: NextRequest) {
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  });
+interface RateLimitEntry {
+  count: number;
+  resetAt: number;
+}
 
-  const { searchParams, pathname } = request.nextUrl;
-  const code = searchParams.get("code");
-  const error = searchParams.get("error");
+// In-memory sliding window store for Edge Middleware
+const rateLimitMap = new Map<string, RateLimitEntry>();
 
-  // If Supabase falls back to Site URL ("/") with OAuth code, forward to callback for exchange.
-  // If an OAuth error lands on "/", forward directly to /sign-in so user sees the message cleanly.
-  if (error && pathname === "/") {
-    const signInUrl = new URL("/sign-in", request.url);
-    const desc = searchParams.get("error_description") || error;
-    signInUrl.searchParams.set("error", desc);
-    return NextResponse.redirect(signInUrl);
-  }
+function checkRateLimit(key: string, maxRequests: number, windowMs: number): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(key);
 
-  if (code && pathname === "/") {
-    const callbackUrl = new URL("/auth/callback", request.url);
-    searchParams.forEach((value, key) => {
-      callbackUrl.searchParams.set(key, value);
-    });
-    return NextResponse.redirect(callbackUrl);
-  }
-
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseKey) {
-    return response;
-  }
-
-  const supabase = createServerClient(supabaseUrl, supabaseKey, {
-    cookies: {
-      getAll() {
-        return request.cookies.getAll();
-      },
-      setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value }) => {
-          request.cookies.set(name, value);
-        });
-        response = NextResponse.next({
-          request,
-        });
-        cookiesToSet.forEach(({ name, value, options }) => {
-          response.cookies.set(name, value, options);
-        });
-      },
-    },
-  });
-
-  // Always refresh auth session so cookies stay valid across all navigation
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const isProtectedUserRoute =
-    pathname.startsWith("/dashboard") ||
-    pathname.startsWith("/badge") ||
-    pathname.startsWith("/leaderboard");
-
-  if (isProtectedUserRoute) {
-    // 1. Not authenticated -> Redirect to /sign-in
-    if (!user) {
-      const redirectUrl = new URL("/sign-in", request.url);
-      redirectUrl.searchParams.set("next", pathname);
-      const redirectResponse = NextResponse.redirect(redirectUrl);
-      response.cookies.getAll().forEach((cookie) => {
-        redirectResponse.cookies.set(cookie);
-      });
-      return redirectResponse;
+  // Periodic cleanup if map grows too large
+  if (rateLimitMap.size > 5000) {
+    for (const [k, v] of rateLimitMap.entries()) {
+      if (now > v.resetAt) {
+        rateLimitMap.delete(k);
+      }
     }
   }
 
-  return response;
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(key, { count: 1, resetAt: now + windowMs });
+    return true;
+  }
+
+  if (entry.count >= maxRequests) {
+    return false;
+  }
+
+  entry.count++;
+  return true;
+}
+
+export function proxy(request: NextRequest) {
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  const ip = forwardedFor ? forwardedFor.split(",")[0].trim() : "unknown-ip";
+  const path = request.nextUrl.pathname;
+
+  const limits: Array<[string, number, number]> = [
+    ["/api/auth/sync", 10, 60_000],
+    ["/api/profile/github", 5, 60_000],
+    ["/api/profile/tech-stack", 10, 60_000],
+    ["/api/github-activity", 15, 60_000],
+  ];
+
+  for (const [route, maxRequests, windowMs] of limits) {
+    if (path.startsWith(route)) {
+      const rateKey = `${ip}:${route}`;
+      const allowed = checkRateLimit(rateKey, maxRequests, windowMs);
+
+      if (!allowed) {
+        return NextResponse.json(
+          { error: "Rate limit exceeded. Please wait before retrying." },
+          {
+            status: 429,
+            headers: {
+              "Retry-After": "60",
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      }
+      break;
+    }
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - static image formats
-     */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/api/auth/sync",
+    "/api/profile/:path*",
+    "/api/github-activity",
   ],
 };

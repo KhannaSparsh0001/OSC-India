@@ -22,7 +22,14 @@ export async function signInWithOAuth(
     const origin = typeof window !== "undefined" ? window.location.origin : "";
     const redirectTo = `${origin}/auth/callback?next=${encodeURIComponent(nextUrl)}`;
 
-    const options: any = {
+    interface OAuthSignInOptions {
+      redirectTo: string;
+      skipBrowserRedirect: boolean;
+      scopes?: string;
+      queryParams?: Record<string, string>;
+    }
+
+    const options: OAuthSignInOptions = {
       redirectTo,
       skipBrowserRedirect: true,
     };
@@ -67,7 +74,7 @@ export async function signInWithGoogleIdToken(
 ): Promise<{ error?: string }> {
   try {
     const supabase = createClient();
-    const { data, error } = await supabase.auth.signInWithIdToken({
+    const { error } = await supabase.auth.signInWithIdToken({
       provider: "google",
       token: idToken,
     });
@@ -164,22 +171,11 @@ export async function getClientProfile(): Promise<ClientProfilePayload | null> {
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     if (userError || !user) return null;
 
-    const userEmail = (user.email || user.user_metadata?.email || "").trim().toLowerCase();
-
-    let { data: profile } = await supabase
+    const { data: profile } = await supabase
       .from("profiles")
-      .select("id, full_name, email, avatar_url, role, is_admin, github")
-      .eq("id", user.id)
+      .select("id, user_id, full_name, avatar_url, role, github")
+      .eq("user_id", user.id)
       .maybeSingle();
-
-    if (!profile && userEmail) {
-      const { data: byEmail } = await supabase
-        .from("profiles")
-        .select("id, full_name, email, avatar_url, role, is_admin, github")
-        .ilike("email", userEmail)
-        .maybeSingle();
-      if (byEmail) profile = byEmail;
-    }
 
     const fullName =
       profile?.full_name ||
@@ -194,9 +190,20 @@ export async function getClientProfile(): Promise<ClientProfilePayload | null> {
       user.user_metadata?.preferred_username ||
       null;
 
+    interface IdentityWithData {
+      identity_data?: {
+        avatar_url?: string;
+        picture?: string;
+      };
+    }
+
+    const identities = user.identities as IdentityWithData[] | undefined;
+    const identityWithAvatar = identities?.find(
+      (i) => i.identity_data?.avatar_url || i.identity_data?.picture
+    );
     const identityAvatar =
-      user.identities?.find((i: any) => i.identity_data?.avatar_url || i.identity_data?.picture)?.identity_data?.avatar_url ||
-      user.identities?.find((i: any) => i.identity_data?.avatar_url || i.identity_data?.picture)?.identity_data?.picture;
+      identityWithAvatar?.identity_data?.avatar_url ||
+      identityWithAvatar?.identity_data?.picture;
 
     const avatar =
       profile?.avatar_url ||
@@ -205,8 +212,8 @@ export async function getClientProfile(): Promise<ClientProfilePayload | null> {
       identityAvatar ||
       (github ? `https://avatars.githubusercontent.com/${github}` : null);
 
-    const role = profile?.role || "contributor";
-    const isAdmin = Boolean(profile?.is_admin || profile?.role === "admin");
+    const role = profile?.role || user.user_metadata?.role || "contributor";
+    const isAdmin = Boolean(role === "admin" || user.user_metadata?.is_admin);
 
     return {
       id: user.id,
@@ -217,7 +224,7 @@ export async function getClientProfile(): Promise<ClientProfilePayload | null> {
       isAdmin,
       github,
     };
-  } catch (err) {
+  } catch (err: unknown) {
     console.error("getClientProfile error:", err);
     return null;
   }

@@ -3,7 +3,7 @@
  * Usage: npx tsx scripts/debug-sync.ts <github_username>
  */
 
-import { getAllowedRepoSlugs } from "../data/projects";
+import { getDbAllowedRepoSlugs } from "../lib/actions/projects";
 import {
   normalizeGitHubHandle,
   detectDifficulty,
@@ -22,8 +22,8 @@ async function run() {
   const handle = normalizeGitHubHandle(username);
   console.log(`\n🔍 Debugging GitHub Sync for handle: "${handle}"`);
 
-  const allowedRepos = getAllowedRepoSlugs();
-  console.log(`📋 Tracked Competition Repos (${allowedRepos.size}):`);
+  const allowedRepos = await getDbAllowedRepoSlugs();
+  console.log(`📋 Tracked Database Projects (${allowedRepos.size}):`);
   allowedRepos.forEach((repo: string) => console.log(`   - ${repo}`));
 
   const token = process.env.GITHUB_ACCESS_TOKEN || process.env.GITHUB_PAT;
@@ -38,8 +38,8 @@ async function run() {
     console.warn(`⚠️ No GITHUB_ACCESS_TOKEN found in environment. Using unauthenticated requests.`);
   }
 
-  // 1. Fetch closed/merged PRs
-  const prQuery = encodeURIComponent(`author:${handle} type:pr is:closed`);
+  // 1. Fetch merged PRs
+  const prQuery = encodeURIComponent(`author:${handle} type:pr is:merged`);
   const prUrl = `https://api.github.com/search/issues?q=${prQuery}&per_page=100`;
   console.log(`\n📡 Fetching PRs from: ${prUrl}`);
   const prRes = await fetch(prUrl, { headers });

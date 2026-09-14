@@ -1,15 +1,8 @@
 "use client";
 
-import React, { useState, useRef, useEffect, Suspense } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-function ShieldIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
-  return (
-    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
-    </svg>
-  );
-}
 
 function UploadIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
   return (
@@ -156,11 +149,30 @@ function BadgeContent({
   initialBadgesCreated = 0,
 }: BadgeContentProps) {
   const searchParams = useSearchParams();
-  // Force all users to get the contributor badge, disabling mentor/admin themes.
-  // The themes are preserved below for future use.
-  const person = "contributor";
+  const [name, setName] = useState(initialName || "");
+  const [photoUrl, setPhotoUrl] = useState<string | null>(initialAvatar || null);
+  const badgeRef = useRef<HTMLDivElement>(null);
+  const avatarFileInputRef = useRef<HTMLInputElement>(null);
   const [badgesCount, setBadgesCount] = useState(initialBadgesCreated);
+
+  // Authoritative role determination: Kanish and official maintainers are always Project Admins
+  const isKanishOrAdmin =
+    (initialName && initialName.toLowerCase().includes("kanish")) ||
+    (name && name.toLowerCase().includes("kanish")) ||
+    initialRole === "project-admin" ||
+    initialRole === "admin";
+
+  const [role, setRole] = useState(
+    isKanishOrAdmin ? "project-admin" : (initialRole || "contributor")
+  );
   
+  const queryRole = searchParams?.get("role");
+  const activeRole = (
+    queryRole ||
+    (isKanishOrAdmin ? "project-admin" : (role || initialRole || "contributor"))
+  ).toLowerCase().trim();
+  const person = activeRole;
+
   let roleText = "CONTRIBUTOR";
   let roleColor = "#FF7518";
   let roleBg = "rgba(255, 117, 24, 0.12)";
@@ -171,51 +183,56 @@ function BadgeContent({
     roleColor = "#f59e0b"; // Premium Amber/Gold
     roleBg = "rgba(245, 158, 11, 0.12)";
     roleBorder = "rgba(245, 158, 11, 0.4)";
-  } else if (person === "project-admin") {
+  } else if (person === "project-admin" || person === "project_admin") {
     roleText = "PROJECT ADMIN";
+    roleColor = "#ef4444"; // Crimson Red
+    roleBg = "rgba(239, 68, 68, 0.12)";
+    roleBorder = "rgba(239, 68, 68, 0.4)";
+  } else if (person === "admin") {
+    roleText = "ADMIN";
     roleColor = "#ef4444"; // Crimson Red
     roleBg = "rgba(239, 68, 68, 0.12)";
     roleBorder = "rgba(239, 68, 68, 0.4)";
   }
 
-  const [name, setName] = useState(initialName || "");
-  const [photoUrl, setPhotoUrl] = useState<string | null>(initialAvatar || null);
-  const badgeRef = useRef<HTMLDivElement>(null);
-  const avatarFileInputRef = useRef<HTMLInputElement>(null);
-
   // Client-side fallback to fetch profile/avatar if not supplied initially by SSR
   useEffect(() => {
-    if (!photoUrl || !name) {
-      getClientProfile().then((clientProf) => {
-        if (!photoUrl && clientProf?.avatar) {
-          setPhotoUrl(clientProf.avatar);
-        }
-        if (!name && clientProf?.name) {
-          setName(clientProf.name);
-        }
-      });
-    }
-  }, [photoUrl, name]);
+    getClientProfile().then((clientProf) => {
+      if (!photoUrl && clientProf?.avatar) {
+        setPhotoUrl(clientProf.avatar);
+      }
+      if (!name && clientProf?.name) {
+        setName(clientProf.name);
+      }
+      if (clientProf?.role && !isKanishOrAdmin) {
+        setRole(clientProf.role);
+      }
+    });
+  }, [photoUrl, name, isKanishOrAdmin]);
 
   // Listen to active Supabase auth changes
   useEffect(() => {
     const supabase = createClient();
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session?.user && !photoUrl) {
+      if (session?.user) {
         const u = session.user;
-        const identAvatar =
-          u.identities?.find((i: any) => i.identity_data?.avatar_url || i.identity_data?.picture)?.identity_data?.avatar_url ||
-          u.identities?.find((i: any) => i.identity_data?.avatar_url || i.identity_data?.picture)?.identity_data?.picture;
-        const gHandle = u.user_metadata?.user_name || u.user_metadata?.preferred_username;
-        const av =
-          u.user_metadata?.avatar_url ||
-          u.user_metadata?.picture ||
-          identAvatar ||
-          (gHandle ? `https://avatars.githubusercontent.com/${gHandle}` : null);
-        if (av) {
-          setPhotoUrl(av);
+        if (!photoUrl) {
+          const identities = (u.identities || []) as Array<{ identity_data?: { avatar_url?: string; picture?: string } }>;
+          const identAvatar =
+            identities.find((i) => i.identity_data?.avatar_url || i.identity_data?.picture)?.identity_data?.avatar_url ||
+            identities.find((i) => i.identity_data?.avatar_url || i.identity_data?.picture)?.identity_data?.picture;
+          const gHandle = u.user_metadata?.user_name || u.user_metadata?.preferred_username;
+          const av =
+            u.user_metadata?.avatar_url ||
+            u.user_metadata?.picture ||
+            identAvatar ||
+            (gHandle ? `https://avatars.githubusercontent.com/${gHandle}` : null);
+          if (av) {
+            setPhotoUrl(av);
+          }
         }
         if (!name) {
+          const gHandle = u.user_metadata?.user_name || u.user_metadata?.preferred_username;
           const nm = u.user_metadata?.full_name || u.user_metadata?.name || gHandle || (u.email ? u.email.split("@")[0] : "");
           if (nm) setName(nm);
         }
@@ -275,8 +292,8 @@ function BadgeContent({
           }
         }
 
-        if (typeof document !== "undefined" && (document as any).fonts) {
-          await (document as any).fonts.ready;
+        if (typeof document !== "undefined" && "fonts" in document) {
+          await document.fonts.ready;
         }
 
         const canvas = await html2canvas(badgeRef.current, {
@@ -526,7 +543,7 @@ function BadgeContent({
             {roleText} Recognition
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight" style={{ marginBottom: '16px', wordBreak: 'break-word' }}>
-            {roleText === "CONTRIBUTOR" ? "Contributor" : roleText === "MENTOR" ? "Mentor" : "Project Admin"} <span style={{ color: roleColor }}>Badge</span>
+            {roleText === "CONTRIBUTOR" ? "Contributor" : roleText === "MENTOR" ? "Mentor" : roleText === "PROJECT ADMIN" ? "Project Admin" : "Admin"} <span style={{ color: roleColor }}>Badge</span>
           </h1>
           <p className="text-[var(--text-secondary)] text-[15px]" style={{ maxWidth: '400px', textAlign: 'center', lineHeight: '1.6', padding: '0 16px' }}>
             Create your personalized OSCI badge to celebrate your contribution to open source.
@@ -873,7 +890,7 @@ function BadgeContent({
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      boxShadow: `0 0 10px rgba(255, 117, 24, 0.75), 0 2px 5px rgba(0, 0, 0, 0.7)`,
+                      boxShadow: `0 0 10px ${roleBg.replace('0.12', '0.75')}, 0 2px 5px rgba(0, 0, 0, 0.7)`,
                       zIndex: 5,
                     }}
                   >
@@ -881,7 +898,7 @@ function BadgeContent({
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                       </svg>
-                    ) : person === 'project-admin' ? (
+                    ) : (person === 'project-admin' || person === 'project_admin' || person === 'admin') ? (
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
                       </svg>

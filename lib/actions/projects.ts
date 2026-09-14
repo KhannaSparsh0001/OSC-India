@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyAdminSession } from "@/lib/auth/admin-auth";
 import { createClient } from "@/lib/supabase/server";
+import { extractRepoSlug, OFFICIAL_COMPETITION_REPO_SLUGS, getGitHubAuthHeaders } from "@/lib/utils/github-helpers";
 
 export interface ProjectItem {
   id: string;
@@ -16,6 +17,8 @@ export interface ProjectItem {
   accentColor: string;
   stars?: string;
   forks?: string;
+  openIssues?: string;
+  unassignedIssues?: string;
   created_at?: string;
 }
 
@@ -243,31 +246,49 @@ async function checkAdminAuth(): Promise<boolean> {
     const admin = createAdminClient();
     const { data: profile } = await admin
       .from("profiles")
-      .select("role, is_admin")
-      .eq("id", user.id)
-      .single();
+      .select("role")
+      .eq("user_id", user.id)
+      .maybeSingle();
 
-    return Boolean(profile && (profile.is_admin || profile.role === "admin" || profile.role === "project-admin"));
+    return Boolean(profile && (profile.role === "admin" || profile.role === "project-admin"));
   } catch {
     return false;
   }
+}
+
+interface DbProjectRow {
+  id: string | number;
+  name?: string;
+  title?: string;
+  description?: string | null;
+  github_repo_url?: string | null;
+  github_url?: string | null;
+  githubUrl?: string | null;
+  language?: string | null;
+  accent_color?: string | null;
+  accentColor?: string | null;
+  stars?: string | number | null;
+  forks?: string | number | null;
+  created_at?: string;
 }
 
 /**
  * Parses a database row from public.projects into a clean ProjectItem.
  * Extracts title from `name`, repo from `github_repo_url`, and extra metadata from embedded comment or columns.
  */
-function parseProjectFromDb(row: any): ProjectItem {
+function parseProjectFromDb(row: DbProjectRow): ProjectItem {
   let cleanDesc = row.description || "";
   let language = "TypeScript";
   let accentColor = "#FF7518";
   let stars = "0";
   let forks = "0";
+  let openIssues = "0";
+  let unassignedIssues = "0";
 
   if (row.language) language = row.language;
-  if (row.accent_color || row.accentColor) accentColor = row.accent_color || row.accentColor;
-  if (row.stars) stars = row.stars;
-  if (row.forks) forks = row.forks;
+  if (row.accent_color || row.accentColor) accentColor = row.accent_color || row.accentColor || "#FF7518";
+  if (row.stars) stars = String(row.stars);
+  if (row.forks) forks = String(row.forks);
 
   const metaMatch = cleanDesc.match(/<!--meta:(.*?)-->/);
   if (metaMatch) {
@@ -275,8 +296,10 @@ function parseProjectFromDb(row: any): ProjectItem {
       const parsed = JSON.parse(metaMatch[1]);
       if (parsed.language) language = parsed.language;
       if (parsed.accentColor) accentColor = parsed.accentColor;
-      if (parsed.stars) stars = parsed.stars;
-      if (parsed.forks) forks = parsed.forks;
+      if (parsed.stars) stars = String(parsed.stars);
+      if (parsed.forks) forks = String(parsed.forks);
+      if (parsed.openIssues !== undefined) openIssues = String(parsed.openIssues);
+      if (parsed.unassignedIssues !== undefined) unassignedIssues = String(parsed.unassignedIssues);
       cleanDesc = cleanDesc.replace(/<!--meta:(.*?)-->/, "").trim();
     } catch {
       // ignore parse error
@@ -292,6 +315,8 @@ function parseProjectFromDb(row: any): ProjectItem {
     accentColor,
     stars,
     forks,
+    openIssues,
+    unassignedIssues,
     created_at: row.created_at,
   };
 }
@@ -332,9 +357,279 @@ export async function getProjects(): Promise<ProjectItem[]> {
   return DEFAULT_PROJECTS;
 }
 
+// Module-level cache for repo slugs (10-minute TTL to prevent repeated DB reads during high sync volume)
+let _slugCache: Set<string> | null = null;
+let _slugCacheAt = 0;
+const SLUG_CACHE_TTL_MS = 10 * 60 * 1000;
+
+export async function invalidateSlugCache(): Promise<void> {
+  _slugCache = null;
+  _slugCacheAt = 0;
+}
+
+/**
+ * Fetches the set of allowed GitHub repository slugs directly from the active projects.
+ * Guarantees 100% parity with the projects displayed in the /projects section.
+ * PRs will ONLY be accepted if their repository slug is present in this set.
+ */
+export async function getDbAllowedRepoSlugs(): Promise<Set<string>> {
+  if (_slugCache && Date.now() - _slugCacheAt < SLUG_CACHE_TTL_MS) {
+    return _slugCache;
+  }
+
+  // Always include the exact official 17 competition repositories
+  const allowed = new Set<string>(OFFICIAL_COMPETITION_REPO_SLUGS);
+  try {
+    const projects = await getProjects();
+    for (const p of projects) {
+      const slug = extractRepoSlug(p.githubUrl);
+      if (slug) {
+        allowed.add(slug.toLowerCase());
+      }
+    }
+  } catch (err) {
+    console.warn("Exception deriving allowed slugs from getProjects:", err);
+  }
+
+  _slugCache = allowed;
+  _slugCacheAt = Date.now();
+  return allowed;
+}
+
+export interface DiscoveredProjectResult {
+  success: boolean;
+  topic: string;
+  totalFound: number;
+  addedCount: number;
+  updatedCount: number;
+  projects: ProjectItem[];
+  error?: string;
+}
+
+const LANGUAGE_COLORS: Record<string, string> = {
+  TypeScript: "#3178c6",
+  JavaScript: "#f7df1e",
+  Python: "#3b82f6",
+  Rust: "#dea584",
+  Go: "#00add8",
+  Java: "#b07219",
+  "C++": "#a855f7",
+  C: "#555555",
+  Dart: "#00b4ab",
+  Flutter: "#FF7518",
+  Kotlin: "#a97bff",
+  Swift: "#f05138",
+  Ruby: "#701516",
+  PHP: "#4f5d95",
+  HTML: "#e34c26",
+  CSS: "#563d7c",
+};
+
+interface GitHubSearchRepoItem {
+  id: number;
+  name: string;
+  full_name: string;
+  html_url: string;
+  description: string | null;
+  language: string | null;
+  stargazers_count: number;
+  forks_count: number;
+  topics?: string[];
+  owner?: {
+    login: string;
+    type?: string;
+    avatar_url?: string;
+  };
+}
+
+// In-memory discovery cache with 30-minute TTL to protect GitHub Search API limits (30 req/min)
+let _discoveryCache: { timestamp: number; topic: string; result: DiscoveredProjectResult } | null = null;
+const DISCOVERY_CACHE_TTL_MS = 30 * 60 * 1000;
+
+/**
+ * Discovers and ingests participating repositories dynamically using GitHub's Search API.
+ * Maintainers simply add the topic tag (default: 'osci-2026') to their repository settings.
+ *
+ * Query format: topic:{topic} fork:false
+ * Auto-upserts newly discovered repositories into public.projects and synchronizes the local cache.
+ */
+export async function discoverProjectsByTopic(
+  topic = "osci-2026",
+  forceRefresh = false
+): Promise<DiscoveredProjectResult> {
+  const cleanTopic = topic.trim().toLowerCase().replace(/^#/, "");
+
+  if (
+    !forceRefresh &&
+    _discoveryCache &&
+    _discoveryCache.topic === cleanTopic &&
+    Date.now() - _discoveryCache.timestamp < DISCOVERY_CACHE_TTL_MS
+  ) {
+    return _discoveryCache.result;
+  }
+
+  const headers = getGitHubAuthHeaders();
+  const searchUrl = `https://api.github.com/search/repositories?q=topic:${encodeURIComponent(cleanTopic)}+fork:false&sort=updated&order=desc&per_page=100`;
+
+  let githubItems: GitHubSearchRepoItem[] = [];
+
+  try {
+    const res = await fetch(searchUrl, {
+      headers,
+      next: { revalidate: 0 },
+    });
+
+    if (!res.ok) {
+      const errText = await res.text().catch(() => "");
+      console.warn(`Notice: GitHub repository search for topic "${cleanTopic}" failed (${res.status}): ${errText}`);
+      const fallbackProjects = await getProjects();
+      const failResult: DiscoveredProjectResult = {
+        success: false,
+        topic: cleanTopic,
+        totalFound: 0,
+        addedCount: 0,
+        updatedCount: 0,
+        projects: fallbackProjects,
+        error: `GitHub API error (${res.status}): ${res.statusText}`,
+      };
+      return failResult;
+    }
+
+    const data = await res.json();
+    if (Array.isArray(data.items)) {
+      githubItems = data.items;
+    }
+  } catch (err: unknown) {
+    console.warn("Notice: Exception querying GitHub Search API for topic repos:", err);
+    const fallbackProjects = await getProjects();
+    return {
+      success: false,
+      topic: cleanTopic,
+      totalFound: 0,
+      addedCount: 0,
+      updatedCount: 0,
+      projects: fallbackProjects,
+      error: err instanceof Error ? err.message : "Search API request failed",
+    };
+  }
+
+  let addedCount = 0;
+  let updatedCount = 0;
+
+  try {
+    const admin = createAdminClient();
+
+    // Fetch existing projects from database to match by repo slug
+    const { data: dbRows, error: dbErr } = await admin
+      .from("projects")
+      .select("*");
+
+    if (dbErr) {
+      console.warn("Notice: Querying projects for topic discovery:", dbErr.message);
+    }
+
+    const existingBySlug = new Map<string, DbProjectRow>();
+    for (const row of (dbRows as DbProjectRow[]) || []) {
+      const slug = extractRepoSlug(row.github_repo_url || row.github_url || row.githubUrl);
+      if (slug) {
+        existingBySlug.set(slug, row);
+      }
+    }
+
+    const newProjectsToInsert: Array<{
+      name: string;
+      github_repo_url: string;
+      description: string;
+    }> = [];
+
+    for (const item of githubItems) {
+      const slug = extractRepoSlug(item.html_url);
+      if (!slug) continue;
+
+      const lang = item.language || "TypeScript";
+      const accentColor = LANGUAGE_COLORS[lang] || "#FF7518";
+      const stars = String(item.stargazers_count ?? 0);
+      const forks = String(item.forks_count ?? 0);
+      const rawDesc = item.description || "Community open source project participating in OSC India.";
+      const metaPayload = {
+        language: lang,
+        accentColor,
+        stars,
+        forks,
+      };
+      const dbDescription = `${rawDesc.trim()}\n<!--meta:${JSON.stringify(metaPayload)}-->`;
+
+      if (!existingBySlug.has(slug)) {
+        // New project discovered!
+        newProjectsToInsert.push({
+          name: item.name,
+          github_repo_url: item.html_url,
+          description: dbDescription,
+        });
+        addedCount++;
+      } else {
+        // Existing project: update stars/forks if changed
+        const existing = existingBySlug.get(slug)!;
+        const currentMeta = parseProjectFromDb(existing);
+        if (currentMeta.stars !== stars || currentMeta.forks !== forks) {
+          try {
+            await admin
+              .from("projects")
+              .update({ description: dbDescription, updated_at: new Date().toISOString() })
+              .eq("id", existing.id);
+            updatedCount++;
+          } catch {
+            // Non-critical update
+          }
+        }
+      }
+    }
+
+    if (newProjectsToInsert.length > 0) {
+      const { error: insertErr } = await admin
+        .from("projects")
+        .insert(newProjectsToInsert);
+
+      if (insertErr) {
+        console.warn("Notice: Inserting discovered projects:", insertErr.message);
+      }
+    }
+
+    // Invalidate caches so callers get fresh allowed repo slugs and project lists
+    await invalidateSlugCache();
+  } catch (syncErr) {
+    console.warn("Notice: Ingesting discovered projects to Supabase:", syncErr);
+  }
+
+  const allProjects = await getProjects();
+
+  // Revalidate public pages
+  try {
+    revalidatePath("/projects");
+    revalidatePath("/admin");
+  } catch {}
+
+  const finalResult: DiscoveredProjectResult = {
+    success: true,
+    topic: cleanTopic,
+    totalFound: githubItems.length,
+    addedCount,
+    updatedCount,
+    projects: allProjects,
+  };
+
+  _discoveryCache = {
+    timestamp: Date.now(),
+    topic: cleanTopic,
+    result: finalResult,
+  };
+
+  return finalResult;
+}
+
 /**
  * Creates and registers a new project directly in the Supabase database.
- * Only accessible by authenticated administrators.
+ * Syncs with local JSON cache and automatically triggers page revalidation.
  */
 export async function createProjectAction(
   input: NewProjectInput
@@ -383,15 +678,16 @@ export async function createProjectAction(
     }
 
     createdProject = parseProjectFromDb(data);
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Database project creation exception:", err);
-    return { success: false, error: err?.message || "Failed to save project to database." };
+    return { success: false, error: err instanceof Error ? err.message : "Failed to save project to database." };
   }
 
   // Also sync to local backup
   const currentLocal = readLocalCustomProjects();
   writeLocalCustomProjects([createdProject, ...currentLocal.filter((p) => p.id !== createdProject.id)]);
 
+  await invalidateSlugCache();
   revalidatePath("/projects");
   revalidatePath("/admin");
 
@@ -450,9 +746,9 @@ export async function deleteProjectAction(
         console.error("Failed to delete project by repo/name from DB:", error);
       }
     }
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Database project deletion exception:", err);
-    return { success: false, error: err?.message || "Failed to delete project from database." };
+    return { success: false, error: err instanceof Error ? err.message : "Failed to delete project from database." };
   }
 
   // 3. Keep local backup cache synchronized
@@ -462,6 +758,7 @@ export async function deleteProjectAction(
   );
   writeLocalCustomProjects(filtered);
 
+  await invalidateSlugCache();
   revalidatePath("/projects");
   revalidatePath("/admin");
 
@@ -503,12 +800,13 @@ export async function deleteAllProjectsAction(): Promise<{ success: boolean; cou
     // 3. Clear local backup cache completely
     writeLocalCustomProjects([]);
 
+    await invalidateSlugCache();
     revalidatePath("/projects");
     revalidatePath("/admin");
 
     return { success: true, count: data ? data.length : 0 };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Database deleteAllProjectsAction exception:", err);
-    return { success: false, error: err?.message || "Failed to delete all projects from database." };
+    return { success: false, error: err instanceof Error ? err.message : "Failed to delete all projects from database." };
   }
 }

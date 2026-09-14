@@ -58,16 +58,16 @@ export async function GET(request: Request) {
             const { data: linkingProfile } = await admin
               .from("profiles")
               .select("*")
-              .eq("id", linkingUserId)
+              .eq("user_id", linkingUserId)
               .maybeSingle();
 
             // 2. Clear any stale profile row holding this github handle
             await admin
               .from("profiles")
-              .update({ github: null, updated_at: new Date().toISOString() })
+              .update({ github: null })
               .eq("github", incomingGithub)
-              .neq("id", linkingUserId)
-              .neq("id", user.id);
+              .neq("user_id", linkingUserId)
+              .neq("user_id", user.id);
 
             const githubAvatar = user.user_metadata?.avatar_url || `https://avatars.githubusercontent.com/${incomingGithub}`;
 
@@ -77,29 +77,25 @@ export async function GET(request: Request) {
               .update({
                 github: incomingGithub,
                 avatar_url: githubAvatar,
-                updated_at: new Date().toISOString(),
               })
-              .eq("id", linkingUserId);
+              .eq("user_id", linkingUserId);
 
             // 4. If current session user.id is different, ensure user.id profile is unified
             if (user.id !== linkingUserId) {
               await admin
                 .from("profiles")
                 .upsert({
-                  id: user.id,
-                  email: user.email || linkingProfile?.email || null,
+                  user_id: user.id,
                   full_name: linkingProfile?.full_name || user.user_metadata?.full_name || incomingGithub,
                   avatar_url: githubAvatar,
                   github: incomingGithub,
                   role: linkingProfile?.role || "contributor",
-                  is_admin: linkingProfile?.is_admin || false,
                   score: linkingProfile?.score || 0,
                   merged_prs: linkingProfile?.merged_prs || 0,
                   projects_count: linkingProfile?.projects_count || 0,
                   badges_created: linkingProfile?.badges_created || 0,
                   tech_stack: linkingProfile?.tech_stack || [],
-                  updated_at: new Date().toISOString(),
-                });
+                }, { onConflict: "user_id" });
             }
 
             // 5. Immediately trigger GitHub contribution sync
@@ -108,15 +104,17 @@ export async function GET(request: Request) {
               if (user.id !== linkingUserId) {
                 await syncGitHubContribution(user.id, incomingGithub);
               }
-            } catch (syncErr: any) {
-              console.warn("GitHub contribution sync warning during link:", syncErr?.message);
+            } catch (syncErr: unknown) {
+              const msg = syncErr instanceof Error ? syncErr.message : "Sync error";
+              console.warn("GitHub contribution sync warning during link:", msg);
             }
           } else {
             await syncUserProfile(user);
           }
         }
-      } catch (profileErr: any) {
-        console.error("Profile auto-provisioning warning:", profileErr?.message);
+      } catch (profileErr: unknown) {
+        const msg = profileErr instanceof Error ? profileErr.message : "Profile error";
+        console.error("Profile auto-provisioning warning:", msg);
         // Non-blocking so user can still access session
       }
 

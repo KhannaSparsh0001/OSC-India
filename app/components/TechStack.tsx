@@ -5,24 +5,17 @@ import React, { useState, useEffect, useRef } from "react";
 interface TechStackProps {
   initialStack: string[];
   providerAccountId: string | null;
+  isReadOnly?: boolean;
 }
 
-export default function TechStack({ initialStack, providerAccountId }: TechStackProps) {
+export default function TechStack({ initialStack, providerAccountId, isReadOnly = false }: TechStackProps) {
   const [stack, setStack] = useState<string[]>(initialStack);
   const [isSyncing, setIsSyncing] = useState(false);
   const [error, setError] = useState("");
   const hasAutoSynced = useRef(false);
 
-  useEffect(() => {
-    // Auto-sync if stack is completely empty on first load
-    if (initialStack.length === 0 && providerAccountId && !hasAutoSynced.current) {
-      hasAutoSynced.current = true;
-      handleSync();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [providerAccountId, initialStack.length]);
-
-  const handleSync = async () => {
+  const handleSync = React.useCallback(async () => {
+    if (isReadOnly) return;
     if (!providerAccountId) {
       setError("No GitHub account linked.");
       return;
@@ -47,7 +40,7 @@ export default function TechStack({ initialStack, providerAccountId }: TechStack
       // 2. Fetch public repos
       const reposRes = await fetch(`https://api.github.com/users/${githubUsername}/repos?per_page=100&type=owner`);
       if (!reposRes.ok) throw new Error("Failed to fetch repositories.");
-      const repos = await reposRes.json();
+      const repos: Array<{ language?: string | null }> = await reposRes.json();
 
       // 3. Calculate Tech Stack
       const languageCounts: Record<string, number> = {};
@@ -78,12 +71,20 @@ export default function TechStack({ initialStack, providerAccountId }: TechStack
         console.warn("Tech stack save notice:", resData?.error);
       }
       setStack(topLanguages);
-    } catch (err: any) {
-      setError(err.message || "Failed to sync. Please try again.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to sync. Please try again.");
     } finally {
       setIsSyncing(false);
     }
-  };
+  }, [providerAccountId, isReadOnly]);
+
+  useEffect(() => {
+    // Auto-sync if stack is completely empty on first load (only for profile owner)
+    if (!isReadOnly && initialStack.length === 0 && providerAccountId && !hasAutoSynced.current) {
+      hasAutoSynced.current = true;
+      handleSync();
+    }
+  }, [providerAccountId, initialStack.length, handleSync, isReadOnly]);
 
   return (
     <div style={{ flex: 1, minWidth: '200px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: '24px' }}>
@@ -91,13 +92,14 @@ export default function TechStack({ initialStack, providerAccountId }: TechStack
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 600 }}>
           <span style={{ color: 'var(--orange)' }}></span> Tech Stack
         </div>
-        <button 
-          onClick={handleSync}
-          disabled={isSyncing}
-          style={{ background: 'transparent', border: 'none', color: '#9ca3af', fontSize: '12px', cursor: isSyncing ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '5px', opacity: isSyncing ? 0.6 : 1 }}
-          className="hover:text-white transition-colors"
-          title="Sync Tech Stack"
-        >
+        {!isReadOnly && (
+          <button 
+            onClick={handleSync}
+            disabled={isSyncing}
+            style={{ background: 'transparent', border: 'none', color: '#9ca3af', fontSize: '12px', cursor: isSyncing ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '5px', opacity: isSyncing ? 0.6 : 1 }}
+            className="hover:text-white transition-colors"
+            title="Sync Tech Stack"
+          >
           <svg
             width="13"
             height="13"
@@ -120,6 +122,7 @@ export default function TechStack({ initialStack, providerAccountId }: TechStack
           </svg>
           <span>{isSyncing ? 'Syncing...' : 'Sync'}</span>
         </button>
+        )}
       </div>
 
       {error && <div style={{ color: '#ef4444', fontSize: '12px', marginBottom: '12px' }}>{error}</div>}

@@ -95,16 +95,18 @@ export async function GET(request: Request) {
     // 3. Synchronize / deduplicate profile
     try {
       await syncUserProfile(data.user);
-    } catch (profileErr: any) {
-      console.error("Profile sync error after Google login:", profileErr?.message);
+    } catch (profileErr: unknown) {
+      const pMsg = profileErr instanceof Error ? profileErr.message : "Profile sync failed";
+      console.error("Profile sync error after Google login:", pMsg);
     }
 
     // 4. Redirect to intended destination
     return NextResponse.redirect(`${origin}${next}`);
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Google authentication failed";
     console.error("Google OAuth callback exception:", err);
     return NextResponse.redirect(
-      `${origin}/sign-in?error=${encodeURIComponent(err?.message || "Google authentication failed")}`
+      `${origin}/sign-in?error=${encodeURIComponent(message)}`
     );
   }
 }

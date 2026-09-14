@@ -1,8 +1,12 @@
 {
   "crons": [
     {
-      "path": "/api/cron/sync-leaderboard",
+      "path": "/api/cron/sync-contributors",
       "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/sync-leaderboard",
+      "schedule": "0 12 * * *"
     }
   ]
 }

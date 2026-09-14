@@ -14,9 +14,39 @@ import {
   type ClientProfilePayload 
 } from "@/lib/auth/client";
 
+interface GoogleCredentialResponse {
+  credential?: string;
+  select_by?: string;
+}
+
+interface GoogleGIS {
+  accounts: {
+    id: {
+      initialize: (config: {
+        client_id: string;
+        callback: (response: GoogleCredentialResponse) => void;
+        auto_select?: boolean;
+        cancel_on_tap_outside?: boolean;
+      }) => void;
+      renderButton: (
+        element: HTMLElement,
+        options: {
+          type?: string;
+          shape?: string;
+          theme?: string;
+          text?: string;
+          size?: string;
+          width?: number;
+        }
+      ) => void;
+      prompt: () => void;
+    };
+  };
+}
+
 declare global {
   interface Window {
-    google?: any;
+    google?: GoogleGIS;
   }
 }
 
@@ -67,7 +97,7 @@ function SignInContent() {
     try {
       window.google.accounts.id.initialize({
         client_id: googleClientId,
-        callback: async (response: any) => {
+        callback: async (response: GoogleCredentialResponse) => {
           if (!response?.credential) return;
           setErrorMessage(null);
           setIsLoading(true);

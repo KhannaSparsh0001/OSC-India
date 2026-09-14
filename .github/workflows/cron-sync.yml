@@ -1,0 +1,26 @@
+name: Background Sync Cron
+
+on:
+  schedule:
+    # Runs fast DB leaderboard aggregation every 2 hours
+    - cron: '0 */2 * * *'
+    # Runs full contributor recalculation every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  cron-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Fast Leaderboard Aggregation
+        run: |
+          if [ -n "${{ secrets.APP_URL }}" ]; then
+            curl -s -X GET "${{ secrets.APP_URL }}/api/cron/sync-leaderboard?secret=${{ secrets.CRON_SECRET }}" || true
+          fi
+
+      - name: Trigger Full Contributor Sync (if 6-hour interval)
+        run: |
+          HOUR=$(date -u +'%H')
+          if [ $((HOUR % 6)) -eq 0 ] && [ -n "${{ secrets.APP_URL }}" ]; then
+            curl -s -X GET "${{ secrets.APP_URL }}/api/cron/sync-contributors?secret=${{ secrets.CRON_SECRET }}" || true
+          fi

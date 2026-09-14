@@ -1,0 +1,31 @@
+name: Automated OSCI'26 Leaderboard Sync
+
+on:
+  schedule:
+    # Runs automatically every 15 minutes
+    - cron: '*/15 * * * *'
+  workflow_dispatch: # Allows 1-click trigger from GitHub Actions tab
+
+  
+jobs:
+  sync-leaderboard:
+    name: Sync Points & Leaderboard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Supabase Client
+        run: npm install @supabase/supabase-js dotenv
+
+      - name: Run Strict OSCI'26 Sync & Leaderboard Recalculation
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GITHUB_ACCESS_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+        run: node scripts/backfill-contributions-table.js

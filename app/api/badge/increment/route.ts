@@ -4,7 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(request: Request) {
+export async function POST() {
   try {
     const supabase = await createClient();
     const {
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
       const { data: profile } = await admin
         .from("profiles")
         .select("badges_created")
-        .eq("id", user.id)
+        .eq("user_id", user.id)
         .maybeSingle();
 
       if (profile && profile.badges_created !== undefined && profile.badges_created !== null) {
@@ -64,14 +64,15 @@ export async function POST(request: Request) {
       await admin
         .from("profiles")
         .update({ badges_created: newCount, updated_at: new Date().toISOString() })
-        .eq("id", user.id);
+        .eq("user_id", user.id);
     } catch (dbErr) {
       console.warn("Notice: saving badges_created to profiles table:", dbErr);
     }
 
     return NextResponse.json({ success: true, count: newCount });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to increment badge count";
     console.warn("Badge increment API error:", err);
-    return NextResponse.json({ error: err.message || "Failed to increment badge count" }, { status: 500 });
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

@@ -1,79 +1,148 @@
 import { NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { syncGitHubContribution } from "@/lib/actions/github";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { revalidatePath } from "next/cache";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
+/**
+ * Fast DB-Only Leaderboard Aggregation Cron Handler
+ * Configured in vercel.json to run periodically.
+ *
+ * Rather than calling the GitHub API repeatedly, this reads verified PRs
+ * from public.contributions, aggregates merit scores and project counts,
+ * and updates public.profiles and public.leaderboard_stats in bulk chunks.
+ * Zero external API rate limit consumption.
+ */
 export async function GET(request: Request) {
   try {
-    // 1. Verify Vercel Cron Token
+    const { searchParams } = new URL(request.url);
+
+    // 1. Verify Vercel Cron Token or query parameter secret
     const authHeader = request.headers.get("authorization");
-    if (
-      process.env.CRON_SECRET &&
-      authHeader !== `Bearer ${process.env.CRON_SECRET}`
-    ) {
+    const secretParam = searchParams.get("secret");
+    const isCronAuthorized =
+      !process.env.CRON_SECRET ||
+      authHeader === `Bearer ${process.env.CRON_SECRET}` ||
+      secretParam === process.env.CRON_SECRET;
+
+    if (!isCronAuthorized) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const admin = createAdminClient();
+    // 2. Check for single user on-demand sync (e.g. ?user_id=...&github=...)
+    const targetUserId = searchParams.get("user_id");
+    const targetGithub = searchParams.get("github");
 
-    // 2. Fetch all contributor profiles with a linked GitHub username
-    const { data: contributors, error } = await admin
-      .from("profiles")
-      .select("id, github, full_name")
-      .eq("role", "contributor")
-      .not("github", "is", null);
-
-    if (error) {
-      throw new Error(`Failed to fetch contributors: ${error.message}`);
-    }
-
-    if (!contributors || contributors.length === 0) {
+    if (targetUserId && targetGithub) {
+      const singleRes = await syncGitHubContribution(targetUserId, targetGithub);
       return NextResponse.json({
-        success: true,
-        message: "No contributors with linked GitHub accounts found.",
-        synced: 0,
+        success: singleRes.success,
+        mode: "single",
+        result: singleRes,
       });
     }
 
-    let successCount = 0;
-    const details: any[] = [];
+    // 3. Fast DB-only leaderboard aggregation across contributions & leaderboard_stats
+    const admin = createAdminClient();
+    const startTime = Date.now();
 
-    // 3. Sequentially sync each contributor with rate-limit pacing
-    for (const contributor of contributors) {
-      if (!contributor.github) continue;
+    const { data: contributions, error: contribError } = await admin
+      .from("contributions")
+      .select("user_id, project_id, points_awarded")
+      .eq("status", "merged");
 
-      try {
-        const result = await syncGitHubContribution(
-          contributor.id,
-          contributor.github
-        );
-
-        if (result.success) {
-          successCount++;
-          details.push({
-            id: contributor.id,
-            github: contributor.github,
-            score: result.score,
-            merged_prs: result.merged_prs,
-          });
-        }
-      } catch (err: any) {
-        console.error(`Sync error for ${contributor.github}:`, err?.message);
-      }
-
-      // 2-second delay between users to avoid GitHub secondary rate limits (per plan.md)
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+    if (contribError) {
+      throw new Error(`Failed to read contributions: ${contribError.message}`);
     }
 
+    interface UserAggregation {
+      score: number;
+      merged_prs: number;
+      projects: Set<string>;
+    }
+
+    const userAggMap = new Map<string, UserAggregation>();
+    for (const c of contributions || []) {
+      if (!c.user_id) continue;
+      if (!userAggMap.has(c.user_id)) {
+        userAggMap.set(c.user_id, {
+          score: 0,
+          merged_prs: 0,
+          projects: new Set<string>(),
+        });
+      }
+      const agg = userAggMap.get(c.user_id)!;
+      agg.score += Number(c.points_awarded || 0);
+      agg.merged_prs += 1;
+      if (c.project_id) agg.projects.add(c.project_id);
+    }
+
+    const nowIso = new Date().toISOString();
+    const profileUpdates: Array<{
+      id: string;
+      user_id: string;
+      score: number;
+      merged_prs: number;
+      projects_count: number;
+    }> = [];
+
+    const leaderboardStats: Array<{
+      user_id: string;
+      total_points: number;
+      current_streak: number;
+      updated_at: string;
+    }> = [];
+
+    for (const [userId, agg] of userAggMap.entries()) {
+      profileUpdates.push({
+        id: userId,
+        user_id: userId,
+        score: agg.score,
+        merged_prs: agg.merged_prs,
+        projects_count: agg.projects.size,
+      });
+
+      leaderboardStats.push({
+        user_id: userId,
+        total_points: agg.score,
+        current_streak: 1,
+        updated_at: nowIso,
+      });
+    }
+
+    // Direct profile updates
+    for (const pUp of profileUpdates) {
+      await admin
+        .from("profiles")
+        .update({
+          score: pUp.score,
+          merged_prs: pUp.merged_prs,
+          projects_count: pUp.projects_count,
+        })
+        .or(`id.eq.${pUp.id},user_id.eq.${pUp.user_id}`);
+    }
+
+    for (let i = 0; i < leaderboardStats.length; i += 500) {
+      const chunk = leaderboardStats.slice(i, i + 500);
+      await admin.from("leaderboard_stats").upsert(chunk, { onConflict: "user_id" });
+    }
+
+    revalidatePath("/leaderboard");
+
+    const durationSec = ((Date.now() - startTime) / 1000).toFixed(2);
+
     return NextResponse.json({
-      success: true,
-      totalContributors: contributors.length,
-      syncedSuccessfully: successCount,
-      details,
+      mode: "fast-db-aggregation",
+      timestamp: nowIso,
+      contributorsAggregated: userAggMap.size,
+      contributionsCount: contributions?.length || 0,
+      duration: `${durationSec}s`,
     });
-  } catch (err: any) {
-    console.error("Leaderboard Cron Sync Error:", err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Internal Server Error";
+    console.error("Leaderboard Cron Aggregation Error:", err);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

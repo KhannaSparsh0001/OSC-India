@@ -9,6 +9,7 @@ interface Contribution {
 
 interface ActivityMatrixProps {
   providerAccountId: string | null;
+  isReadOnly?: boolean;
 }
 
 interface CachedPayload {
@@ -26,54 +27,27 @@ function formatLocalDate(d: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-export default function ActivityMatrix({ providerAccountId }: ActivityMatrixProps) {
-  const [contributions, setContributions] = useState<Contribution[]>([]);
+export default function ActivityMatrix({ providerAccountId, isReadOnly = false }: ActivityMatrixProps) {
+  const [contributions, setContributions] = useState<Contribution[]>(() => {
+    if (typeof window === "undefined" || !providerAccountId) return [];
+    try {
+      const cacheKey = `github_activity_${providerAccountId}`;
+      const cachedStr = localStorage.getItem(cacheKey);
+      if (cachedStr) {
+        const parsed = JSON.parse(cachedStr);
+        return Array.isArray(parsed) ? parsed : parsed?.contributions || [];
+      }
+    } catch {
+      // ignore
+    }
+    return [];
+  });
   const [isSyncing, setIsSyncing] = useState(false);
-  const [, setIsLoaded] = useState(false);
   const [error, setError] = useState("");
   const [customHandle, setCustomHandle] = useState("");
   const [isLinking, setIsLinking] = useState(false);
 
-  // Auto-fetch or read cache when providerAccountId is available
-  useEffect(() => {
-    if (providerAccountId) {
-      const cacheKey = `github_activity_${providerAccountId}`;
-      const cachedStr = localStorage.getItem(cacheKey);
-      let hasValidCache = false;
-
-      if (cachedStr) {
-        try {
-          const parsed = JSON.parse(cachedStr);
-          // Handle both new format ({ timestamp, contributions }) and legacy format (array)
-          const data: Contribution[] = Array.isArray(parsed)
-            ? parsed
-            : parsed?.contributions || [];
-          const timestamp = Array.isArray(parsed) ? 0 : parsed?.timestamp || 0;
-
-          if (data.length > 0) {
-            setContributions(data);
-            setIsLoaded(true);
-            hasValidCache = true;
-
-            // If cache is fresh (less than 1 hour old), do not refetch immediately
-            if (Date.now() - timestamp < CACHE_TTL_MS) {
-              return;
-            }
-          }
-        } catch {
-          localStorage.removeItem(cacheKey);
-        }
-      }
-
-      // Revalidate in background or fetch if no cache
-      handleSync(providerAccountId, !hasValidCache);
-    } else {
-      setIsLoaded(true);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [providerAccountId]);
-
-  const handleSync = async (overrideHandle?: string, showSpinner = true) => {
+  const handleSync = React.useCallback(async (overrideHandle?: string, showSpinner = true) => {
     const targetHandle = (overrideHandle || customHandle || providerAccountId || "")
       .replace(/^@/, "")
       .trim();
@@ -114,13 +88,58 @@ export default function ActivityMatrix({ providerAccountId }: ActivityMatrixProp
         contributions: parsedEvents,
       };
       localStorage.setItem(`github_activity_${githubUsername}`, JSON.stringify(payload));
-      setIsLoaded(true);
-    } catch (err: any) {
-      setError(err.message || "Failed to sync.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to sync.");
     } finally {
       setIsSyncing(false);
     }
-  };
+  }, [customHandle, providerAccountId]);
+
+  // Auto-fetch or read cache when providerAccountId is available
+  useEffect(() => {
+    if (!providerAccountId) return;
+
+    const cacheKey = `github_activity_${providerAccountId}`;
+    let hasValidCache = false;
+
+    try {
+      const cachedStr = localStorage.getItem(cacheKey);
+      if (cachedStr) {
+        const parsed = JSON.parse(cachedStr);
+        const data: Contribution[] = Array.isArray(parsed)
+          ? parsed
+          : parsed?.contributions || [];
+        const timestamp = Array.isArray(parsed) ? 0 : parsed?.timestamp || 0;
+
+        if (data.length > 0) {
+          hasValidCache = true;
+          // If cache is fresh (less than 1 hour old), do not refetch immediately
+          if (Date.now() - timestamp < CACHE_TTL_MS) {
+            return;
+          }
+        }
+      }
+    } catch {
+      try {
+        localStorage.removeItem(cacheKey);
+      } catch {
+        // ignore
+      }
+    }
+
+    // Revalidate in background or fetch if no cache (deferred to avoid synchronous setState in effect body)
+    let isCancelled = false;
+    const timer = setTimeout(() => {
+      if (!isCancelled) {
+        handleSync(providerAccountId, !hasValidCache);
+      }
+    }, 0);
+
+    return () => {
+      isCancelled = true;
+      clearTimeout(timer);
+    };
+  }, [providerAccountId, handleSync]);
 
   const handleLinkAndSync = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -141,8 +160,8 @@ export default function ActivityMatrix({ providerAccountId }: ActivityMatrixProp
         throw new Error(data.error || "Failed to link GitHub handle");
       }
       await handleSync(handle, true);
-    } catch (err: any) {
-      setError(err.message || "Failed to link GitHub handle");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to link GitHub handle");
     } finally {
       setIsLinking(false);
     }
@@ -304,51 +323,94 @@ export default function ActivityMatrix({ providerAccountId }: ActivityMatrixProp
           )}
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        {!isReadOnly && (
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+            {/* Direct GitHub username input for instant graph loading */}
+            {(!providerAccountId || !contributions.length) && (
+              <form
+                onSubmit={handleLinkAndSync}
+                style={{ display: "flex", alignItems: "center", gap: "6px" }}
+              >
+                <input
+                  type="text"
+                  placeholder="GitHub username"
+                  value={customHandle}
+                  onChange={(e) => setCustomHandle(e.target.value)}
+                  style={{
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                    borderRadius: "6px",
+                    padding: "4px 8px",
+                    fontSize: "12px",
+                    color: "white",
+                    outline: "none",
+                    width: "140px",
+                  }}
+                />
+                <button
+                  type="submit"
+                  disabled={isLinking || !customHandle.trim()}
+                  style={{
+                    background: "var(--orange)",
+                    border: "none",
+                    borderRadius: "6px",
+                    padding: "4px 10px",
+                    fontSize: "12px",
+                    fontWeight: 600,
+                    color: "white",
+                    cursor: isLinking ? "not-allowed" : "pointer",
+                    opacity: isLinking || !customHandle.trim() ? 0.6 : 1,
+                  }}
+                >
+                  {isLinking ? "Linking..." : "Link"}
+                </button>
+              </form>
+            )}
 
-          <button
-            type="button"
-            onClick={() => handleSync(undefined, true)}
-            disabled={isSyncing}
-            style={{
-              background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: "8px",
-              padding: "6px 12px",
-              color: "#9ca3af",
-              fontSize: "12px",
-              cursor: isSyncing ? "not-allowed" : "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              opacity: isSyncing ? 0.5 : 1,
-              transition: "all 0.2s ease",
-            }}
-            className="hover:text-white hover:border-[rgba(255,255,255,0.2)]"
-          >
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+            <button
+              type="button"
+              onClick={() => handleSync(undefined, true)}
+              disabled={isSyncing}
               style={{
-                animation: isSyncing ? "spin 1s linear infinite" : "none",
-                transformOrigin: "center",
-                display: "block",
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: "8px",
+                padding: "6px 12px",
+                color: "#9ca3af",
+                fontSize: "12px",
+                cursor: isSyncing ? "not-allowed" : "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                opacity: isSyncing ? 0.5 : 1,
+                transition: "all 0.2s ease",
               }}
+              className="hover:text-white hover:border-[rgba(255,255,255,0.2)]"
             >
-              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-              <path d="M21 3v5h-5" />
-              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-              <path d="M8 16H3v5" />
-            </svg>
-            <span>{isSyncing ? "Syncing Activity..." : "Sync Activity"}</span>
-          </button>
-        </div>
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{
+                  animation: isSyncing ? "spin 1s linear infinite" : "none",
+                  transformOrigin: "center",
+                  display: "block",
+                }}
+              >
+                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                <path d="M21 3v5h-5" />
+                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+                <path d="M8 16H3v5" />
+              </svg>
+              <span>{isSyncing ? "Syncing Activity..." : "Sync Activity"}</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {error && (

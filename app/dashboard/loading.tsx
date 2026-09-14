@@ -4,56 +4,111 @@ import Footer from "../components/Footer";
 
 export default function DashboardLoading() {
   return (
-    <div className="min-h-screen bg-[var(--bg)] flex flex-col font-sans text-white">
+    <div className="min-h-screen bg-[#000000] flex flex-col font-sans text-white">
       <Navbar />
-      <div style={{ height: '96px', width: '100%', flexShrink: 0 }} aria-hidden="true" />
-      
-      <main className="flex-grow flex flex-col items-center" style={{ margin: '0 auto', maxWidth: '1440px', width: '100%', paddingBottom: '96px', paddingTop: '24px', paddingLeft: 'clamp(20px, 5vw, 64px)', paddingRight: 'clamp(20px, 5vw, 64px)', overflowX: 'hidden', boxSizing: 'border-box' }}>
-        
+      <div style={{ height: "96px", width: "100%", flexShrink: 0 }} aria-hidden="true" />
+
+      <main
+        style={{
+          margin: "0 auto",
+          maxWidth: "1320px",
+          width: "100%",
+          paddingTop: "24px",
+          paddingBottom: "96px",
+          paddingLeft: "clamp(20px, 4vw, 40px)",
+          paddingRight: "clamp(20px, 4vw, 40px)",
+          boxSizing: "border-box",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         {/* Header Skeleton */}
-        <div style={{ width: '100%', marginBottom: '40px' }} className="animate-pulse">
-          <div style={{ width: '140px', height: '24px', borderRadius: '16px', background: 'rgba(255,255,255,0.05)', marginBottom: '24px' }} />
-          <div style={{ width: '300px', height: '48px', borderRadius: '8px', background: 'rgba(255,255,255,0.1)', marginBottom: '8px' }} />
-          <div style={{ width: '200px', height: '20px', borderRadius: '4px', background: 'rgba(255,255,255,0.05)' }} />
+        <div style={{ width: "100%", marginBottom: "36px" }} className="animate-pulse">
+          <div style={{ width: "140px", height: "22px", borderRadius: "8px", background: "rgba(255,255,255,0.06)", marginBottom: "8px" }} />
+          <div style={{ width: "240px", height: "42px", borderRadius: "10px", background: "rgba(255,255,255,0.1)", marginBottom: "8px" }} />
+          <div style={{ width: "300px", height: "16px", borderRadius: "6px", background: "rgba(255,255,255,0.05)" }} />
         </div>
 
         {/* Top Grid Area Skeleton */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full mb-12">
-          
-          {/* LEFT COLUMN: Profile Skeleton */}
-          <div className="md:col-span-1 xl:col-span-1 animate-pulse" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: 'clamp(24px, 4vw, 40px) 24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', marginBottom: '20px' }} />
-              <div style={{ width: '160px', height: '28px', borderRadius: '4px', background: 'rgba(255,255,255,0.1)', marginBottom: '12px' }} />
-              <div style={{ width: '100px', height: '16px', borderRadius: '4px', background: 'rgba(255,255,255,0.05)', marginBottom: '24px' }} />
-              
-              <div style={{ display: 'flex', gap: '8px', marginBottom: '24px' }}>
-                <div style={{ width: '80px', height: '24px', borderRadius: '16px', background: 'rgba(255,255,255,0.1)' }} />
-                <div style={{ width: '80px', height: '24px', borderRadius: '16px', background: 'rgba(255,255,255,0.05)' }} />
-              </div>
+        <div
+          className="dashboard-top-grid"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "300px 1fr",
+            gap: "24px",
+            width: "100%",
+            marginBottom: "28px",
+          }}
+        >
+          {/* Profile Card Skeleton */}
+          <div
+            className="animate-pulse"
+            style={{
+              background: "#0d0e12",
+              border: "1px solid #1c1e26",
+              borderRadius: "20px",
+              padding: "28px 20px",
+              height: "380px",
+            }}
+          />
 
-              <div style={{ width: '100%', height: '80px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', marginBottom: '24px' }} />
+          {/* Stats & Tech Stack Skeleton */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            <div
+              className="dashboard-metrics-grid animate-pulse"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(4, 1fr)",
+                gap: "16px",
+                height: "150px",
+              }}
+            >
+              {[1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  style={{
+                    background: "#0d0e12",
+                    border: "1px solid #1c1e26",
+                    borderRadius: "18px",
+                  }}
+                />
+              ))}
             </div>
-          </div>
 
-          {/* RIGHT COLUMN: Stats Skeleton */}
-          <div className="md:col-span-1 xl:col-span-2 animate-pulse" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px', padding: 'clamp(20px, 4vw, 32px)', height: '250px' }}>
-              <div style={{ width: '120px', height: '16px', borderRadius: '4px', background: 'rgba(255,255,255,0.05)', marginBottom: '16px' }} />
-              <div style={{ width: '200px', height: '48px', borderRadius: '8px', background: 'rgba(255,255,255,0.1)' }} />
-              
-              <div style={{ display: 'flex', gap: '16px', marginTop: '64px' }}>
-                <div style={{ flex: 1, height: '80px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)' }} />
-                <div style={{ flex: 1, height: '80px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)' }} />
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
-              <div style={{ flex: 1, minWidth: '200px', height: '140px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px' }} />
-            </div>
+            <div
+              className="animate-pulse"
+              style={{
+                background: "#0d0e12",
+                border: "1px solid #1c1e26",
+                borderRadius: "18px",
+                height: "140px",
+              }}
+            />
           </div>
         </div>
 
+        {/* Daily Contributions Skeleton */}
+        <div
+          className="animate-pulse"
+          style={{
+            background: "#0d0e12",
+            border: "1px solid #1c1e26",
+            borderRadius: "20px",
+            height: "220px",
+            marginBottom: "28px",
+          }}
+        />
+
+        {/* PRs Table Skeleton */}
+        <div
+          className="animate-pulse"
+          style={{
+            background: "#0d0e12",
+            border: "1px solid #1c1e26",
+            borderRadius: "20px",
+            height: "400px",
+          }}
+        />
       </main>
 
       <Footer />
