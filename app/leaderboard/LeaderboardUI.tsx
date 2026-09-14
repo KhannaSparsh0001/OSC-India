@@ -100,8 +100,32 @@ export default function LeaderboardUI({
         }
       });
 
+    // Client-side auth guard: redirect immediately if signed out in another tab or action
+    const {
+      data: { subscription: authSub },
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_OUT") {
+        router.replace("/sign-in?next=/leaderboard");
+      }
+    });
+
+    // Guard against restoring stale authenticated view from bfcache after signout
+    const handlePageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (!session) {
+            router.replace("/sign-in?next=/leaderboard");
+          }
+        });
+      }
+    };
+
+    window.addEventListener("pageshow", handlePageShow);
+
     return () => {
       supabase.removeChannel(channel);
+      authSub.unsubscribe();
+      window.removeEventListener("pageshow", handlePageShow);
     };
   }, [router]);
 
