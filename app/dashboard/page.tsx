@@ -215,7 +215,7 @@ export default async function DashboardPage(props: {
   let relevantPRs: typeof allContributions = [];
 
   if (isProjectAdmin) {
-    let matchedProjects = allProjects.filter((p) => {
+    const matchedProjects = allProjects.filter((p) => {
       if (!p.github_repo_url) return false;
       const urlLower = p.github_repo_url.toLowerCase();
       return (

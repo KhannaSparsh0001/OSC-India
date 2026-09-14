@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import LeaderboardUI from "./LeaderboardUI";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -10,7 +11,15 @@ export default async function LeaderboardPage(props: {
   const supabase = await createClient();
   const {
     data: { user },
+    error: userError,
   } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    if (userError) {
+      console.warn("Leaderboard auth verification notice:", userError.message);
+    }
+    redirect("/sign-in?next=/leaderboard");
+  }
 
   const resolvedSearchParams = props?.searchParams ? await props.searchParams : {};
   const q = typeof resolvedSearchParams?.q === "string" ? resolvedSearchParams.q.trim() : "";
