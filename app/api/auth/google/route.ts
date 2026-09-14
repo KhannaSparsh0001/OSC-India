@@ -23,6 +23,7 @@ export async function GET(request: Request) {
     );
   }
 
+  
   const redirectUri = `${origin}/api/auth/google/callback`;
 
   const googleAuthUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
