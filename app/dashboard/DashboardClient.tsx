@@ -89,10 +89,10 @@ export default function DashboardClient({
   const [newTech, setNewTech] = useState("");
   const [isSavingTech, setIsSavingTech] = useState(false);
 
-  const rawRole = profile.role || "project-admin";
+  const rawRole = profile.role || "contributor";
   const isProjectAdmin = rawRole === "project-admin";
   const roleDisplay = isProjectAdmin ? "Project Admin" : "Contributor";
-  const githubUsername = profile.github || "kanishjebamathewm";
+  const githubUsername = profile.github || "";
 
   // Visible daily contributions (7 days window)
   const visibleDays = useMemo(() => {
@@ -1339,7 +1339,7 @@ export default function DashboardClient({
                       })
                     : "Sep 13, 2026";
 
-                  const repoName = c.project_name || "Truxify";
+                  const repoName = c.project_name || "Project";
 
                   return (
                     <tr

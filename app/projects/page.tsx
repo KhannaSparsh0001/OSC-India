@@ -240,42 +240,54 @@ export default async function ProjectsPage() {
   let viewerProfile = null;
 
   if (currentUser) {
-    const { data: ownProfile } = await admin
+    let ownProfile: Record<string, unknown> | null = null;
+    const { data: byUserId } = await admin
       .from("profiles")
       .select("*")
       .eq("user_id", currentUser.id)
       .maybeSingle();
 
-    if (ownProfile) {
-      viewerProfile = {
-        id: ownProfile.user_id || ownProfile.id,
-        name: ownProfile.full_name,
-        email: currentUser.email || "",
-        avatar: ownProfile.avatar_url,
-        role: ownProfile.role,
-        isAdmin: ownProfile.role === "project-admin",
-        github: ownProfile.github,
-      };
-    }
-  } else {
-    // Default fallback to Kanish profile for local preview
-    const { data: defaultProfile } = await admin
-      .from("profiles")
-      .select("*")
-      .ilike("github", "%kanish%")
-      .maybeSingle();
+    ownProfile = byUserId;
 
-    if (defaultProfile) {
-      viewerProfile = {
-        id: defaultProfile.user_id || defaultProfile.id,
-        name: defaultProfile.full_name,
-        email: "kanishjebamathewm@osc-india.org",
-        avatar: defaultProfile.avatar_url,
-        role: defaultProfile.role,
-        isAdmin: defaultProfile.role === "project-admin",
-        github: defaultProfile.github,
-      };
+    if (!ownProfile) {
+      const { data: byId } = await admin
+        .from("profiles")
+        .select("*")
+        .eq("id", currentUser.id)
+        .maybeSingle();
+      if (byId) ownProfile = byId;
     }
+
+    const gh =
+      (ownProfile?.github as string) ||
+      (currentUser.user_metadata?.user_name as string) ||
+      (currentUser.user_metadata?.preferred_username as string) ||
+      null;
+
+    const fn =
+      (ownProfile?.full_name as string) ||
+      (currentUser.user_metadata?.full_name as string) ||
+      (currentUser.user_metadata?.name as string) ||
+      gh ||
+      "Contributor";
+
+    const av =
+      (ownProfile?.avatar_url as string) ||
+      (currentUser.user_metadata?.avatar_url as string) ||
+      (currentUser.user_metadata?.picture as string) ||
+      (gh ? `https://avatars.githubusercontent.com/${gh}` : null);
+
+    const r = (ownProfile?.role as string) || (currentUser.user_metadata?.role as string) || "contributor";
+
+    viewerProfile = {
+      id: (ownProfile?.user_id as string) || (ownProfile?.id as string) || currentUser.id,
+      name: fn,
+      email: currentUser.email || "",
+      avatar: av,
+      role: r,
+      isAdmin: r === "project-admin",
+      github: gh,
+    };
   }
 
   // Enrich raw projects with tags, category, custom icon, and mockup attributes

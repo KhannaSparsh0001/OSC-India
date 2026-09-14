@@ -3,6 +3,8 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { redirect } from "next/navigation";
+import { syncUserProfile } from "@/lib/auth/syncProfile";
 import Link from "next/link";
 import DashboardClient, { PRContribution, DayContribution, ProjectSummary } from "./DashboardClient";
 
@@ -37,6 +39,11 @@ export default async function DashboardPage(props: {
       : "";
   const requestedId =
     typeof resolvedParams?.id === "string" ? resolvedParams.id.trim() : "";
+
+  // If unauthenticated and not requesting a public profile, redirect to sign-in
+  if (!currentUser && !requestedUser && !requestedId) {
+    redirect("/sign-in");
+  }
 
   const admin = createAdminClient();
   let targetProfile: Record<string, unknown> | null = null;
@@ -85,6 +92,7 @@ export default async function DashboardPage(props: {
     isOwnProfile = true;
     targetUserId = currentUser.id;
 
+    // Search by user_id
     const { data: ownProfile } = await admin
       .from("profiles")
       .select("*")
@@ -92,32 +100,96 @@ export default async function DashboardPage(props: {
       .maybeSingle();
 
     profile = ownProfile as Record<string, unknown> | null;
-  }
 
-  // 3. Fallback to Kanish Jeba Mathew M profile for local dev and preview
-  if (!profile) {
-    const { data: defaultProfile } = await admin
-      .from("profiles")
-      .select("*")
-      .ilike("github", "%kanish%")
-      .maybeSingle();
+    // Fallback: search by id
+    if (!profile) {
+      const { data: byId } = await admin
+        .from("profiles")
+        .select("*")
+        .eq("id", currentUser.id)
+        .maybeSingle();
+      if (byId) profile = byId as Record<string, unknown> | null;
+    }
 
-    if (defaultProfile) {
-      profile = defaultProfile;
-      targetUserId = String(defaultProfile.user_id || defaultProfile.id);
-      isOwnProfile = true;
+    // Fallback: search by github username from user_metadata
+    const metaGithub =
+      currentUser.user_metadata?.user_name ||
+      currentUser.user_metadata?.preferred_username ||
+      currentUser.user_metadata?.github ||
+      null;
+
+    if (!profile && metaGithub) {
+      const cleanGh = metaGithub.replace(/^@+/, "").trim();
+      const { data: byGh } = await admin
+        .from("profiles")
+        .select("*")
+        .ilike("github", cleanGh)
+        .maybeSingle();
+      if (byGh) profile = byGh as Record<string, unknown> | null;
+    }
+
+    // Fallback: search by email
+    const userEmail = (currentUser.email || currentUser.user_metadata?.email || "").trim().toLowerCase();
+    if (!profile && userEmail) {
+      const { data: byEmail } = await admin
+        .from("profiles")
+        .select("*")
+        .ilike("email", userEmail)
+        .maybeSingle();
+      if (byEmail) profile = byEmail as Record<string, unknown> | null;
+    }
+
+    // If profile still does not exist, auto-provision using syncUserProfile
+    if (!profile) {
+      try {
+        const synced = await syncUserProfile(currentUser);
+        if (synced) {
+          profile = synced as unknown as Record<string, unknown>;
+        }
+      } catch (syncErr) {
+        console.warn("Notice: syncUserProfile on dashboard error:", syncErr);
+      }
     }
   }
 
+  // Extract viewer identity fields
+  const metaGithub =
+    (currentUser?.user_metadata?.user_name as string) ||
+    (currentUser?.user_metadata?.preferred_username as string) ||
+    (currentUser?.user_metadata?.github as string) ||
+    "";
+
+  const githubUsername = (
+    (profile?.github as string) ||
+    (isOwnProfile ? metaGithub : "") ||
+    requestedUser ||
+    ""
+  ).replace(/^@+/, "").trim();
+
   const fullName =
-    (profile?.full_name as string) || "Kanish Jeba Mathew M";
-  const firstName = fullName.trim().split(" ")[0] || "Kanish";
+    (profile?.full_name as string) ||
+    (isOwnProfile
+      ? (currentUser?.user_metadata?.full_name as string) ||
+        (currentUser?.user_metadata?.name as string) ||
+        githubUsername
+      : "") ||
+    githubUsername ||
+    "Contributor";
+
+  const firstName = fullName.trim().split(" ")[0] || "Contributor";
+
   const avatar =
     (profile?.avatar_url as string) ||
-    "https://avatars.githubusercontent.com/u/181569773?v=4";
-  const githubUsername =
-    (profile?.github as string) || "kanishjebamathewm";
-  const rawRole = (profile?.role as string) || "project-admin";
+    (isOwnProfile
+      ? (currentUser?.user_metadata?.avatar_url as string) ||
+        (currentUser?.user_metadata?.picture as string)
+      : "") ||
+    (githubUsername ? `https://avatars.githubusercontent.com/${githubUsername}` : "");
+
+  const rawRole =
+    (profile?.role as string) ||
+    (isOwnProfile ? (currentUser?.user_metadata?.role as string) : "") ||
+    "contributor";
   const isProjectAdmin = rawRole === "project-admin";
 
   const badgesCreated = Number(profile?.badges_created || 0);
@@ -147,19 +219,11 @@ export default async function DashboardPage(props: {
       if (!p.github_repo_url) return false;
       const urlLower = p.github_repo_url.toLowerCase();
       return (
-        urlLower.includes(`/${githubUsername.toLowerCase()}/`) ||
-        urlLower.endsWith(`/${githubUsername.toLowerCase()}`)
+        Boolean(githubUsername) &&
+        (urlLower.includes(`/${githubUsername.toLowerCase()}/`) ||
+         urlLower.endsWith(`/${githubUsername.toLowerCase()}`))
       );
     });
-
-    if (matchedProjects.length === 0) {
-      const truxify = allProjects.find((p) => p.name.toLowerCase().includes("truxify"));
-      if (truxify) {
-        matchedProjects = [truxify];
-      } else if (allProjects.length > 0) {
-        matchedProjects = [allProjects[0]];
-      }
-    }
 
     const matchedProjectIds = new Set(matchedProjects.map((p) => p.id));
     relevantPRs = allContributions.filter((c) => {
@@ -177,13 +241,12 @@ export default async function DashboardPage(props: {
     });
 
     managedProjects = matchedProjects.map((proj) => {
+      const projShort = proj.name.split("–")[0].trim().toLowerCase();
       const projContribs = relevantPRs.filter(
-        (c) => c.project_id === proj.id || (c.github_url && c.github_url.toLowerCase().includes("truxify"))
+        (c) => c.project_id === proj.id || (c.github_url && c.github_url.toLowerCase().includes(projShort))
       );
-      const prCount = projContribs.length > 0 ? projContribs.length : 122;
-      const totalPoints = projContribs.length > 0
-        ? projContribs.reduce((sum, c) => sum + (c.points_awarded || 10), 0)
-        : 2020;
+      const prCount = projContribs.length;
+      const totalPoints = projContribs.reduce((sum, c) => sum + (c.points_awarded || 10), 0);
       return {
         id: proj.id,
         name: proj.name,
@@ -195,9 +258,11 @@ export default async function DashboardPage(props: {
   }
 
   // 6. For Contributors: group user's contributions by project and calculate points
-  const userContribs = allContributions.filter(
-    (c) => c.user_id === targetUserId || (profile?.id && c.user_id === profile.id)
-  );
+  const userContribs = allContributions.filter((c) => {
+    if (targetUserId && c.user_id === targetUserId) return true;
+    if (profile?.id && c.user_id === profile.id) return true;
+    return false;
+  });
 
   const contributedProjectsMap = new Map<string, { prCount: number; totalPoints: number }>();
   for (const c of userContribs) {
@@ -232,12 +297,12 @@ export default async function DashboardPage(props: {
 
   // 7. Select PRs to display in the main contributions table
   const displayContributions = isProjectAdmin
-    ? (relevantPRs.length > 0 ? relevantPRs : allContributions)
-    : (userContribs.length > 0 ? userContribs : (githubUsername.toLowerCase().includes("kanish") ? relevantPRs : []));
+    ? relevantPRs
+    : userContribs;
 
   const allPRs: PRContribution[] = displayContributions.map((c) => {
     const project = Array.isArray(c.projects) ? c.projects[0] : c.projects;
-    const shortName = project?.name?.split("–")[0]?.trim() || "Truxify";
+    const shortName = project?.name?.split("–")[0]?.trim() || "Project";
     const cleanUrl = (c.github_url || "").replace(/^merged:/, "");
     const prMatch = cleanUrl.match(/\/pull\/(\d+)/);
     const prNum = prMatch ? prMatch[1] : "";
@@ -284,24 +349,24 @@ export default async function DashboardPage(props: {
 
   // 9. Metric counts: score & merged PRs
   const totalPoints =
-    typeof profile?.score === "number" && profile.score > 0
+    typeof profile?.score === "number" && profile.score >= 0
       ? profile.score
       : allPRs.reduce((sum, p) => sum + (p.points_awarded || 10), 0);
 
   const mergedPRs =
-    typeof profile?.merged_prs === "number" && profile.merged_prs > 0
+    typeof profile?.merged_prs === "number" && profile.merged_prs >= 0
       ? profile.merged_prs
       : allPRs.length;
 
   const weeklyScore = allPRs
     .filter((p) => p.contributed_at && p.contributed_at.startsWith("2026-09"))
-    .reduce((sum, p) => sum + (p.points_awarded || 10), 0) || totalPoints;
+    .reduce((sum, p) => sum + (p.points_awarded || 10), 0);
 
-  const weeklyPRs = allPRs.filter((p) => p.contributed_at && p.contributed_at.startsWith("2026-09")).length || mergedPRs;
+  const weeklyPRs = allPRs.filter((p) => p.contributed_at && p.contributed_at.startsWith("2026-09")).length;
 
   const projectsCount = isProjectAdmin
-    ? managedProjects.length || 1
-    : contributedProjects.length || Number(profile?.projects_count || 1);
+    ? managedProjects.length
+    : (contributedProjects.length || Number(profile?.projects_count || 0));
 
   // 10. Calculate user's leaderboard rank
   let userRank = 1;
@@ -321,13 +386,13 @@ export default async function DashboardPage(props: {
 
   // Viewer profile for Navbar
   const viewerProfilePayload = {
-    id: targetUserId,
-    name: fullName,
-    email: currentUser?.email || `${githubUsername}@osc-india.org`,
-    avatar,
-    role: rawRole,
-    isAdmin: rawRole === "project-admin",
-    github: githubUsername,
+    id: currentUser ? currentUser.id : targetUserId,
+    name: (currentUser?.user_metadata?.full_name as string) || (currentUser?.user_metadata?.name as string) || fullName,
+    email: currentUser?.email || (githubUsername ? `${githubUsername}@osc-india.org` : ""),
+    avatar: (currentUser?.user_metadata?.avatar_url as string) || (currentUser?.user_metadata?.picture as string) || avatar,
+    role: isOwnProfile ? rawRole : ((currentUser?.user_metadata?.role as string) || "contributor"),
+    isAdmin: (isOwnProfile ? rawRole : ((currentUser?.user_metadata?.role as string) || "contributor")) === "project-admin",
+    github: isOwnProfile ? githubUsername : ((currentUser?.user_metadata?.user_name as string) || ""),
   };
 
   return (

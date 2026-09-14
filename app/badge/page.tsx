@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { syncUserProfile } from "@/lib/auth/syncProfile";
 import { redirect } from "next/navigation";
 import BadgeClient from "./BadgeClient";
 
@@ -70,14 +71,16 @@ export default async function BadgePage() {
       if (byEmail) profile = byEmail as BadgeProfile;
     }
 
-    // 4. Fallback to default profile for local preview
+    // 4. If profile not found, auto-sync using syncUserProfile
     if (!profile) {
-      const { data: defaultProfile } = await admin
-        .from("profiles")
-        .select("id, user_id, full_name, avatar_url, role, badges_created, github")
-        .ilike("github", "%kanish%")
-        .maybeSingle();
-      if (defaultProfile) profile = defaultProfile as BadgeProfile;
+      try {
+        const synced = await syncUserProfile(user);
+        if (synced) {
+          profile = synced as unknown as BadgeProfile;
+        }
+      } catch (syncErr) {
+        console.warn("Notice: syncUserProfile on badge error:", syncErr);
+      }
     }
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Fetch error";
