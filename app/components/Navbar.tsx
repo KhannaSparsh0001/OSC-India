@@ -76,7 +76,6 @@ export default function Navbar({ initialProfile }: NavbarProps = {}) {
       ]
     : [
         { label: "About us", href: "/about" },
-        { label: "Leaderboard", href: "/leaderboard" },
         { label: "Projects", href: "/projects" },
         { label: "Team", href: "/team" },
         { label: "Timeline", href: "/timeline" },
